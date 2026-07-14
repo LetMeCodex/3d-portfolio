@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { StickyNote } from './ui/StickyNote';
 import { SocialCards } from './ui/SocialCards';
+import { TicTacToe } from './TicTacToe';
 
 const topRow = [
   "Figma", "•", "Brand Identity", "•", "Wireframing", "•", "User Research", "•",
@@ -163,6 +164,11 @@ export function MarqueeDivider() {
         {/* Social Cards inserted in the free space */}
         <div className="absolute left-[5%] bottom-[10%] hidden lg:block hover:-rotate-3 transition-transform duration-500">
           <SocialCards />
+        </div>
+
+        {/* Tic-Tac-Toe Game inserted in the free space */}
+        <div className="absolute right-[5%] bottom-[10%] hidden lg:block hover:rotate-3 transition-transform duration-500 z-30">
+          <TicTacToe />
         </div>
       </div>
 
