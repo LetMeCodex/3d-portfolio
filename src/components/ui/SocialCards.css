@@ -19,12 +19,12 @@
 }
 
 .social-card1 {
-  width: 90px;
-  height: 90px;
+  width: 110px;
+  height: 110px;
   outline: none;
   border: none;
   background: white;
-  border-radius: 90px 5px 5px 5px;
+  border-radius: 110px 5px 5px 5px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   transition: .2s ease-in-out;
   display: flex;
@@ -33,19 +33,19 @@
 }
 
 .social-instagram {
-  margin-top: 1.5em;
-  margin-left: 1.2em;
+  margin-top: 1.8em;
+  margin-left: 1.5em;
   fill: #cc39a4;
   transition: fill .2s ease-in-out;
 }
 
 .social-card2 {
-  width: 90px;
-  height: 90px;
+  width: 110px;
+  height: 110px;
   outline: none;
   border: none;
   background: white;
-  border-radius: 5px 90px 5px 5px;
+  border-radius: 5px 110px 5px 5px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   transition: .2s ease-in-out;
   display: flex;
@@ -54,19 +54,19 @@
 }
 
 .social-linkedin {
-  margin-top: 1.5em;
-  margin-left: -.9em;
+  margin-top: 1.8em;
+  margin-left: -1.2em;
   fill: #0A66C2;
   transition: fill .2s ease-in-out;
 }
 
 .social-card3 {
-  width: 90px;
-  height: 90px;
+  width: 110px;
+  height: 110px;
   outline: none;
   border: none;
   background: white;
-  border-radius: 5px 5px 5px 90px;
+  border-radius: 5px 5px 5px 110px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   transition: .2s ease-in-out;
   display: flex;
@@ -75,18 +75,18 @@
 }
 
 .social-github {
-  margin-top: -.6em;
-  margin-left: 1.2em;
+  margin-top: -.8em;
+  margin-left: 1.5em;
   transition: fill .2s ease-in-out;
 }
 
 .social-card4 {
-  width: 90px;
-  height: 90px;
+  width: 110px;
+  height: 110px;
   outline: none;
   border: none;
   background: white;
-  border-radius: 5px 5px 90px 5px;
+  border-radius: 5px 5px 110px 5px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   transition: .2s ease-in-out;
   display: flex;
@@ -95,8 +95,8 @@
 }
 
 .social-gmail {
-  margin-top: -.9em;
-  margin-left: -1.2em;
+  margin-top: -1.2em;
+  margin-left: -1.5em;
   fill: #EA4335;
   transition: fill .2s ease-in-out;
 }

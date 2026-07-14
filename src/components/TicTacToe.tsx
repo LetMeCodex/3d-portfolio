@@ -73,10 +73,10 @@ function findBestMove(board: Board): number {
 }
 
 const aiPhrases = {
-  thinking: 'AI IS THINKING...',
-  win: 'DISHA\'S AI WINS! 😉',
-  draw: 'TIE! WORTHY OPPONENT. 🤝',
-  playerTurn: 'YOUR TURN [O]...'
+  thinking: 'AI IS SCANNING GRID VECTORS...',
+  win: 'DISHA\'S AI DEFEATED YOU. 😉',
+  draw: 'MATCH DRAWN. WELL PLAYED! 🤝',
+  playerTurn: 'AWAITING YOUR MOVE [O]...'
 };
 
 export function TicTacToe() {
@@ -154,25 +154,25 @@ export function TicTacToe() {
   };
 
   return (
-    <div className="w-[188px] h-[188px] bg-[#FAF8F5]/30 hover:bg-[#FAF8F5]/90 backdrop-blur-sm hover:shadow-[0_20px_50px_rgba(229,139,136,0.1)] border-2 border-black/10 hover:border-[#E58B88]/60 transition-all duration-700 rounded-[2.5rem] p-3 relative overflow-hidden flex flex-col justify-between select-none">
+    <div className="w-[228px] h-[228px] bg-[#FAF8F5]/30 hover:bg-[#FAF8F5]/90 backdrop-blur-sm hover:shadow-[0_20px_50px_rgba(229,139,136,0.1)] border-2 border-black/10 hover:border-[#E58B88]/60 transition-all duration-700 rounded-[2.5rem] p-3.5 relative overflow-hidden flex flex-col justify-between select-none">
       {/* Drafting border */}
       <div className="absolute inset-1.5 border border-dashed border-[#1c2135]/5 rounded-[2.2rem] pointer-events-none" />
 
-      {/* Tiny Header Scoreboard */}
-      <div className="w-full flex items-center justify-between text-[7px] font-mono text-[#1c2135]/40 px-1 relative z-10 select-none">
-        <span>YOU:{scores.player}</span>
-        <span>TIE:{scores.ties}</span>
-        <span>AI:{scores.ai}</span>
+      {/* Premium Monospace Scoreboard */}
+      <div className="w-full flex items-center justify-between text-[8px] font-mono text-[#1c2135]/50 px-1 relative z-10 select-none">
+        <span>PLAYER [O]: {scores.player}</span>
+        <span>TIES: {scores.ties}</span>
+        <span>AI [X]: {scores.ai}</span>
       </div>
 
       {/* Unbeatable Game Grid */}
-      <div className="w-[108px] h-[108px] mx-auto relative z-10 flex items-center justify-center bg-transparent">
+      <div className="w-[138px] h-[138px] mx-auto relative z-10 flex items-center justify-center bg-transparent mt-1">
         
         {/* Hashtag Lines Intersections */}
-        <span className="absolute left-[34px] top-[30px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
-        <span className="absolute left-[70px] top-[30px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
-        <span className="absolute left-[34px] top-[66px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
-        <span className="absolute left-[70px] top-[66px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
+        <span className="absolute left-[43px] top-[39px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
+        <span className="absolute left-[89px] top-[39px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
+        <span className="absolute left-[43px] top-[85px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
+        <span className="absolute left-[89px] top-[85px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
 
         {/* Grid Cells */}
         <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
@@ -180,7 +180,7 @@ export function TicTacToe() {
             <div 
               key={idx} 
               onClick={() => handleCellClick(idx)}
-              className={`w-[36px] h-[36px] flex items-center justify-center cursor-pointer hover:bg-black/[0.02] active:bg-[#E58B88]/5 transition-colors relative ${getBorderClasses(idx)}`}
+              className={`w-[46px] h-[46px] flex items-center justify-center cursor-pointer hover:bg-black/[0.02] active:bg-[#E58B88]/5 transition-colors relative ${getBorderClasses(idx)}`}
             >
               {/* Coordinates label */}
               <span className="absolute top-[2px] left-[2px] font-mono text-[5px] text-black/10">
@@ -189,7 +189,7 @@ export function TicTacToe() {
 
               {/* Sketchy X (AI) */}
               {cell === 'X' && (
-                <svg className="w-6 h-6 text-[#E58B88]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <svg className="w-8 h-8 text-[#E58B88]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
                   <motion.path 
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
@@ -207,7 +207,7 @@ export function TicTacToe() {
 
               {/* Sketchy O (Player) */}
               {cell === 'O' && (
-                <svg className="w-5 h-5 text-[#B2BEE2]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <svg className="w-7 h-7 text-[#B2BEE2]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
                   <motion.circle 
                     cx="12" 
                     cy="12" 
@@ -224,18 +224,18 @@ export function TicTacToe() {
       </div>
 
       {/* Mini Console Output or Reset */}
-      <div className="relative z-10 w-full text-center flex justify-center pb-0.5">
+      <div className="relative z-10 w-full text-center flex justify-center mt-1">
         {gameOver ? (
           <button 
             onClick={resetGame}
-            className="font-mono text-[7px] uppercase tracking-widest text-[#E58B88] hover:text-[#1c2135] font-bold transition-colors cursor-pointer border border-[#E58B88]/20 bg-white px-2 py-0.5 rounded shadow-sm"
+            className="w-full bg-[#E58B88] text-white font-mono text-[8px] uppercase tracking-widest py-1.5 rounded-lg shadow-sm hover:bg-[#1c2135] transition-colors duration-300 font-bold cursor-pointer"
           >
             RETRY MATCH
           </button>
         ) : (
-          <span className="font-mono text-[6.5px] uppercase tracking-widest text-[#1c2135]/50 leading-none truncate max-w-full px-1">
+          <div className="w-full bg-[#1c2135] text-[#34C759] font-mono text-[7px] px-2 py-1.5 rounded-lg shadow-inner flex items-center justify-center leading-none tracking-widest truncate">
             {log}
-          </span>
+          </div>
         )}
       </div>
     </div>
