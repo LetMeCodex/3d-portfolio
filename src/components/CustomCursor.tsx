@@ -1,34 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
-interface Particle {
-  id: number;
+interface Point {
   x: number;
   y: number;
-  vx: number;
-  vy: number;
-  color: string;
-  size: number;
-  opacity: number;
+  time: number;
 }
 
 export function CustomCursor() {
-  const [isHovered, setIsHovered] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
+  const [hoveredRadius, setHoveredRadius] = useState('50%');
   const [cursorText, setCursorText] = useState('');
   const [isClicked, setIsClicked] = useState(false);
-  const [particles, setParticles] = useState<Particle[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Position of precision dot
+  // Precision coordinate values
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
-  // Smooth elastic lag for trailing ring
-  const ringX = useSpring(mouseX, { damping: 30, stiffness: 220, mass: 0.6 });
-  const ringY = useSpring(mouseY, { damping: 30, stiffness: 220, mass: 0.6 });
+  // Mouse trajectory points history for blueprint line drawings
+  const pointsRef = useRef<Point[]>([]);
+
+  // Smooth springs for trailing magnetic focus box
+  const boxX = useSpring(mouseX, { damping: 25, stiffness: 200, mass: 0.5 });
+  const boxY = useSpring(mouseY, { damping: 25, stiffness: 200, mass: 0.5 });
+  const boxWidth = useSpring(24, { damping: 25, stiffness: 220 });
+  const boxHeight = useSpring(24, { damping: 25, stiffness: 220 });
+  const boxRadius = useSpring(9999, { damping: 25, stiffness: 220 });
 
   useEffect(() => {
-    // Hide default cursor only if pointer device is fine (mouse)
+    // Inject CSS to hide browser cursor on mouse devices
     const styleEl = document.createElement('style');
     styleEl.innerHTML = `
       @media (pointer: fine) {
@@ -39,25 +41,73 @@ export function CustomCursor() {
     `;
     document.head.appendChild(styleEl);
 
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    const handleResize = () => {
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
+      }
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!isVisible) setIsVisible(true);
-      
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
 
+      const cx = e.clientX;
+      const cy = e.clientY;
+      mouseX.set(cx);
+      mouseY.set(cy);
+
+      // Track coordinates for calling technical lines trail
+      pointsRef.current.push({ x: cx, y: cy, time: Date.now() });
+
+      // Scan target element for layout focus snapping
       const target = e.target as HTMLElement;
-      if (!target) return;
+      if (target) {
+        const hoverTarget = target.closest('a, button, [role="button"], .cursor-pointer, input, select, [data-cursor]');
+        if (hoverTarget) {
+          const rect = hoverTarget.getBoundingClientRect();
+          setHoveredRect(rect);
+          
+          // Get border radius styles dynamically for perfect box alignment
+          const style = window.getComputedStyle(hoverTarget);
+          setHoveredRadius(style.borderRadius || '8px');
+          
+          const text = (hoverTarget as HTMLElement).getAttribute('data-cursor') || '';
+          setCursorText(text);
 
-      // Detect hover on links, buttons, and custom triggers
-      const hoverTarget = target.closest('a, button, [role="button"], .cursor-pointer, input, select, [data-cursor]');
-      if (hoverTarget) {
-        setIsHovered(true);
-        const text = (hoverTarget as HTMLElement).getAttribute('data-cursor') || '';
-        setCursorText(text);
-      } else {
-        setIsHovered(false);
-        setCursorText('');
+          // Snap trailing box directly to the button dimensions
+          boxX.set(rect.left);
+          boxY.set(rect.top);
+          boxWidth.set(rect.width);
+          boxHeight.set(rect.height);
+          
+          const radiusNum = parseFloat(style.borderRadius);
+          boxRadius.set(isNaN(radiusNum) ? 8 : radiusNum);
+        } else {
+          setHoveredRect(null);
+          setCursorText('');
+          
+          // Shrink box back into standard trailing circle
+          boxX.set(cx - 12);
+          boxY.set(cy - 12);
+          boxWidth.set(24);
+          boxHeight.set(24);
+          boxRadius.set(9999);
+        }
       }
+    };
+
+    const handleMouseDown = () => {
+      setIsClicked(true);
+    };
+
+    const handleMouseUp = () => {
+      setIsClicked(false);
     };
 
     const handleMouseLeaveWindow = () => {
@@ -68,34 +118,10 @@ export function CustomCursor() {
       setIsVisible(true);
     };
 
-    const handleMouseDown = () => {
-      setIsClicked(true);
-      
-      // Explode star particles on click
-      const newParticles = Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i * 2 * Math.PI) / 8 + (Math.random() - 0.5) * 0.4;
-        const speed = 2.5 + Math.random() * 3.5;
-        return {
-          id: Date.now() + i + Math.random(),
-          x: mouseX.get(),
-          y: mouseY.get(),
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          color: i % 2 === 0 ? '#E58B88' : '#B2BEE2',
-          size: 4 + Math.random() * 6,
-          opacity: 1
-        };
-      });
-      setParticles(prev => [...prev, ...newParticles]);
-    };
-
-    const handleMouseUp = () => {
-      setIsClicked(false);
-    };
-
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('resize', handleResize);
     document.addEventListener('mouseleave', handleMouseLeaveWindow);
     document.addEventListener('mouseenter', handleMouseEnterWindow);
 
@@ -104,103 +130,166 @@ export function CustomCursor() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('resize', handleResize);
       document.removeEventListener('mouseleave', handleMouseLeaveWindow);
       document.removeEventListener('mouseenter', handleMouseEnterWindow);
     };
-  }, [isVisible, mouseX, mouseY]);
+  }, [isVisible, mouseX, mouseY, boxX, boxY, boxWidth, boxHeight, boxRadius]);
 
-  // Physics animation loop for click burst particles
+  // Canvas calligraphic parallel-line drafting trail loop
   useEffect(() => {
-    let active = true;
-    const updateParticles = () => {
-      if (!active) return;
-      setParticles(prev =>
-        prev
-          .map(p => ({
-            ...p,
-            x: p.x + p.vx,
-            y: p.y + p.vy,
-            vy: p.vy + 0.12, // subtle gravity pull
-            opacity: p.opacity - 0.035
-          }))
-          .filter(p => p.opacity > 0)
-      );
-      requestAnimationFrame(updateParticles);
+    let animationId: number;
+
+    const renderTrail = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const now = Date.now();
+      // Age points (500ms lifespan)
+      pointsRef.current = pointsRef.current.filter(p => now - p.time < 500);
+      const points = pointsRef.current;
+
+      if (points.length > 2) {
+        // Draw 3 fine parallel calligraphic wireframe lines (converging drafting pen effect)
+        for (let lineOffset = -1.5; lineOffset <= 1.5; lineOffset += 1.5) {
+          ctx.beginPath();
+          
+          // Color fading gradient along path
+          const grad = ctx.createLinearGradient(
+            points[0].x, points[0].y, 
+            points[points.length - 1].x, points[points.length - 1].y
+          );
+          grad.addColorStop(0, 'rgba(178, 190, 226, 0)'); // fade trail start
+          grad.addColorStop(0.5, 'rgba(229, 139, 136, 0.4)');
+          grad.addColorStop(1, 'rgba(28, 33, 53, 0.65)'); // solid near cursor
+
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = lineOffset === 0 ? 1 : 0.5; // middle line slightly more solid
+          
+          for (let i = 1; i < points.length; i++) {
+            const p1 = points[i - 1];
+            const p2 = points[i];
+
+            // Direction vector to offset perpendicular lines
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const len = Math.hypot(dx, dy);
+            
+            let nx = 0;
+            let ny = 0;
+            if (len > 0.1) {
+              nx = -dy / len;
+              ny = dx / len;
+            }
+
+            const scaleOffset = lineOffset * (1 + (len * 0.1)); // converge/disperse based on speed
+
+            const cx = (p2.x + p1.x) / 2 + nx * scaleOffset;
+            const cy = (p2.y + p1.y) / 2 + ny * scaleOffset;
+
+            if (i === 1) {
+              ctx.moveTo(p1.x + nx * scaleOffset, p1.y + ny * scaleOffset);
+            }
+            ctx.quadraticCurveTo(p1.x + nx * scaleOffset, p1.y + ny * scaleOffset, cx, cy);
+          }
+          ctx.stroke();
+        }
+      }
+
+      animationId = requestAnimationFrame(renderTrail);
     };
-    requestAnimationFrame(updateParticles);
-    return () => {
-      active = false;
-    };
+
+    animationId = requestAnimationFrame(renderTrail);
+    return () => cancelAnimationFrame(animationId);
   }, []);
 
   if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden hidden md:block">
-      {/* Click explosion particles (Mini stars) */}
-      {particles.map(p => (
-        <span
-          key={p.id}
-          className="absolute flex items-center justify-center font-bold text-[10px]"
-          style={{
-            left: p.x,
-            top: p.y,
-            color: p.color,
-            opacity: p.opacity,
-            transform: `translate(-50%, -50%) scale(${p.size / 8})`,
-            fontSize: `${p.size * 2}px`
-          }}
-        >
-          ✦
-        </span>
-      ))}
+      {/* Calligraphy Drafting Canvas Trail */}
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[9998]" />
 
-      {/* Trailing Elastic Ring */}
+      {/* Trailing Bounding Focus Box */}
       <motion.div
-        style={{ x: ringX, y: ringY }}
-        className="absolute left-0 top-0 w-8 h-8 rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+        style={{
+          x: boxX,
+          y: boxY,
+          width: boxWidth,
+          height: boxHeight,
+          borderRadius: boxRadius,
+        }}
+        animate={{
+          borderColor: hoveredRect ? '#E58B88' : 'rgba(28, 33, 53, 0.2)',
+          borderStyle: hoveredRect ? 'solid' : 'dashed',
+          backgroundColor: hoveredRect ? 'rgba(229, 139, 136, 0.03)' : 'rgba(0,0,0,0)',
+          boxShadow: hoveredRect ? '0 15px 35px rgba(229,139,136,0.1)' : 'none',
+        }}
+        transition={{
+          type: 'spring',
+          damping: 24,
+          stiffness: 220,
+        }}
+        className="fixed left-0 top-0 border-2 z-40 pointer-events-none flex items-center justify-center"
       >
-        <motion.div
-          animate={{
-            width: isHovered ? 64 : 32,
-            height: isHovered ? 64 : 32,
-            scale: isClicked ? 0.8 : 1,
-            backgroundColor: isHovered ? 'rgba(229, 139, 136, 0.1)' : 'rgba(229, 139, 136, 0)',
-            borderColor: isHovered ? '#E58B88' : 'rgba(229, 139, 136, 0.4)',
-            borderStyle: isHovered ? 'solid' : 'dashed',
-            rotate: isHovered ? 90 : 0
-          }}
-          transition={{
-            type: 'spring',
-            damping: 24,
-            stiffness: 180,
-            rotate: { duration: 1.2, ease: 'easeInOut', repeat: Infinity }
-          }}
-          className="w-full h-full rounded-full border-2 relative flex items-center justify-center"
-        >
-          {/* Typing log tooltip tag inside ring */}
-          {isHovered && cursorText && (
-            <motion.span
+        {/* CAD Blueprint Corner Ticks (Visible only when hovering over components) */}
+        {hoveredRect && (
+          <>
+            <div className="absolute top-[-3px] left-[-3px] w-2 h-2 border-t-2 border-l-2 border-[#1c2135]/40" />
+            <div className="absolute top-[-3px] right-[-3px] w-2 h-2 border-t-2 border-r-2 border-[#1c2135]/40" />
+            <div className="absolute bottom-[-3px] left-[-3px] w-2 h-2 border-b-2 border-l-2 border-[#1c2135]/40" />
+            <div className="absolute bottom-[-3px] right-[-3px] w-2 h-2 border-b-2 border-r-2 border-[#1c2135]/40" />
+
+            {/* Scale/Coord Layout Tag */}
+            <motion.div 
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute font-mono text-[7px] tracking-widest text-[#1c2135] bg-white border border-[#E8E5F0] px-2 py-0.5 rounded-md shadow-sm uppercase font-bold whitespace-nowrap"
-              style={{ top: '70px' }}
+              className="absolute -top-7 left-0 font-mono text-[7px] tracking-widest text-[#1c2135] bg-[#FAF8F5] px-2 py-0.5 border border-[#E8E5F0] rounded shadow-sm whitespace-nowrap uppercase font-bold"
             >
-              {cursorText}
-            </motion.span>
-          )}
-        </motion.div>
+              LOC: [{Math.round(hoveredRect.left)}, {Math.round(hoveredRect.top)}] | DIM: [{Math.round(hoveredRect.width)}x{Math.round(hoveredRect.height)}]
+            </motion.div>
+
+            {/* Custom Tooltip text tag */}
+            {cursorText && (
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute font-mono text-[6.5px] tracking-widest text-white bg-[#1c2135] px-1.5 py-0.5 rounded shadow-sm uppercase font-bold whitespace-nowrap"
+                style={{ bottom: '-18px' }}
+              >
+                {cursorText}
+              </motion.span>
+            )}
+          </>
+        )}
       </motion.div>
 
-      {/* Precision Tip Pointer Dot */}
+      {/* Precision CAD Rotating Crosshair Core */}
       <motion.div
         style={{ x: mouseX, y: mouseY }}
         animate={{
-          scale: isClicked ? 0.6 : 1,
-          backgroundColor: isHovered ? '#E58B88' : '#1c2135'
+          scale: isClicked ? 0.85 : 1,
+          rotate: 360,
         }}
-        className="absolute left-0 top-0 w-2.5 h-2.5 rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 bg-[#1c2135] shadow-sm z-50"
-      />
+        transition={{
+          rotate: { duration: 16, repeat: Infinity, ease: 'linear' },
+          scale: { type: 'spring', damping: 15, stiffness: 250 }
+        }}
+        className="absolute left-0 top-0 w-3 h-3 pointer-events-none -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-50"
+      >
+        {/* Precision Core Dot */}
+        <div className="w-1.5 h-1.5 bg-[#1c2135] rounded-full" />
+
+        {/* CAD Crosshairs */}
+        <div className="absolute top-[-6px] left-[5px] w-[1px] h-[5px] bg-[#1c2135]/60" />
+        <div className="absolute bottom-[-6px] left-[5px] w-[1px] h-[5px] bg-[#1c2135]/60" />
+        <div className="absolute left-[-6px] top-[5px] w-[5px] h-[1px] bg-[#1c2135]/60" />
+        <div className="absolute right-[-6px] top-[5px] w-[5px] h-[1px] bg-[#1c2135]/60" />
+      </motion.div>
     </div>
   );
 }
