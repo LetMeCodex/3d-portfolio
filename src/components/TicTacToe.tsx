@@ -73,11 +73,10 @@ function findBestMove(board: Board): number {
 }
 
 const aiPhrases = {
-  idle: 'AWAITING PLAYER CELL INPUT...',
-  thinking: 'COMPUTING BEST VECTORS...',
-  win: 'SYS: PLAYER DEFEATED. ALWAYS 10 STEPS AHEAD. 😉',
-  draw: 'SYS: MATCH DRAWN. WORTHY OPPONENT. 🤝',
-  playerTurn: 'PLAYER TURN [O]. ANALYZING MOVES...'
+  thinking: 'AI IS THINKING...',
+  win: 'DISHA\'S AI WINS! 😉',
+  draw: 'TIE! WORTHY OPPONENT. 🤝',
+  playerTurn: 'YOUR TURN [O]...'
 };
 
 export function TicTacToe() {
@@ -87,7 +86,6 @@ export function TicTacToe() {
   const [scores, setScores] = useState({ player: 0, ai: 0, ties: 0 });
   const [gameOver, setGameOver] = useState(false);
 
-  // Play again
   const resetGame = () => {
     setBoard(Array(9).fill(null));
     setIsAiTurn(false);
@@ -122,7 +120,7 @@ export function TicTacToe() {
           setLog(aiPhrases.playerTurn);
         }
       }
-    }, 600);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [isAiTurn, board, gameOver]);
@@ -139,7 +137,7 @@ export function TicTacToe() {
       setGameOver(true);
       if (winner === 'O') {
         setScores(prev => ({ ...prev, player: prev.player + 1 }));
-        setLog('SYS: HOW DID YOU BEAT THE SYSTEM? IMPOSSIBLE.');
+        setLog('YOU BEAT THE SYSTEM?!');
       } else if (winner === 'draw') {
         setScores(prev => ({ ...prev, ties: prev.ties + 1 }));
         setLog(aiPhrases.draw);
@@ -149,94 +147,74 @@ export function TicTacToe() {
     }
   };
 
-  return (
-    <div className="w-[280px] p-6 bg-[#FAF8F5]/80 backdrop-blur-md border-2 border-black/10 rounded-[2rem] shadow-sm relative overflow-hidden flex flex-col gap-4 select-none">
-      {/* Drafting border */}
-      <div className="absolute inset-2 border border-dashed border-[#1c2135]/5 rounded-[1.7rem] pointer-events-none" />
+  const getBorderClasses = (i: number) => {
+    const r = Math.floor(i / 3);
+    const c = i % 3;
+    return `${c < 2 ? 'border-r border-[#1c2135]/10' : ''} ${r < 2 ? 'border-b border-[#1c2135]/10' : ''}`;
+  };
 
-      {/* Header Info */}
-      <div className="flex flex-col gap-1 relative z-10">
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[8px] uppercase tracking-widest text-black/35">SYS_REF: [DISHA-AI-V2]</span>
-          <div className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E58B88] animate-pulse" />
-            <span className="font-mono text-[7px] uppercase tracking-widest text-[#E58B88]">ACTIVE</span>
-          </div>
-        </div>
-        <h4 className="font-mono text-[10px] font-bold text-[#1c2135] uppercase tracking-[0.1em] mt-1">Tic-Tac-Toe Core</h4>
+  return (
+    <div className="w-[188px] h-[188px] bg-[#FAF8F5]/30 hover:bg-[#FAF8F5]/90 backdrop-blur-sm hover:shadow-[0_20px_50px_rgba(229,139,136,0.1)] border-2 border-black/10 hover:border-[#E58B88]/60 transition-all duration-700 rounded-[2.5rem] p-3 relative overflow-hidden flex flex-col justify-between select-none">
+      {/* Drafting border */}
+      <div className="absolute inset-1.5 border border-dashed border-[#1c2135]/5 rounded-[2.2rem] pointer-events-none" />
+
+      {/* Tiny Header Scoreboard */}
+      <div className="w-full flex items-center justify-between text-[7px] font-mono text-[#1c2135]/40 px-1 relative z-10 select-none">
+        <span>YOU:{scores.player}</span>
+        <span>TIE:{scores.ties}</span>
+        <span>AI:{scores.ai}</span>
       </div>
 
       {/* Unbeatable Game Grid */}
-      <div className="w-48 h-48 mx-auto relative z-10 flex items-center justify-center bg-transparent mt-2">
-        {/* Hashtag Lines with Crosshairs */}
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none">
-          {Array(9).fill(null).map((_, i) => {
-            const hasRight = i % 3 !== 2;
-            const hasBottom = i < 6;
-            return (
-              <div 
-                key={i} 
-                className={`relative flex items-center justify-center ${hasRight ? 'border-r border-[#1c2135]/10' : ''} ${hasBottom ? 'border-b border-[#1c2135]/10' : ''}`}
-              >
-                {/* Micro CAD plus marks at grid intersections */}
-                {i === 0 && (
-                  <div className="absolute -bottom-[5px] -right-[5px] font-mono text-[9px] text-[#1c2135]/25 font-bold line-none select-none">+</div>
-                )}
-                {i === 1 && (
-                  <div className="absolute -bottom-[5px] -right-[5px] font-mono text-[9px] text-[#1c2135]/25 font-bold line-none select-none">+</div>
-                )}
-                {i === 3 && (
-                  <div className="absolute -bottom-[5px] -right-[5px] font-mono text-[9px] text-[#1c2135]/25 font-bold line-none select-none">+</div>
-                )}
-                {i === 4 && (
-                  <div className="absolute -bottom-[5px] -right-[5px] font-mono text-[9px] text-[#1c2135]/25 font-bold line-none select-none">+</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+      <div className="w-[108px] h-[108px] mx-auto relative z-10 flex items-center justify-center bg-transparent">
+        
+        {/* Hashtag Lines Intersections */}
+        <span className="absolute left-[34px] top-[30px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
+        <span className="absolute left-[70px] top-[30px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
+        <span className="absolute left-[34px] top-[66px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
+        <span className="absolute left-[70px] top-[66px] font-mono text-[8px] text-[#1c2135]/25 font-bold select-none pointer-events-none leading-none">+</span>
 
-        {/* Clickable cells */}
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 z-20">
+        {/* Grid Cells */}
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
           {board.map((cell, idx) => (
             <div 
               key={idx} 
               onClick={() => handleCellClick(idx)}
-              className="w-16 h-16 flex items-center justify-center cursor-pointer hover:bg-black/[0.02] active:bg-[#E58B88]/5 transition-colors relative"
+              className={`w-[36px] h-[36px] flex items-center justify-center cursor-pointer hover:bg-black/[0.02] active:bg-[#E58B88]/5 transition-colors relative ${getBorderClasses(idx)}`}
             >
               {/* Coordinates label */}
-              <span className="absolute top-1 left-1 font-mono text-[6px] text-black/15">
+              <span className="absolute top-[2px] left-[2px] font-mono text-[5px] text-black/10">
                 {idx % 3},{Math.floor(idx / 3)}
               </span>
 
               {/* Sketchy X (AI) */}
               {cell === 'X' && (
-                <svg className="w-10 h-10 text-[#E58B88]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <svg className="w-6 h-6 text-[#E58B88]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <motion.path 
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                    d="M 4 4 L 20 20" 
+                    transition={{ duration: 0.35, ease: 'easeOut' }}
+                    d="M 5 5 L 19 19" 
                   />
                   <motion.path 
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.4, delay: 0.15, ease: 'easeOut' }}
-                    d="M 20 4 L 4 20" 
+                    transition={{ duration: 0.35, delay: 0.1, ease: 'easeOut' }}
+                    d="M 19 5 L 5 19" 
                   />
                 </svg>
               )}
 
               {/* Sketchy O (Player) */}
               {cell === 'O' && (
-                <svg className="w-9 h-9 text-[#B2BEE2]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <svg className="w-5 h-5 text-[#B2BEE2]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <motion.circle 
                     cx="12" 
                     cy="12" 
-                    r="8.5"
+                    r="8"
                     initial={{ pathLength: 0, rotate: -90 }}
                     animate={{ pathLength: 1, rotate: 270 }}
-                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    transition={{ duration: 0.45, ease: 'easeInOut' }}
                   />
                 </svg>
               )}
@@ -245,29 +223,21 @@ export function TicTacToe() {
         </div>
       </div>
 
-      {/* Scores Monospace Table */}
-      <div className="flex items-center justify-between px-2 text-[9px] font-mono text-black/40 border-t border-b border-black/[0.06] py-1.5 mt-1 relative z-10">
-        <span>YOU: {scores.player}</span>
-        <span>AI: {scores.ai}</span>
-        <span>TIES: {scores.ties}</span>
+      {/* Mini Console Output or Reset */}
+      <div className="relative z-10 w-full text-center flex justify-center pb-0.5">
+        {gameOver ? (
+          <button 
+            onClick={resetGame}
+            className="font-mono text-[7px] uppercase tracking-widest text-[#E58B88] hover:text-[#1c2135] font-bold transition-colors cursor-pointer border border-[#E58B88]/20 bg-white px-2 py-0.5 rounded shadow-sm"
+          >
+            RETRY MATCH
+          </button>
+        ) : (
+          <span className="font-mono text-[6.5px] uppercase tracking-widest text-[#1c2135]/50 leading-none truncate max-w-full px-1">
+            {log}
+          </span>
+        )}
       </div>
-
-      {/* Mini Console Output */}
-      <div className="relative z-10 w-full min-h-[32px] bg-[#1c2135] text-[#34C759] font-mono text-[8px] px-3 py-2 rounded-lg flex flex-col justify-center leading-normal select-text shadow-inner">
-        <p className="truncate">{log}</p>
-      </div>
-
-      {/* Restart Button */}
-      {gameOver && (
-        <motion.button 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          onClick={resetGame}
-          className="absolute bottom-[22px] right-[24px] z-30 font-mono text-[9px] uppercase tracking-widest text-[#E58B88] hover:text-[#1c2135] transition-colors border border-[#E58B88]/20 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-md shadow-sm"
-        >
-          RETRY
-        </motion.button>
-      )}
     </div>
   );
 }
