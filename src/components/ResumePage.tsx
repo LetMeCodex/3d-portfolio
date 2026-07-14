@@ -450,40 +450,35 @@ export function ResumePage({ onBack }: ResumePageProps) {
         <Footer />
 
         {/* ─── Video-Integrated "View Full CV" Button ─── */}
-        <AnimatePresence>
-            <motion.button 
-                onClick={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setCvCoords({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
-                  setIsCVViewerOpen(true);
-                }}
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="fixed bottom-10 right-10 z-[150] group"
-            >
-                {/* Button Glow Effect */}
-                <div className="absolute inset-0 bg-white blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700 rounded-full" />
+        <button 
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setCvCoords({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+              setIsCVViewerOpen(true);
+            }}
+            className="fixed bottom-10 right-10 z-[150] group"
+        >
+            {/* Button Glow Effect */}
+            <div className="absolute inset-0 bg-white blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700 rounded-full" />
+            
+            <div className="relative flex items-center gap-6 pl-8 pr-3 py-3 bg-black text-white rounded-full overflow-hidden border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.4)] transition-all duration-700 group-hover:scale-[1.05] group-hover:border-white group-hover:shadow-[0_40px_80px_rgba(255,255,255,0.2)]">
                 
-                <div className="relative flex items-center gap-6 pl-8 pr-3 py-3 bg-black text-white rounded-full overflow-hidden border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.4)] transition-all duration-700 group-hover:scale-[1.05] group-hover:border-white group-hover:shadow-[0_40px_80px_rgba(255,255,255,0.2)]">
-                    
-                    {/* Elegant White Background Reveal */}
-                    <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none" />
+                {/* Elegant White Background Reveal */}
+                <div className="absolute inset-0 bg-white translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none" />
 
-                    {/* Content Overlay */}
-                    <span className="relative z-10 font-mono text-[11px] uppercase tracking-[0.4em] font-bold text-white group-hover:text-black transition-colors duration-500 delay-100">
-                        View Full CV
-                    </span>
-                    
-                    <div className="relative z-10 w-12 h-12 rounded-full bg-white/10 group-hover:bg-black flex items-center justify-center transition-all duration-500 group-hover:rotate-45">
-                        <ArrowUpRight size={20} className="text-white" />
-                    </div>
-
-                    {/* Inner Shine Effect */}
-                    <div className="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[30deg] group-hover:left-[150%] transition-all duration-[1.5s] ease-in-out z-20 pointer-events-none" />
+                {/* Content Overlay */}
+                <span className="relative z-10 font-mono text-[11px] uppercase tracking-[0.4em] font-bold text-white group-hover:text-black transition-colors duration-500 delay-100">
+                    View Full CV
+                </span>
+                
+                <div className="relative z-10 w-12 h-12 rounded-full bg-white/10 group-hover:bg-black flex items-center justify-center transition-all duration-500 group-hover:rotate-45">
+                    <ArrowUpRight size={20} className="text-white" />
                 </div>
-            </motion.button>
-        </AnimatePresence>
+
+                {/* Inner Shine Effect */}
+                <div className="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[30deg] group-hover:left-[150%] transition-all duration-[1.5s] ease-in-out z-20 pointer-events-none" />
+            </div>
+        </button>
 
         {/* Floating Background Elements (Optimized) */}
         <div className="fixed top-1/4 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(229,139,136,0.06) 0%, transparent 70%)', transform: 'translateZ(0)' }} />
