@@ -14,7 +14,7 @@ import { Footer } from "./components/Footer";
 import { MarqueeDivider } from "./components/MarqueeDivider";
 import { ArchitecturalGrid } from "./components/ui/ArchitecturalGrid";
 import { BackgroundDoodles } from "./components/ui/BackgroundDoodles";
-import { BeeTraveler } from "./components/BeeTraveler";
+import { CustomCursor } from "./components/CustomCursor";
 import { CulinaryJourney } from "./components/CulinaryJourney";
 import Preloader from "./components/ui/Preloader";
 import { WeatherSystem } from "./components/WeatherSystem";
@@ -63,8 +63,8 @@ export default function App() {
         <ArchitecturalGrid className="fixed inset-0 z-0" />
 
 
-        {/* The Bee Traveler Animation — only after preloader */}
-        {!isLoading && <BeeTraveler />}
+        {/* Custom cursor and interactive trail */}
+        {!isLoading && <CustomCursor />}
 
         <AnimatePresence>
           {!isResumeOpen && !isAboutOpen && !isLoading && (

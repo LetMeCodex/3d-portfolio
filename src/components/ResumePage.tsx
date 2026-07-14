@@ -248,6 +248,7 @@ export function ResumePage({ onBack }: ResumePageProps) {
                       setCvCoords({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
                       setIsCVViewerOpen(true);
                     }}
+                    data-cursor="VIEW"
                     className="group relative"
                 >
                     {/* Button Glow Effect */}

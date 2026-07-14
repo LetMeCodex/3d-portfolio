@@ -180,6 +180,7 @@ export function TicTacToe() {
             <div 
               key={idx} 
               onClick={() => handleCellClick(idx)}
+              data-cursor="PLAY"
               className={`w-[46px] h-[46px] flex items-center justify-center cursor-pointer hover:bg-black/[0.02] active:bg-[#E58B88]/5 transition-colors relative ${getBorderClasses(idx)}`}
             >
               {/* Coordinates label */}
@@ -228,6 +229,7 @@ export function TicTacToe() {
         {gameOver ? (
           <button 
             onClick={resetGame}
+            data-cursor="RESET"
             className="w-full bg-[#E58B88] text-white font-mono text-[8px] uppercase tracking-widest py-1.5 rounded-lg shadow-sm hover:bg-[#1c2135] transition-colors duration-300 font-bold cursor-pointer"
           >
             RETRY MATCH
