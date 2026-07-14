@@ -1,0 +1,281 @@
+/* ── Uiverse Neo-Brutalist Card ── */
+.nb-card {
+  --nb-primary: #E84855;
+  --nb-secondary: #1c2135;
+  --nb-accent: #E58B88;
+  --nb-text: #1c2135;
+  --nb-bg: #ffffff;
+  --nb-shadow: #1c2135;
+  --nb-pattern: #d0cdc8;
+
+  position: relative;
+  width: 19em;
+  background: var(--nb-bg);
+  border: 0.3em solid var(--nb-text);
+  border-radius: 0.6em;
+  box-shadow: 0.6em 0.6em 0 var(--nb-shadow), inset 0 0 0 0.12em rgba(0,0,0,0.04);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  transform-origin: center;
+}
+
+.nb-card:hover {
+  transform: translate(-0.35em, -0.35em) scale(1.02);
+  box-shadow: 0.9em 0.9em 0 var(--nb-shadow);
+}
+
+.nb-card::before {
+  content: "";
+  position: absolute;
+  top: -1em;
+  right: -1em;
+  width: 3.5em;
+  height: 3.5em;
+  background: var(--nb-accent);
+  transform: rotate(45deg);
+  z-index: 1;
+}
+
+.nb-card::after {
+  content: "✦";
+  position: absolute;
+  top: 0.35em;
+  right: 0.35em;
+  color: var(--nb-text);
+  font-size: 1em;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.nb-card-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 0.5em 0.5em;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.nb-card:hover .nb-card-grid { opacity: 1; }
+
+.nb-card-header {
+  position: relative;
+  padding: 1.2em 1.4em;
+  background: var(--nb-primary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.3em solid var(--nb-text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.nb-card-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 0.5em, transparent 0.5em, transparent 1em);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.nb-card-tag {
+  background: #fff;
+  color: var(--nb-text);
+  font-size: 0.55em;
+  font-weight: 800;
+  padding: 0.35em 0.7em;
+  border: 0.15em solid var(--nb-text);
+  border-radius: 0.3em;
+  box-shadow: 0.2em 0.2em 0 var(--nb-shadow);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transform: rotate(3deg);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.nb-card:hover .nb-card-tag {
+  transform: rotate(-2deg) scale(1.08);
+}
+
+.nb-card-body {
+  position: relative;
+  padding: 1.3em;
+  z-index: 2;
+}
+
+.nb-card-desc {
+  margin-bottom: 1.2em;
+  color: var(--nb-text);
+  font-size: 0.82em;
+  line-height: 1.5;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.nb-feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75em;
+  margin-bottom: 1.3em;
+}
+
+.nb-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  transition: transform 0.2s ease;
+}
+
+.nb-feature-item:hover { transform: translateX(0.25em); }
+
+.nb-feature-icon {
+  width: 1.4em;
+  height: 1.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--nb-secondary);
+  border: 0.12em solid var(--nb-text);
+  border-radius: 0.3em;
+  box-shadow: 0.18em 0.18em 0 rgba(0,0,0,0.25);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.nb-feature-item:hover .nb-feature-icon {
+  background: #E84855;
+  transform: rotate(-5deg);
+}
+
+.nb-feature-icon svg {
+  width: 0.85em;
+  height: 0.85em;
+  fill: #fff;
+}
+
+.nb-feature-text {
+  font-size: 0.78em;
+  font-weight: 600;
+  color: var(--nb-text);
+}
+
+.nb-card-footer {
+  padding-top: 1em;
+  border-top: 0.12em dashed rgba(0,0,0,0.15);
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nb-card-footer::before {
+  content: "✂";
+  position: absolute;
+  top: -0.75em;
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+  background: var(--nb-bg);
+  padding: 0 0.4em;
+  font-size: 0.9em;
+  color: rgba(0,0,0,0.3);
+}
+
+.nb-card-btn {
+  position: relative;
+  background: var(--nb-secondary);
+  color: #fff;
+  font-size: 0.78em;
+  font-weight: 700;
+  padding: 0.6em 1.1em;
+  border: 0.18em solid var(--nb-text);
+  border-radius: 0.4em;
+  box-shadow: 0.28em 0.28em 0 var(--nb-shadow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nb-card-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.nb-card-btn:hover {
+  background: var(--nb-primary);
+  transform: translate(-0.1em, -0.1em);
+  box-shadow: 0.38em 0.38em 0 var(--nb-shadow);
+}
+
+.nb-card-btn:hover::before { left: 100%; }
+
+.nb-dots-pattern {
+  position: absolute;
+  bottom: 2em; left: -2em;
+  width: 8em; height: 4em;
+  opacity: 0.2;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.nb-accent-shape {
+  position: absolute;
+  width: 2em; height: 2em;
+  background: var(--nb-primary);
+  border: 0.12em solid var(--nb-text);
+  border-radius: 0.25em;
+  transform: rotate(45deg);
+  bottom: -1em; right: 2em;
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.nb-card:hover .nb-accent-shape { transform: rotate(55deg) scale(1.1); }
+
+.nb-stamp {
+  position: absolute;
+  bottom: 1.2em; left: 1.2em;
+  width: 3.5em; height: 3.5em;
+  display: flex; align-items: center; justify-content: center;
+  border: 0.14em solid rgba(0,0,0,0.25);
+  border-radius: 50%;
+  transform: rotate(-15deg);
+  opacity: 0.18;
+  z-index: 1;
+}
+
+.nb-stamp-text {
+  font-size: 0.52em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.nb-corner-slice {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 1.3em; height: 1.3em;
+  background: var(--nb-bg);
+  border-right: 0.22em solid var(--nb-text);
+  border-top: 0.22em solid var(--nb-text);
+  border-radius: 0 0.4em 0 0;
+  z-index: 1;
+}

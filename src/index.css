@@ -1,0 +1,553 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@300;400;500&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Playwrite+IS:wght@100..400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-heading-bold: "Anton", sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+}
+
+@layer base {
+  :root {
+    --background: #F5F4F0; /* Warm editorial cream */
+    --foreground: #1c2135; /* Deep slate charcoal blue */
+    --primary: #B2BEE2; /* Soft periwinkle/lavender */
+    --primary-foreground: #ffffff;
+    --muted: #E5E0F2;
+    --muted-foreground: #7D82A1;
+    --border: #E8E5F0;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
+  }
+
+  /* Paint containment on page sections to isolate stacking contexts and reduce repaint area */
+  section {
+    contain: paint;
+  }
+}
+
+/* CSS Keyframe-based orb drift animations - much cheaper than GSAP repeat:-1 */
+@keyframes orb-drift-1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(-40px, 30px) scale(1.1); }
+  66%  { transform: translate(30px, -20px) scale(0.92); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes orb-drift-2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  40%  { transform: translate(60px, -35px) scale(1.05); }
+  70%  { transform: translate(-30px, 25px) scale(0.95); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes orb-drift-3 {
+  0%   { transform: translate(0, 0) scale(1); }
+  30%  { transform: translate(25px, 50px) scale(1.08); }
+  65%  { transform: translate(-45px, -20px) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.animate-orb-drift-1 { animation: orb-drift-1 9s ease-in-out infinite; }
+.animate-orb-drift-2 { animation: orb-drift-2 11s ease-in-out infinite; }
+.animate-orb-drift-3 { animation: orb-drift-3 8s ease-in-out infinite; }
+
+/* Floating Hobby Stickers Animations */
+@keyframes float {
+  0%   { transform: translateY(0) rotate(var(--base-rotation)); }
+  50%  { transform: translateY(-15px) rotate(calc(var(--base-rotation) + 2deg)); }
+  100% { transform: translateY(0) rotate(var(--base-rotation)); }
+}
+
+.animate-float-slow { 
+  --base-rotation: -5deg;
+  animation: float 6s ease-in-out infinite; 
+}
+.animate-float-medium { 
+  --base-rotation: 4deg;
+  animation: float 5s ease-in-out infinite; 
+}
+.animate-float-fast { 
+  --base-rotation: -2deg;
+  animation: float 4s ease-in-out infinite; 
+}
+
+.hobby-sticker:hover {
+  animation-play-state: paused;
+}
+
+/* Infinite Marquee Animations */
+@keyframes marquee-scroll-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-25%); }
+}
+@keyframes marquee-scroll-right {
+  0%   { transform: translateX(-25%); }
+  100% { transform: translateX(0); }
+}
+
+.marquee-left {
+  animation: marquee-scroll-left 25s linear infinite;
+  will-change: transform;
+}
+.marquee-right {
+  animation: marquee-scroll-right 30s linear infinite;
+  will-change: transform;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
+/* ─── AnimatedCornerButton (ACB) Styles ─── */
+.acb-container {
+  --btn-color: #FF85C1; /* Blush pink */
+  --corner-color: rgba(0, 0, 0, 0.1);
+  --corner-dist: 18px;
+  --corner-multiplier: 1.3;
+  --timing-function: cubic-bezier(0, 0, 0, 2.5);
+  --duration: 250ms;
+  --text-color: #2B1D24;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acb-dark {
+  --btn-color: rgba(255, 255, 255, 0.1);
+  --corner-color: rgba(255, 255, 255, 0.2);
+  --text-color: #ffffff;
+}
+
+.acb-solid-black {
+  --btn-color: #1c2135;
+  --corner-color: rgba(28, 33, 53, 0.2);
+  --text-color: #ffffff;
+}
+
+.acb-btn {
+  position: relative;
+  min-width: 140px;
+  min-height: 48px;
+  border-radius: 12px;
+  border: none;
+  padding: 0.5em 1.5em;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+
+  background: linear-gradient(rgba(255,255,255,0.1), rgba(0,0,0,0.05)), var(--btn-color);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.05),
+    0 10px 15px rgba(0,0,0,0.05);
+
+  transition:
+    transform var(--duration) var(--timing-function),
+    filter var(--duration) var(--timing-function);
+}
+
+.acb-drawer {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+  border-radius: 8px;
+  padding: 0.2em 0.8em;
+  font-size: 0.7em;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-color);
+  opacity: 0.8;
+
+  background: var(--btn-color);
+  background-color: #fbff13; /* Kept the yellow as requested for the drawer specifically? Actually user said "dont change the design in yellow yk what i mean" - likely referring to the drawer highlight. */
+  opacity: 0;
+  z-index: 1;
+
+  transition:
+    transform calc(0.5 * var(--duration)) ease,
+    filter var(--duration) var(--timing-function),
+    opacity calc(0.5 * var(--duration)) ease;
+  filter: blur(2px);
+}
+
+.acb-top {
+  top: 0;
+  left: 0;
+  border-radius: 8px 8px 0 0;
+  transform: translateY(0);
+}
+.acb-bottom {
+  bottom: 0;
+  right: 0;
+  border-radius: 0 0 8px 8px;
+  transform: translateY(0);
+}
+
+.acb-text {
+  display: inline-block;
+  font-size: 1em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--text-color);
+  z-index: 3;
+
+  transition:
+    transform var(--duration) var(--timing-function),
+    color var(--duration) var(--timing-function);
+}
+
+.acb-corner {
+  position: absolute;
+  width: 24px;
+  fill: none;
+  stroke: var(--corner-color);
+  stroke-width: 1.5px;
+  z-index: 0;
+
+  transition:
+    transform var(--duration) var(--timing-function),
+    filter var(--duration) var(--timing-function);
+}
+
+.acb-corner:nth-of-type(1) {
+  top:0; left:0;
+  transform: translate(calc(-1 * var(--corner-dist)), calc(-1 * var(--corner-dist))) rotate(90deg);
+}
+.acb-corner:nth-of-type(2) {
+  top:0; right:0;
+  transform: translate(var(--corner-dist), calc(-1 * var(--corner-dist))) rotate(180deg);
+}
+.acb-corner:nth-of-type(3) {
+  bottom:0; right:0;
+  transform: translate(var(--corner-dist), var(--corner-dist)) rotate(-90deg);
+}
+.acb-corner:nth-of-type(4) {
+  bottom:0; left:0;
+  transform: translate(calc(-1 * var(--corner-dist)), var(--corner-dist)) rotate(0deg);
+}
+
+.acb-container:hover .acb-btn {
+  transform: scale(1.05);
+}
+
+.acb-container:hover .acb-top {
+  transform: translateY(-20px) rotateZ(3deg);
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.acb-container:hover .acb-bottom {
+  transform: translateY(20px) rotateZ(-3deg);
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.acb-container:hover .acb-corner:nth-of-type(1) {
+  transform: translate(calc(-1.4 * var(--corner-dist)), calc(-1.4 * var(--corner-dist))) rotate(90deg);
+}
+.acb-container:hover .acb-corner:nth-of-type(2) {
+  transform: translate(calc(1.4 * var(--corner-dist)), calc(-1.4 * var(--corner-dist))) rotate(180deg);
+}
+.acb-container:hover .acb-corner:nth-of-type(3) {
+  transform: translate(calc(1.4 * var(--corner-dist)), calc(1.4 * var(--corner-dist))) rotate(-90deg);
+}
+.acb-container:hover .acb-corner:nth-of-type(4) {
+  transform: translate(calc(-1.4 * var(--corner-dist)), calc(1.4 * var(--corner-dist))) rotate(0deg);
+}
+
+.acb-container:active .acb-btn {
+  transform: scale(0.95);
+}
+
+/* ─── ACB Mini Variant (Navigation Dock) ─── */
+.acb-mini {
+  --corner-dist: 10px;
+  --corner-multiplier: 1.2;
+  --duration: 200ms;
+}
+
+.acb-mini .acb-btn {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+  padding: 0.4em;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.acb-mini .acb-text {
+  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.acb-mini .acb-corner {
+  width: 14px;
+  stroke-width: 1px;
+  opacity: 0;
+  transition: opacity var(--duration) ease, transform var(--duration) var(--timing-function);
+}
+
+.acb-mini:hover .acb-corner {
+  opacity: 1;
+}
+
+.acb-mini .acb-drawer {
+  font-size: 0.55em;
+  min-height: 18px;
+  padding: 0.15em 0.6em;
+  border-radius: 6px;
+  letter-spacing: 0.15em;
+}
+
+.acb-mini:hover .acb-btn {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.acb-mini:hover .acb-text {
+  color: #fbff13;
+}
+
+.acb-mini:hover .acb-bottom {
+  transform: translateY(16px) rotateZ(-2deg);
+}
+
+.acb-mini:active .acb-btn {
+  transform: scale(0.92);
+}
+
+/* ─── Video Hero 4K Smoothness ─── */
+.video-hero-smooth {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+  transform: translateZ(0);
+  will-change: transform;
+  image-rendering: high-quality;
+}
+
+/* ─── Grain / Noise Overlay ─── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+}
+
+/* ─── Premium Serif Italic ─── */
+.font-premium-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ─── Kinetic Stroke-to-Fill ─── */
+.kinetic-text {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+  transition: -webkit-text-stroke 0.4s ease, color 0.4s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.kinetic-text:hover, .kinetic-text.active {
+  -webkit-text-stroke: 1px transparent;
+  color: #fff;
+  transform: translateX(10px);
+}
+
+/* ─── Staggered Panel Logic ─── */
+.panel-blur {
+  backdrop-filter: blur(16px) saturate(1.5);
+  background: rgba(10, 10, 10, 0.8);
+}
+
+
+/* ─── Orbital Header Tokens ─── */
+.orbital-tokens {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.token-container {
+  --token-bg: rgba(255, 255, 255, 0.08);
+  --token-border: rgba(255, 255, 255, 0.15);
+  --token-accent: #fbff13;
+  --duration: 300ms;
+  
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.token-btn {
+  position: relative;
+  height: 100%;
+  padding: 0 1.25rem;
+  background: var(--token-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--token-border);
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all var(--duration) cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.token-container:hover .token-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(251, 255, 19, 0.1);
+}
+
+.token-drawer {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  padding: 4px 12px;
+  background: var(--token-accent);
+  color: #000;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all var(--duration) cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.token-container:hover .token-drawer {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.token-pulse {
+  width: 6px;
+  height: 6px;
+  background: #34C759;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 8px #34C759;
+}
+
+.token-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px solid #34C759;
+  border-radius: 50%;
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* --- Highlighter Animation --- */
+@property --mask-progress {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.highlighter-span {
+  position: relative;
+  display: inline-block;
+  font-family: "Playwrite IS", cursive !important;
+  font-size: 1.1em;
+}
+
+.highlighter-span::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140%;
+  aspect-ratio: 1/1;
+  z-index: -1;
+  border: 10px solid #E58B88; /* Matching your theme pink */
+  border-radius: 50%;
+  opacity: 0.2;
+  
+  --mask-progress: 0%;
+  mask-image: conic-gradient(from -27deg, #000 var(--mask-progress), #0000 0);
+  transition: --mask-progress 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.highlighter-span.active::before {
+  --mask-progress: 100%;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+  .highlighter-span::before {
+    border-width: 6px;
+    width: 130%;
+  }
+}
+

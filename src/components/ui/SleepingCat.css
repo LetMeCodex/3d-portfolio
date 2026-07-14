@@ -1,0 +1,79 @@
+.mouse-detector {
+  position: relative;
+  display: inline-block;
+  padding: 20px 30px 30px 30px;
+}
+/* Wakes the cat up when the mouse enters the padding box */
+.mouse-detector:hover #lefteyelid {
+  visibility: hidden; /* Open left eye */
+}
+.mouse-detector:hover .sleep-symbol {
+  visibility: hidden; /* Remove Zzz */
+}
+.cat {
+  position: relative;
+}
+/* Mouse gets closer to the right side of the cat */
+.cat:hover #righteyelid {
+  visibility: hidden; /* Open right eye */
+}
+.thecat #eyesdown {
+  visibility: hidden;
+}
+.mouse-detector:hover .thecat #eyesdown {
+  visibility: visible; /* Render pupils looking down */
+}
+/* Sleeping Zzz Animation styling */
+.sleep-symbol {
+  position: absolute;
+  top: -10px;
+  right: -20px;
+  font-weight: 600;
+  font-family: 'Comic Sans MS', 'Sour Gummy', sans-serif;
+  color: #333;
+}
+.sleep-symbol span {
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+  transform: scale(1);
+  animation: sleep 4s ease-in-out infinite;
+}
+.sleep-symbol span:nth-child(1) {
+  animation-delay: 0s;
+}
+.sleep-symbol span:nth-child(2) {
+  animation-delay: 1s;
+  margin-left: -5px;
+}
+.sleep-symbol span:nth-child(3) {
+  animation-delay: 2s;
+  margin-left: -5px;
+}
+.thecat {
+  z-index: 2;
+  position: relative;
+  pointer-events: none;
+  width: 50px;
+  height: auto;
+}
+#tail {
+  visibility: hidden;
+}
+#longtail {
+  visibility: visible;
+}
+@keyframes sleep {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(-2px, -15px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-25px) scale(1.2);
+  }
+}

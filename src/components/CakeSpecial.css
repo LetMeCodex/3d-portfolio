@@ -1,0 +1,67 @@
+/* CakeSpecial.css */
+:root {
+  --cake-purple: #2A1005;
+  --cake-brown: #5C2E0A;
+  --cake-gold: #C67B3E;
+  --cake-orange: #8B4D1E;
+  --cake-red: rgba(184, 28, 44, 0.9);
+  --cake-red-dark: #70111b;
+  --cake-vanilla: #FEF0DC;
+  --cake-white: #ffffff;
+}
+
+.cake-container {
+  width: 100vmin;
+  height: 70vmin;
+  position: relative;
+  margin: 0 auto;
+}
+
+.cake-plate {
+  position: absolute;
+  inset: 0;
+  background: 
+    /* plate */
+    radial-gradient(ellipse, rgba(255, 255, 255, 1) 0vmin, rgba(255, 255, 255, 0.8) 44vmin, rgba(0, 0, 0, 0.05) 47.5vmin, transparent 0.5vmin) calc(0vmin + -40vmin) calc(0vmin + 10.25vmin) / 180vmin 75vmin no-repeat,
+    /* plate lip */
+    radial-gradient(ellipse, rgba(255, 255, 255, 0.9) 0vmin, rgba(255, 255, 255, 0.85) 49vmin, transparent 0.5vmin) calc(0vmin + -40vmin) calc(10.5vmin) / 180vmin 75vmin no-repeat,
+    /* plate shadow */
+    radial-gradient(ellipse, rgba(0, 0, 0, 0.2) 0vmin, rgba(0, 0, 0, 0.1) 45vmin, transparent 50vmin) calc(0vmin + -32vmin) calc(18.5vmin) / 165vmin 65vmin no-repeat;
+}
+
+.cake-body {
+  position: absolute;
+  width: 100vmin;
+  height: 100vmin;
+  top: -8vmin;
+  left: 0;
+  transform: rotate(-12deg);
+  background: 
+    /* caramel slice base -- left */
+    linear-gradient(280deg, var(--cake-orange) 0vmin, #5c3314 40vmin, transparent 0.5vmin) calc(-12.5vmin) calc(34.5vmin) / 80vmin 23vmin no-repeat,
+    /* caramel slice base -- right */
+    linear-gradient(100deg, var(--cake-orange) 0vmin, var(--cake-orange) 18.5vmin, var(--cake-brown) 18.5vmin, var(--cake-brown) 20vmin, transparent 0.5vmin) calc(59vmin) calc(34.5vmin) / 40vmin 23vmin no-repeat,
+    /* caramel cream base -- left */
+    linear-gradient(280deg, #d49a5b 0vmin, #cc8e4c 40vmin, transparent 0.5vmin) calc(-11.25vmin) calc(42vmin) / 80vmin 8vmin no-repeat,
+    /* caramel cream base -- right */
+    linear-gradient(100deg, #db9f5e 0vmin, #d49a5b 40vmin, transparent 0.5vmin) calc(35.5vmin) calc(42vmin) / 80vmin 8vmin no-repeat;
+}
+
+.cake-cream {
+  position: absolute;
+  width: 100vmin;
+  height: 100vmin;
+  top: -8vmin;
+  left: 0;
+  transform: rotate(-12deg);
+  /* The whip cream logic from the SASS function */
+}
+
+.cake-cherry {
+  position: absolute;
+  width: 100vmin;
+  height: 100vmin;
+  top: -8vmin;
+  left: 0;
+  transform: rotate(48deg);
+}

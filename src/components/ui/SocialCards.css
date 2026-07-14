@@ -1,0 +1,142 @@
+/* src/components/ui/SocialCards.css */
+.social-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  z-index: 40;
+}
+
+.social-up {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.social-down {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.social-card1 {
+  width: 90px;
+  height: 90px;
+  outline: none;
+  border: none;
+  background: white;
+  border-radius: 90px 5px 5px 5px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: .2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-instagram {
+  margin-top: 1.5em;
+  margin-left: 1.2em;
+  fill: #cc39a4;
+  transition: fill .2s ease-in-out;
+}
+
+.social-card2 {
+  width: 90px;
+  height: 90px;
+  outline: none;
+  border: none;
+  background: white;
+  border-radius: 5px 90px 5px 5px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: .2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-linkedin {
+  margin-top: 1.5em;
+  margin-left: -.9em;
+  fill: #0A66C2;
+  transition: fill .2s ease-in-out;
+}
+
+.social-card3 {
+  width: 90px;
+  height: 90px;
+  outline: none;
+  border: none;
+  background: white;
+  border-radius: 5px 5px 5px 90px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: .2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-github {
+  margin-top: -.6em;
+  margin-left: 1.2em;
+  transition: fill .2s ease-in-out;
+}
+
+.social-card4 {
+  width: 90px;
+  height: 90px;
+  outline: none;
+  border: none;
+  background: white;
+  border-radius: 5px 5px 90px 5px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: .2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-gmail {
+  margin-top: -.9em;
+  margin-left: -1.2em;
+  fill: #EA4335;
+  transition: fill .2s ease-in-out;
+}
+
+.social-card1:hover {
+  cursor: pointer;
+  scale: 1.1;
+  background-color: #cc39a4;
+}
+
+.social-card1:hover .social-instagram {
+  fill: white;
+}
+
+.social-card2:hover {
+  cursor: pointer;
+  scale: 1.1;
+  background-color: #0A66C2;
+}
+
+.social-card2:hover .social-linkedin {
+  fill: white;
+}
+
+.social-card3:hover {
+  cursor: pointer;
+  scale: 1.1;
+  background-color: black;
+}
+
+.social-card3:hover .social-github {
+  fill: white;
+}
+
+.social-card4:hover {
+  cursor: pointer;
+  scale: 1.1;
+  background-color: #EA4335;
+}
+
+.social-card4:hover .social-gmail {
+  fill: white;
+}
