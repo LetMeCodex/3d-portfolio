@@ -46,6 +46,16 @@ export function Logo({ className, size = 'md' }: LogoProps) {
       
       // Loop through pixels and extract signature with smooth anti-aliased borders
       for (let i = 0; i < data.length; i += 4) {
+        const index = i / 4;
+        const x = index % canvas.width;
+        const y = Math.floor(index / canvas.width);
+        
+        // Clear stray markings at the bottom right corner (x > 80% and y > 80%)
+        if (x > canvas.width * 0.8 && y > canvas.height * 0.8) {
+          data[i + 3] = 0;
+          continue;
+        }
+        
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
