@@ -53,7 +53,7 @@ export function HomeIntro() {
 
     // Step A: Character-by-character elastic scatter reveal for greeting title
     if (nameRef.current) {
-      const chars = nameRef.current.querySelectorAll('.name-char');
+      const chars = nameRef.current.querySelectorAll('.name-char, .disha-char');
       textTimeline.fromTo(chars,
         {
           opacity: 0,
@@ -123,84 +123,111 @@ export function HomeIntro() {
       );
     }
 
-    // 3. Color Palette Shift to Claude-like Warm Clay Orange on Scroll
-    gsap.fromTo(containerRef.current,
-      { backgroundColor: "rgba(245, 244, 240, 0)" },
-      {
-        backgroundColor: "#F3E2D3", // Claude-like aesthetic warm clay-orange paper background
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 60%",
-          end: "top 25%",
-          scrub: true,
-        }
-      }
-    );
+    // 3. Dynamic Color Palette Shift on Scroll (Claude aesthetic orange)
+    if (containerRef.current) {
+      const dishaChars = containerRef.current.querySelectorAll('.disha-char');
+      const accentDots = containerRef.current.querySelectorAll('.accent-dot');
+      const taglineText = containerRef.current.querySelector('.tagline-text');
+      const cadSvgs = containerRef.current.querySelectorAll('.cad-svg');
+      const gridLines = containerRef.current.querySelectorAll('.grid-line');
+      const gridTexts = containerRef.current.querySelectorAll('.grid-text');
 
-    // Accents text color transition to Claude rust/terracotta orange
-    const accentTexts = containerRef.current.querySelectorAll('.accent-text-target');
-    gsap.fromTo(accentTexts,
-      { color: "#8A7FE8" },
-      {
-        color: "#C95B3D", // Claude-inspired rust orange accent
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 60%",
-          end: "top 25%",
-          scrub: true,
+      // Container background color shift
+      gsap.fromTo(containerRef.current,
+        { backgroundColor: '#F5F4F0' },
+        {
+          backgroundColor: '#FAF5ED', // Cozy warm cream
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
         }
-      }
-    );
+      );
 
-    // Accents background color transition to Claude rust/terracotta orange
-    const accentBgs = containerRef.current.querySelectorAll('.accent-bg-target');
-    gsap.fromTo(accentBgs,
-      { backgroundColor: "#8A7FE8" },
-      {
-        backgroundColor: "#C95B3D", // Rust orange fill
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 60%",
-          end: "top 25%",
-          scrub: true,
+      // Text colors transition (disha-char & tagline-text)
+      gsap.fromTo([dishaChars, taglineText],
+        { color: '#8A7FE8' },
+        {
+          color: '#E35F38', // Claude aesthetic warm orange
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
         }
-      }
-    );
+      );
 
-    // Blueprint grid lines transition to a warm rust-orange tint
-    const draftingLines = [lineH1Ref.current, lineH2Ref.current, lineV1Ref.current, lineV2Ref.current];
-    gsap.fromTo(draftingLines,
-      { backgroundColor: "rgba(28, 33, 53, 0.1)" },
-      {
-        backgroundColor: "rgba(201, 91, 61, 0.15)", // Rust grid lines
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 60%",
-          end: "top 25%",
-          scrub: true,
+      // Accent dots background color transition
+      gsap.fromTo(accentDots,
+        { backgroundColor: '#8A7FE8' },
+        {
+          backgroundColor: '#E35F38',
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
         }
-      }
-    );
+      );
 
-    // Blueprint corner intersection crosshairs and texts
-    const cornerMarkers = containerRef.current.querySelectorAll('.marker-color-target');
-    gsap.fromTo(cornerMarkers,
-      { color: "rgba(28, 33, 53, 0.2)" },
-      {
-        color: "rgba(201, 91, 61, 0.3)",
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 60%",
-          end: "top 25%",
-          scrub: true,
+      // CAD vector stroke lines shift
+      gsap.fromTo(cadSvgs,
+        { color: 'rgba(28, 33, 53, 0.15)' },
+        {
+          color: 'rgba(227, 95, 56, 0.25)', // Claude orange soft stroke tint
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
         }
-      }
-    );
+      );
+
+      // Grid dividers shift
+      gsap.fromTo(gridLines,
+        { backgroundColor: 'rgba(28, 33, 53, 0.1)' },
+        {
+          backgroundColor: 'rgba(227, 95, 56, 0.12)',
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
+      );
+
+      // Grid metadata labels & crosshairs shift
+      gsap.fromTo(gridTexts,
+        { color: 'rgba(28, 33, 53, 0.2)' },
+        {
+          color: 'rgba(227, 95, 56, 0.35)',
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
+      );
+    }
 
     // 4. Coordinate tracker tracking mouse move for magnetic reaction
     const handleMouseMove = (e: MouseEvent) => {
@@ -260,48 +287,48 @@ export function HomeIntro() {
   return (
     <div 
       ref={containerRef} 
-      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 pt-32 pb-40 select-none z-10 bg-transparent transition-colors duration-300"
+      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 pt-32 pb-40 bg-[#F5F4F0] select-none z-10 transition-colors duration-300"
     >
       {/* ─── Architectural Drafting Lines overlaying this section ─── */}
       {/* Horizontal Top Guide Line */}
       <div 
         ref={lineH1Ref} 
-        className="absolute top-16 left-[10%] right-[10%] h-[1px] bg-[#1c2135]/10 origin-left"
+        className="absolute top-16 left-[10%] right-[10%] h-[1px] bg-[#1c2135]/10 origin-left grid-line"
       >
-        <span className="absolute left-0 -top-3 font-mono text-[7px] text-black/20 marker-color-target">GRID_REF: [H-01]</span>
-        <span className="absolute right-0 -top-3 font-mono text-[7px] text-black/20 marker-color-target">0,0.48px</span>
+        <span className="absolute left-0 -top-3 font-mono text-[7px] text-[#1c2135]/20 grid-text">GRID_REF: [H-01]</span>
+        <span className="absolute right-0 -top-3 font-mono text-[7px] text-[#1c2135]/20 grid-text">0,0.48px</span>
       </div>
 
       {/* Horizontal Bottom Guide Line */}
       <div 
         ref={lineH2Ref} 
-        className="absolute bottom-20 left-[10%] right-[10%] h-[1px] bg-[#1c2135]/10 origin-right"
+        className="absolute bottom-20 left-[10%] right-[10%] h-[1px] bg-[#1c2135]/10 origin-right grid-line"
       >
-        <span className="absolute left-0 -bottom-3.5 font-mono text-[7px] text-black/20 marker-color-target">GRID_REF: [H-02]</span>
-        <span className="absolute right-0 -bottom-3.5 font-mono text-[7px] text-black/20 marker-color-target">X_CALIBRATED</span>
+        <span className="absolute left-0 -bottom-3.5 font-mono text-[7px] text-[#1c2135]/20 grid-text">GRID_REF: [H-02]</span>
+        <span className="absolute right-0 -bottom-3.5 font-mono text-[7px] text-[#1c2135]/20 grid-text">X_CALIBRATED</span>
       </div>
 
       {/* Vertical Left Guide Line */}
       <div 
         ref={lineV1Ref} 
-        className="absolute top-8 bottom-8 left-[10%] w-[1px] bg-[#1c2135]/10 origin-top"
+        className="absolute top-8 bottom-8 left-[10%] w-[1px] bg-[#1c2135]/10 origin-top grid-line"
       >
-        <span className="absolute top-0 -left-6 font-mono text-[7px] text-black/20 rotate-[-90deg] origin-top-left marker-color-target">AXIS_Y1</span>
+        <span className="absolute top-0 -left-6 font-mono text-[7px] text-[#1c2135]/20 rotate-[-90deg] origin-top-left grid-text">AXIS_Y1</span>
       </div>
 
       {/* Vertical Right Guide Line */}
       <div 
         ref={lineV2Ref} 
-        className="absolute top-8 bottom-8 right-[10%] w-[1px] bg-[#1c2135]/10 origin-bottom"
+        className="absolute top-8 bottom-8 right-[10%] w-[1px] bg-[#1c2135]/10 origin-bottom grid-line"
       >
-        <span className="absolute bottom-0 -right-2 font-mono text-[7px] text-black/20 rotate-[90deg] origin-bottom-right marker-color-target">AXIS_Y2</span>
+        <span className="absolute bottom-0 -right-2 font-mono text-[7px] text-[#1c2135]/20 rotate-[90deg] origin-bottom-right grid-text">AXIS_Y2</span>
       </div>
 
       {/* Corner Intersection Crosshairs */}
-      <div className="absolute top-[60px] left-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
-      <div className="absolute top-[60px] right-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
-      <div className="absolute bottom-[75px] left-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
-      <div className="absolute bottom-[75px] right-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
+      <div className="absolute top-[60px] left-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none grid-text">+</div>
+      <div className="absolute top-[60px] right-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none grid-text">+</div>
+      <div className="absolute bottom-[75px] left-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none grid-text">+</div>
+      <div className="absolute bottom-[75px] right-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none grid-text">+</div>
 
       {/* Floating CAD Widget Left: Compass / Protractor */}
       <div 
@@ -309,14 +336,14 @@ export function HomeIntro() {
         className="absolute left-[3%] top-[30%] hidden xl:block rotate-[15deg] pointer-events-none filter drop-shadow-sm select-none"
         style={{ transformOrigin: 'center center' }}
       >
-        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-[#1c2135]/15">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-[#1c2135]/15 cad-svg">
           <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 3" />
           <path d="M 50 5 L 50 95 M 5 50 L 95 50" stroke="currentColor" strokeWidth="0.5" />
           <path d="M 50 50 L 80 20" stroke="currentColor" strokeWidth="1" />
-          <path d="M 75 20 A 35 35 0 0 0 50 15" stroke="#E58B88" strokeWidth="1.5" />
-          <circle cx="50" cy="50" r="3" fill="#1c2135" />
+          <path d="M 75 20 A 35 35 0 0 0 50 15" stroke="currentColor" strokeWidth="1.5" />
+          <circle cx="50" cy="50" r="3" fill="currentColor" />
         </svg>
-        <div className="text-[6px] font-mono text-center text-black/20 mt-1">PROTRACTOR_MD-08</div>
+        <div className="text-[6px] font-mono text-center text-black/20 mt-1 grid-text">PROTRACTOR_MD-08</div>
       </div>
 
       {/* Floating CAD Widget Right: Vector Spiral Helix */}
@@ -325,13 +352,13 @@ export function HomeIntro() {
         className="absolute right-[3%] bottom-[25%] hidden xl:block rotate-[-20deg] pointer-events-none filter drop-shadow-sm select-none"
         style={{ transformOrigin: 'center center' }}
       >
-        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-[#1c2135]/15">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-[#1c2135]/15 cad-svg">
           {/* Fibonacci style nested spiral */}
           <path d="M 50 50 A 5 5 0 0 1 55 50 A 10 10 0 0 1 45 50 A 15 15 0 0 1 60 50 A 20 20 0 0 1 40 50 A 25 25 0 0 1 65 50 A 30 30 0 0 1 35 50" stroke="currentColor" strokeWidth="0.75" />
-          <circle cx="50" cy="50" r="1.5" fill="#B2BEE2" />
-          <line x1="50" y1="50" x2="35" y2="50" stroke="#B2BEE2" strokeWidth="1" />
+          <circle cx="50" cy="50" r="1.5" fill="currentColor" />
+          <line x1="50" y1="50" x2="35" y2="50" stroke="currentColor" strokeWidth="1" />
         </svg>
-        <div className="text-[6px] font-mono text-center text-black/20 mt-1">HELIX_V_CALIBRATOR</div>
+        <div className="text-[6px] font-mono text-center text-black/20 mt-1 grid-text">HELIX_V_CALIBRATOR</div>
       </div>
 
       {/* Main Content Layout */}
@@ -349,9 +376,9 @@ export function HomeIntro() {
               </span>
             ))}
           </span>
-          <span className="font-premium-serif text-[#8A7FE8] flex italic font-light accent-text-target">
+          <span className="font-premium-serif text-[#8A7FE8] flex italic font-light">
             {part2.map((char, index) => (
-              <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
+              <span key={index} className="disha-char inline-block origin-center" style={{ opacity: 0 }}>
                 {char === " " ? "\u00A0" : char}
               </span>
             ))}
@@ -372,11 +399,11 @@ export function HomeIntro() {
           ref={badgeRef}
           className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-10 opacity-0 select-none"
         >
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#1c2135]/40 font-bold marker-color-target">
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#1c2135]/40 font-bold grid-text">
             [ PERSPECTIVE // 01 ]
           </span>
-          <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#8A7FE8] accent-bg-target" />
-          <span className="font-premium-serif text-[15px] text-[#8A7FE8] italic font-light tracking-wide lowercase accent-text-target">
+          <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#8A7FE8] accent-dot" />
+          <span className="font-premium-serif text-[15px] text-[#8A7FE8] italic font-light tracking-wide lowercase tagline-text">
             shaping digital matter into interactive poetry
           </span>
         </div>
@@ -398,7 +425,7 @@ export function HomeIntro() {
         </h2>
 
         {/* Coordinates status label bottom */}
-        <div className="mt-12 flex gap-4 font-mono text-[7px] text-black/25 uppercase tracking-wider marker-color-target">
+        <div className="mt-12 flex gap-4 font-mono text-[7px] text-[#1c2135]/30 uppercase tracking-wider grid-text">
           <span>SCALE: 1.000</span>
           <span>•</span>
           <span>CURSOR: [{mousePos.x}, {mousePos.y}]</span>
