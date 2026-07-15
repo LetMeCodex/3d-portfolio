@@ -463,16 +463,16 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             ))}
           </span>
 
-          {/* Inline Waving Character Lottie (Placed directly next to Disha Jain) */}
-          {animationData && (
-            <div 
-              ref={lottieRef}
-              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 inline-flex items-center justify-center flex-shrink-0 select-none pointer-events-none ml-2 md:ml-4"
-              style={{ opacity: 0, transform: 'scale(0)' }}
-            >
+          {/* Inline Waving Character Lottie (Always rendered so GSAP can bind, content loaded conditionally) */}
+          <div 
+            ref={lottieRef}
+            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 inline-flex items-center justify-center flex-shrink-0 select-none pointer-events-none ml-2 md:ml-4"
+            style={{ opacity: 0, transform: 'scale(0)' }}
+          >
+            {animationData && (
               <Lottie animationData={animationData} loop={true} className="w-full h-full" />
-            </div>
-          )}
+            )}
+          </div>
         </h1>
 
         {/* Philosophical Tagline Badge */}
