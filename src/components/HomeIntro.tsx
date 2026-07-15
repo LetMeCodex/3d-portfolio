@@ -200,8 +200,16 @@ export function HomeIntro() {
           className="flex items-center gap-3 mb-8"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-black/35 font-bold">
+          <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-black/35 font-bold flex items-center gap-2 select-none">
             Hello, I'm Disha Jain
+            <motion.span 
+              animate={{ rotate: [0, -18, 18, -18, 18, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 1.2, ease: "easeInOut" }}
+              style={{ display: "inline-block", transformOrigin: "80% 80%" }}
+              className="text-[12px] -mt-1"
+            >
+              👋
+            </motion.span>
           </span>
           <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
         </motion.div>
