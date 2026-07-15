@@ -100,7 +100,7 @@ export default function App() {
                 <BackgroundDoodles />
                 <div className="relative z-10">
                   <Hero onOpenResume={handleOpenResume} />
-                  <HomeIntro />
+                  <HomeIntro onOpenAbout={handleOpenAbout} />
                   <IntroSection onOpenAbout={handleOpenAbout} />
                   <AchievementsSection />
                   <MarqueeDivider />

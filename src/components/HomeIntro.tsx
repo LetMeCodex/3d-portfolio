@@ -5,12 +5,18 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function HomeIntro() {
+interface HomeIntroProps {
+  onOpenAbout?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
   const handRef = useRef<HTMLSpanElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
+  const buttonWrapperRef = useRef<HTMLDivElement>(null);
+  const arrowPathRef = useRef<SVGPathElement>(null);
   const lineH1Ref = useRef<HTMLDivElement>(null);
   const lineH2Ref = useRef<HTMLDivElement>(null);
   const lineV1Ref = useRef<HTMLDivElement>(null);
@@ -123,14 +129,41 @@ export function HomeIntro() {
       );
     }
 
+    // Step E: Fade in button wrapper and draw curly arrow
+    if (buttonWrapperRef.current) {
+      textTimeline.fromTo(buttonWrapperRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "back.out(1.5)"
+        },
+        "-=0.4"
+      );
+    }
+
+    if (arrowPathRef.current) {
+      textTimeline.fromTo(arrowPathRef.current,
+        { strokeDashoffset: 100 },
+        {
+          strokeDashoffset: 0,
+          duration: 0.9,
+          ease: "power2.out"
+        },
+        "-=0.5"
+      );
+    }
+
     // 3. Dynamic Color Palette Shift on Scroll (Claude aesthetic orange)
     if (containerRef.current) {
       const dishaChars = containerRef.current.querySelectorAll('.disha-char');
       const accentDots = containerRef.current.querySelectorAll('.accent-dot');
-      const taglineText = containerRef.current.querySelector('.tagline-text');
+      const taglineTexts = containerRef.current.querySelectorAll('.tagline-text');
       const cadSvgs = containerRef.current.querySelectorAll('.cad-svg');
       const gridLines = containerRef.current.querySelectorAll('.grid-line');
       const gridTexts = containerRef.current.querySelectorAll('.grid-text');
+      const aboutButton = containerRef.current.querySelector('.about-button');
 
       // Container background color shift
       gsap.fromTo(containerRef.current,
@@ -149,7 +182,7 @@ export function HomeIntro() {
       );
 
       // Text colors transition (disha-char & tagline-text)
-      gsap.fromTo([dishaChars, taglineText],
+      gsap.fromTo([dishaChars, taglineTexts],
         { color: '#8A7FE8' },
         {
           color: '#E35F38', // Claude aesthetic warm orange
@@ -179,6 +212,25 @@ export function HomeIntro() {
           }
         }
       );
+
+      // 3D tactile button shadow/border shift
+      if (aboutButton) {
+        gsap.fromTo(aboutButton,
+          { boxShadow: '6px 6px 0px #8A7FE8', borderColor: '#8A7FE8' },
+          {
+            boxShadow: '6px 6px 0px #E35F38',
+            borderColor: '#E35F38',
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top 60%',
+              end: 'bottom 40%',
+              toggleActions: 'play reverse play reverse',
+            }
+          }
+        );
+      }
 
       // CAD vector stroke lines shift
       gsap.fromTo(cadSvgs,
@@ -411,7 +463,7 @@ export function HomeIntro() {
         {/* Masterpiece Split-Word Calligraphy Headline */}
         <h2 
           ref={headlineRef}
-          className="font-display font-semibold text-3xl sm:text-4xl md:text-[2.8rem] lg:text-[3.6rem] xl:text-[4.2rem] text-[#1c2135] leading-[1.15] tracking-tight max-w-[90%] md:max-w-[85%] flex flex-wrap justify-center gap-x-3 gap-y-2.5 overflow-hidden py-2 px-4"
+          className="font-display font-semibold text-3xl sm:text-4xl md:text-[2.8rem] lg:text-[3.6rem] xl:text-[4.2rem] text-[#1c2135] leading-[1.15] tracking-tight max-w-[90%] md:max-w-[85%] flex flex-wrap justify-center gap-x-3 gap-y-2.5 overflow-hidden py-2 px-4 mb-12"
         >
           {words.map((word, i) => (
             <span 
@@ -423,6 +475,49 @@ export function HomeIntro() {
             </span>
           ))}
         </h2>
+
+        {/* Interactive 3D Tactile Button & Cursive Annotation Wrapper */}
+        <div ref={buttonWrapperRef} className="relative inline-block mt-4 mb-2 opacity-0">
+          {/* Cursive Annotation & Handwritten Arrow (Desktop only) */}
+          <div className="absolute -left-48 -top-12 hidden lg:flex flex-col items-center rotate-[-12deg] pointer-events-none select-none">
+            <span 
+              style={{ fontFamily: '"Playwrite IS", cursive' }} 
+              className="text-[11px] text-[#8A7FE8] tagline-text font-light whitespace-nowrap mb-1.5"
+            >
+              click to know more about me
+            </span>
+            {/* Hand-drawn curly arrow */}
+            <svg width="60" height="40" viewBox="0 0 60 40" fill="none" className="text-[#8A7FE8] tagline-text opacity-80">
+              <path 
+                ref={arrowPathRef}
+                d="M 5,5 C 20,5 30,35 45,25 C 50,20 48,15 45,15 C 40,15 38,22 48,32" 
+                stroke="currentColor" 
+                strokeWidth="1.5" 
+                strokeLinecap="round"
+                strokeDasharray="100"
+                strokeDashoffset="100"
+              />
+              <path 
+                d="M 42,28 L 48,32 L 46,24" 
+                stroke="currentColor" 
+                strokeWidth="1.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+              />
+            </svg>
+          </div>
+
+          {/* Tactile 3D Button */}
+          <button 
+            onClick={onOpenAbout}
+            className="about-button group relative px-8 py-4 bg-[#1c2135] text-[#FAF5ED] font-mono text-[11px] uppercase tracking-[0.25em] font-bold rounded-sm border border-[#1c2135] shadow-[6px_6px_0px_#8A7FE8] hover:shadow-[1px_1px_0px_#8A7FE8] hover:translate-x-[5px] hover:translate-y-[5px] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-300 z-10"
+          >
+            <span className="relative z-10 group-hover:text-white transition-colors duration-300">
+              Explore Archives // About Me
+            </span>
+            <div className="absolute inset-0 bg-[#E35F38] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom z-0" />
+          </button>
+        </div>
 
         {/* Coordinates status label bottom */}
         <div className="mt-12 flex gap-4 font-mono text-[7px] text-[#1c2135]/30 uppercase tracking-wider grid-text">
