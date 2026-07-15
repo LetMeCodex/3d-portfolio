@@ -42,8 +42,8 @@ export function VideoScrollHero({
           ease: "none",
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 65%", 
-            end: "top 10%", // Finish faster for "one scroll" feel
+            start: "top 78%", 
+            end: "top 15%", // Finish faster for "one scroll" feel
             scrub: 1.2, 
           }
         }

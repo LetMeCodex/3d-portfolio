@@ -27,13 +27,13 @@ export function HomeIntro() {
   const words = sentence.split(" ");
 
   useEffect(() => {
-    // 1. Technical Drafting Lines self-drawing animation
+    // 1. Technical Drafting Lines self-drawing animation (starts at top 80% and plays on every entry)
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top 80%',
         end: 'bottom 20%',
-        toggleActions: 'play none none reverse',
+        toggleActions: 'restart reverse restart reverse',
       }
     });
 
@@ -42,12 +42,12 @@ export function HomeIntro() {
       .fromTo(lineV1Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2')
       .fromTo(lineV2Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2');
 
-    // 2. Coordinated GSAP scroll timeline for all text elements
+    // 2. Coordinated GSAP scroll timeline for all text elements (starts simultaneously at top 80%)
     const textTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        start: 'top 75%',
-        toggleActions: 'play none none reverse',
+        start: 'top 80%',
+        toggleActions: 'restart reverse restart reverse',
       }
     });
 
@@ -287,7 +287,7 @@ export function HomeIntro() {
   return (
     <div 
       ref={containerRef} 
-      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 pt-32 pb-40 bg-[#F5F4F0] select-none z-10 transition-colors duration-300"
+      className="relative min-h-[85vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 pt-24 pb-16 bg-[#F5F4F0] select-none z-10 transition-colors duration-300"
     >
       {/* ─── Architectural Drafting Lines overlaying this section ─── */}
       {/* Horizontal Top Guide Line */}
