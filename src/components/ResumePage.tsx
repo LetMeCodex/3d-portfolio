@@ -346,6 +346,36 @@ export function ResumePage({ onBack }: ResumePageProps) {
                     description="Gained deep practical expertise in Generative AI development, Azure AI services, Microsoft Copilot, and autonomous agent systems."
                 />
                 <ResumeItem 
+                    title="GenAI Powered Data Analytics"
+                    subtitle="TATA Group / Forage"
+                    date="2026"
+                    description="Completed simulation model tackling real-world business challenges, leveraging GenAI alongside advanced data analysis, risk profiling, and storytelling."
+                />
+                <ResumeItem 
+                    title="Professional Networking"
+                    subtitle="HP LIFE / HP Foundation"
+                    date="2026"
+                    description="Completed training for building professional networks, personal branding, and leveraging digital tools to expand professional reach."
+                />
+                <ResumeItem 
+                    title="Innovexis Participation"
+                    subtitle="Innovexis"
+                    date="2026"
+                    description="Awarded for active participation and dedication throughout the program, focusing on open-source ecosystems, web engineering, and collaborative development."
+                />
+                <ResumeItem 
+                    title="Yuva AI for All"
+                    subtitle="IndiaAI & nasscom"
+                    date="2026"
+                    description="Completed certification program covering AI/ML foundations, CRAFT prompt engineering, and FAST responsible AI frameworks."
+                />
+                <ResumeItem 
+                    title="CodSoft Web Dev Intern"
+                    subtitle="CodSoft Selection"
+                    date="2026"
+                    description="Selected for a one-month intensive Web Development internship focusing on building responsive modules, backend systems, and web projects."
+                />
+                <ResumeItem 
                     title="AWS Academy Cloud Foundations"
                     subtitle="Amazon Web Services"
                     date="2026"

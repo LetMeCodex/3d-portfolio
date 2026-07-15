@@ -17,11 +17,59 @@ const achievements = [
   },
   {
     year: "2026",
+    category: "Data Analytics",
+    title: "GenAI Powered Data Analytics",
+    issuer: "TATA Group / Forage",
+    desc: "Completed a simulation model tackling real-world business challenges, leveraging GenAI alongside advanced data analysis, risk profiling, and storytelling.",
+    imageUrl: "/certificates/tata-forage.png"
+  },
+  {
+    year: "2026",
+    category: "Professional Growth",
+    title: "Professional Networking",
+    issuer: "HP LIFE / HP Foundation",
+    desc: "Completed the HP LIFE course for building meaningful professional relationships, personal branding, and leveraging digital tools to expand professional reach.",
+    imageUrl: "/certificates/hp-life.png"
+  },
+  {
+    year: "2026",
+    category: "Open Source",
+    title: "Innovexis Participant",
+    issuer: "Innovexis",
+    desc: "Awarded for active participation and dedication throughout the program, focusing on open-source ecosystems, web engineering, and collaborative development.",
+    imageUrl: "/certificates/innovexis.png"
+  },
+  {
+    year: "2026",
+    category: "Artificial Intelligence",
+    title: "Yuva AI for All",
+    issuer: "IndiaAI & nasscom",
+    desc: "Completed the Yuva AI for All program, deep-diving into AI/ML foundations, CRAFT prompt engineering, and responsible AI FAST frameworks.",
+    imageUrl: "/certificates/yuva-ai.png"
+  },
+  {
+    year: "2026",
+    category: "Web Development",
+    title: "CodSoft Web Dev Intern",
+    issuer: "CodSoft",
+    desc: "Selected for a one-month intensive Web Development internship focusing on building responsive modules, backend systems, and web projects.",
+    imageUrl: "/certificates/codsoft.png"
+  },
+  {
+    year: "2026",
     category: "Cloud Architecture",
     title: "AWS Academy Cloud Foundations",
     issuer: "Amazon Web Services (AWS)",
     desc: "Successfully completed the Academy Cloud Foundations course, gaining proficiency in AWS core services, support, and CloudFormation.",
     imageUrl: "/certificates/aws.png.png"
+  },
+  {
+    year: "2025",
+    category: "Innovation",
+    title: "AICTE Participant",
+    issuer: "IIC Organised",
+    desc: "Active participation in high-level technical programs, driving forward-thinking technical paradigms and innovation.",
+    imageUrl: "/certificates/aicte.png"
   },
   {
     year: "2024",
@@ -38,14 +86,6 @@ const achievements = [
     issuer: "Collaborative Contributor",
     desc: "Contributed to rapid problem-solving and ideation within a collaborative technical team, delivering innovative solutions under pressure.",
     imageUrl: "/certificates/daksh.png"
-  },
-  {
-    year: "2025",
-    category: "Innovation",
-    title: "AICTE Participant",
-    issuer: "IIC Organised",
-    desc: "Active participation in high-level technical programs, driving forward-thinking technical paradigms and innovation.",
-    imageUrl: "/certificates/aicte.png"
   }
 ];
 
