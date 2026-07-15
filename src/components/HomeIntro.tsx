@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lottie from 'lottie-react';
@@ -13,7 +12,7 @@ interface HomeIntroProps {
 export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
-  const handRef = useRef<HTMLSpanElement>(null);
+  const lottieRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const buttonWrapperRef = useRef<HTMLDivElement>(null);
@@ -109,14 +108,18 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       );
     }
 
-    // Step B: Pop the waving hand emoji (starts slightly before the name finishes scattering)
-    if (handRef.current) {
-      textTimeline.to(handRef.current, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.5,
-        ease: "back.out(2)"
-      }, "-=0.3");
+    // Step B: Pop the Lottie Character animation (starts slightly before the name finishes scattering)
+    if (lottieRef.current) {
+      textTimeline.fromTo(lottieRef.current,
+        { opacity: 0, scale: 0 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          ease: "back.out(1.8)"
+        },
+        "-=0.3"
+      );
     }
 
     // Step C: Scale-reveal the "What I Bring to the Table?" badge
@@ -440,44 +443,37 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       {/* Main Content Layout */}
       <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center">
         
-        {/* Large, Eye-Catching Greeting Headline + Lottie Player Wrapper */}
-        <div className="relative flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 w-full">
-          <h1 
-            ref={nameRef} 
-            className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] text-[#1c2135] tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2"
-          >
-            <span className="flex">
-              {part1.map((char, index) => (
-                <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </span>
-            <span className="font-premium-serif text-[#8A7FE8] flex italic font-light">
-              {part2.map((char, index) => (
-                <span key={index} className="disha-char inline-block origin-center" style={{ opacity: 0 }}>
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </span>
-            <motion.span 
-              ref={handRef}
-              animate={{ rotate: [0, -18, 18, -18, 18, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 1.2, ease: "easeInOut" }}
-              style={{ display: "inline-block", transformOrigin: "80% 80%", opacity: 0, scale: 0 }}
-              className="text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] lg:text-[3.2rem] -mt-2 ml-2"
-            >
-              👋
-            </motion.span>
-          </h1>
+        {/* Large, Eye-Catching Greeting Headline with inline Lottie */}
+        <h1 
+          ref={nameRef} 
+          className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] text-[#1c2135] mb-8 tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2 w-full"
+        >
+          <span className="flex">
+            {part1.map((char, index) => (
+              <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </span>
+          <span className="font-premium-serif text-[#8A7FE8] flex italic font-light">
+            {part2.map((char, index) => (
+              <span key={index} className="disha-char inline-block origin-center" style={{ opacity: 0 }}>
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </span>
 
-          {/* Lottie Character Animation player (loaded safely from JSON file) */}
+          {/* Inline Waving Character Lottie (Placed directly next to Disha Jain) */}
           {animationData && (
-            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 flex-shrink-0 select-none pointer-events-none">
+            <div 
+              ref={lottieRef}
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 inline-flex items-center justify-center flex-shrink-0 select-none pointer-events-none ml-2 md:ml-4"
+              style={{ opacity: 0, transform: 'scale(0)' }}
+            >
               <Lottie animationData={animationData} loop={true} className="w-full h-full" />
             </div>
           )}
-        </div>
+        </h1>
 
         {/* Philosophical Tagline Badge */}
         <div 
