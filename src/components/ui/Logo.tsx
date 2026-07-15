@@ -82,23 +82,6 @@ export function Logo({ className, size = 'md' }: LogoProps) {
           ref={canvasRef}
           className="w-full h-full object-contain pointer-events-none"
         />
-
-        {/* Underline Flourish - Kinetic brand touch */}
-        <svg 
-          viewBox="0 0 400 100" 
-          className="absolute -bottom-4 left-0 w-full h-12 overflow-visible pointer-events-none"
-        >
-          <motion.path 
-            d="M80 20 Q 200 -10 320 15" 
-            fill="none" 
-            stroke="#1D1D1F" 
-            strokeWidth="2.5" 
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 0.8 }}
-            transition={{ delay: 0.8, duration: 1.5, ease: "easeOut" }}
-          />
-        </svg>
       </div>
     </div>
   );
