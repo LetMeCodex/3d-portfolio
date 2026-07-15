@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lottie from 'lottie-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,10 +28,34 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
   const compassRef = useRef<HTMLDivElement>(null);
   const spiralRef = useRef<HTMLDivElement>(null);
 
+  // Lottie Animation state
+  const [animationData, setAnimationData] = useState<any>(null);
+
   const part1 = "Hello, I'm ".split("");
   const part2 = "Disha Jain".split("");
   const sentence = "A creative developer specializing in high-fidelity interfaces, fluid motion design, and engineering products that feel alive.";
   const words = sentence.split(" ");
+
+  useEffect(() => {
+    // Dynamically fetch Lottie file to prevent compile issues on empty workspaces
+    fetch('/character.json')
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error('Not in public folder');
+      })
+      .then((data) => setAnimationData(data))
+      .catch(() => {
+        // Try fallback location using a variable to prevent compile-time type errors
+        const assetPath = '../assets/character.json';
+        import(/* @vite-ignore */ assetPath)
+          .then((module) => {
+            setAnimationData(module.default || module);
+          })
+          .catch((e) => {
+            console.log('Lottie character.json file not loaded yet:', e);
+          });
+      });
+  }, []);
 
   useEffect(() => {
     // 1. Technical Drafting Lines self-drawing animation (starts at top 80% and plays on every entry)
@@ -415,35 +440,44 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       {/* Main Content Layout */}
       <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center">
         
-        {/* Large, Eye-Catching Greeting Headline */}
-        <h1 
-          ref={nameRef} 
-          className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] text-[#1c2135] mb-8 tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2"
-        >
-          <span className="flex">
-            {part1.map((char, index) => (
-              <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
-          </span>
-          <span className="font-premium-serif text-[#8A7FE8] flex italic font-light">
-            {part2.map((char, index) => (
-              <span key={index} className="disha-char inline-block origin-center" style={{ opacity: 0 }}>
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
-          </span>
-          <motion.span 
-            ref={handRef}
-            animate={{ rotate: [0, -18, 18, -18, 18, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 1.2, ease: "easeInOut" }}
-            style={{ display: "inline-block", transformOrigin: "80% 80%", opacity: 0, scale: 0 }}
-            className="text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] lg:text-[3.2rem] -mt-2 ml-2"
+        {/* Large, Eye-Catching Greeting Headline + Lottie Player Wrapper */}
+        <div className="relative flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 w-full">
+          <h1 
+            ref={nameRef} 
+            className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] text-[#1c2135] tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2"
           >
-            👋
-          </motion.span>
-        </h1>
+            <span className="flex">
+              {part1.map((char, index) => (
+                <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </span>
+            <span className="font-premium-serif text-[#8A7FE8] flex italic font-light">
+              {part2.map((char, index) => (
+                <span key={index} className="disha-char inline-block origin-center" style={{ opacity: 0 }}>
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </span>
+            <motion.span 
+              ref={handRef}
+              animate={{ rotate: [0, -18, 18, -18, 18, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 1.2, ease: "easeInOut" }}
+              style={{ display: "inline-block", transformOrigin: "80% 80%", opacity: 0, scale: 0 }}
+              className="text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] lg:text-[3.2rem] -mt-2 ml-2"
+            >
+              👋
+            </motion.span>
+          </h1>
+
+          {/* Lottie Character Animation player (loaded safely from JSON file) */}
+          {animationData && (
+            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 flex-shrink-0 select-none pointer-events-none">
+              <Lottie animationData={animationData} loop={true} className="w-full h-full" />
+            </div>
+          )}
+        </div>
 
         {/* Philosophical Tagline Badge */}
         <div 
