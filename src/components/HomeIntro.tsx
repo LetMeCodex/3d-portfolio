@@ -288,16 +288,18 @@ export function HomeIntro() {
           </motion.span>
         </h1>
 
-        {/* "What I Bring to the Table?" Tagline Badge */}
+        {/* Philosophical Tagline Badge */}
         <div 
           ref={badgeRef}
-          className="py-2 px-5 border border-[#1c2135]/10 bg-[#1c2135]/5 rounded-sm inline-flex items-center gap-2 mb-8 overflow-hidden opacity-0 select-none"
+          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-10 opacity-0 select-none"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#1c2135]/60 font-bold">
-            What I Bring to the Table?
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#1c2135]/40 font-bold">
+            [ PERSPECTIVE // 01 ]
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
+          <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#8A7FE8]" />
+          <span className="font-premium-serif text-[15px] text-[#8A7FE8] italic font-light tracking-wide lowercase">
+            shaping digital matter into interactive poetry
+          </span>
         </div>
 
         {/* Masterpiece Split-Word Calligraphy Headline */}
