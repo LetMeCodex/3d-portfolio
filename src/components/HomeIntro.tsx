@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lottie from 'lottie-react';
+import { Motion3DCanvas } from './ui/Motion3DCanvas';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,28 +40,24 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
     { 
       text: "developer", 
       isSpecial: true, 
-      blobClass: "blob-1",
       img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=400&auto=format&fit=crop"
     },
     { text: " specializing in high-fidelity ", isSpecial: false },
     { 
       text: "interfaces,", 
       isSpecial: true, 
-      blobClass: "blob-2",
       img: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=400&auto=format&fit=crop"
     },
     { text: " fluid ", isSpecial: false },
     { 
       text: "motion", 
       isSpecial: true, 
-      blobClass: "blob-3",
-      img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop"
+      is3D: true
     },
     { text: " design, and engineering products that feel ", isSpecial: false },
     { 
       text: "alive.", 
       isSpecial: true, 
-      blobClass: "blob-4",
       img: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=400&auto=format&fit=crop"
     }
   ];
@@ -260,12 +257,11 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       const gridTexts = containerRef.current.querySelectorAll('.grid-text');
       const aboutButton = containerRef.current.querySelector('.about-button');
 
-      // Container background color shift (Scrubbed with CSS Custom Property binding)
+      // Container background color shift (Scrubbed)
       gsap.fromTo(containerRef.current,
-        { backgroundColor: '#F5F4F0', '--current-bg': '#F5F4F0' },
+        { backgroundColor: '#F5F4F0' },
         {
           backgroundColor: '#FAF5ED', // Cozy warm cream
-          '--current-bg': '#FAF5ED',
           scrollTrigger: {
             trigger: containerRef.current,
             start: 'top 80%',
@@ -553,15 +549,19 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
               return (
                 <span key={sIdx} className="text-animation__word inline-flex items-center mx-1">
                   <span className="text-animation__blur">
-                    <span className={`text-animation__image-wrapper inline-block ${seg.blobClass}`}>
-                      <img 
-                        className="text-animation__animated-img" 
-                        src={seg.img} 
-                        alt={seg.text} 
-                        loading="lazy" 
-                      />
-                      <div className="text-animation__reveal left"></div>
-                      <div className="text-animation__reveal right"></div>
+                    <span className="text-animation__image-wrapper inline-block">
+                      {seg.is3D ? (
+                        <Motion3DCanvas />
+                      ) : (
+                        <img 
+                          className="text-animation__animated-img" 
+                          src={seg.img} 
+                          alt={seg.text} 
+                          loading="lazy" 
+                        />
+                      )}
+                      <div className="text-animation__reveal left bg-[#FAF5ED]"></div>
+                      <div className="text-animation__reveal right bg-[#FAF5ED]"></div>
                     </span>
                   </span>
                   <span className="text-animation__word-text text-[#1c2135]/25 transition-colors duration-300">
