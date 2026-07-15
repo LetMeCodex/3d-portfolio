@@ -88,7 +88,7 @@ export function HomeIntro() {
       }, "-=0.3");
     }
 
-    // Step C: Scale-reveal the tagline badge
+    // Step C: Scale-reveal the "What I Bring to the Table?" badge
     if (badgeRef.current) {
       textTimeline.fromTo(badgeRef.current,
         {
@@ -123,30 +123,84 @@ export function HomeIntro() {
       );
     }
 
-    // 3. Suddenly transition colors to warm Claude-like apricot orange on scroll
-    if (containerRef.current) {
-      // Set initial CSS values
-      gsap.set(containerRef.current, {
-        "--theme-bg": "transparent",
-        "--theme-text": "#1c2135",
-        "--theme-accent": "#8A7FE8",
-        "--theme-line": "rgba(28, 33, 53, 0.1)"
-      });
-
-      gsap.to(containerRef.current, {
-        "--theme-bg": "#FAF0E6", // Warm apricot-cream linen background
-        "--theme-text": "#2E1E1C", // Deep espresso charcoal
-        "--theme-accent": "#E46A4A", // Premium Claude terracotta orange
-        "--theme-line": "rgba(228, 106, 74, 0.15)", // Warm rust drafting guides
-        duration: 1,
+    // 3. Color Palette Shift to Claude-like Warm Clay Orange on Scroll
+    gsap.fromTo(containerRef.current,
+      { backgroundColor: "rgba(245, 244, 240, 0)" },
+      {
+        backgroundColor: "#F3E2D3", // Claude-like aesthetic warm clay-orange paper background
+        duration: 0.8,
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 80%",
-          end: "top 30%",
-          scrub: 1.0,
+          start: "top 60%",
+          end: "top 25%",
+          scrub: true,
         }
-      });
-    }
+      }
+    );
+
+    // Accents text color transition to Claude rust/terracotta orange
+    const accentTexts = containerRef.current.querySelectorAll('.accent-text-target');
+    gsap.fromTo(accentTexts,
+      { color: "#8A7FE8" },
+      {
+        color: "#C95B3D", // Claude-inspired rust orange accent
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 60%",
+          end: "top 25%",
+          scrub: true,
+        }
+      }
+    );
+
+    // Accents background color transition to Claude rust/terracotta orange
+    const accentBgs = containerRef.current.querySelectorAll('.accent-bg-target');
+    gsap.fromTo(accentBgs,
+      { backgroundColor: "#8A7FE8" },
+      {
+        backgroundColor: "#C95B3D", // Rust orange fill
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 60%",
+          end: "top 25%",
+          scrub: true,
+        }
+      }
+    );
+
+    // Blueprint grid lines transition to a warm rust-orange tint
+    const draftingLines = [lineH1Ref.current, lineH2Ref.current, lineV1Ref.current, lineV2Ref.current];
+    gsap.fromTo(draftingLines,
+      { backgroundColor: "rgba(28, 33, 53, 0.1)" },
+      {
+        backgroundColor: "rgba(201, 91, 61, 0.15)", // Rust grid lines
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 60%",
+          end: "top 25%",
+          scrub: true,
+        }
+      }
+    );
+
+    // Blueprint corner intersection crosshairs and texts
+    const cornerMarkers = containerRef.current.querySelectorAll('.marker-color-target');
+    gsap.fromTo(cornerMarkers,
+      { color: "rgba(28, 33, 53, 0.2)" },
+      {
+        color: "rgba(201, 91, 61, 0.3)",
+        duration: 0.8,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 60%",
+          end: "top 25%",
+          scrub: true,
+        }
+      }
+    );
 
     // 4. Coordinate tracker tracking mouse move for magnetic reaction
     const handleMouseMove = (e: MouseEvent) => {
@@ -206,114 +260,78 @@ export function HomeIntro() {
   return (
     <div 
       ref={containerRef} 
-      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 pt-32 pb-40 select-none z-10 transition-colors duration-300"
-      style={{ 
-        backgroundColor: 'var(--theme-bg, transparent)',
-        color: 'var(--theme-text, #1c2135)' 
-      }}
+      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 pt-32 pb-40 select-none z-10 bg-transparent transition-colors duration-300"
     >
       {/* ─── Architectural Drafting Lines overlaying this section ─── */}
       {/* Horizontal Top Guide Line */}
       <div 
         ref={lineH1Ref} 
-        className="absolute top-16 left-[10%] right-[10%] h-[1px] origin-left"
-        style={{ backgroundColor: 'var(--theme-line, rgba(28, 33, 53, 0.1))' }}
+        className="absolute top-16 left-[10%] right-[10%] h-[1px] bg-[#1c2135]/10 origin-left"
       >
-        <span className="absolute left-0 -top-3 font-mono text-[7px] opacity-40">GRID_REF: [H-01]</span>
-        <span className="absolute right-0 -top-3 font-mono text-[7px] opacity-40">0,0.48px</span>
+        <span className="absolute left-0 -top-3 font-mono text-[7px] text-black/20 marker-color-target">GRID_REF: [H-01]</span>
+        <span className="absolute right-0 -top-3 font-mono text-[7px] text-black/20 marker-color-target">0,0.48px</span>
       </div>
 
       {/* Horizontal Bottom Guide Line */}
       <div 
         ref={lineH2Ref} 
-        className="absolute bottom-20 left-[10%] right-[10%] h-[1px] origin-right"
-        style={{ backgroundColor: 'var(--theme-line, rgba(28, 33, 53, 0.1))' }}
+        className="absolute bottom-20 left-[10%] right-[10%] h-[1px] bg-[#1c2135]/10 origin-right"
       >
-        <span className="absolute left-0 -bottom-3.5 font-mono text-[7px] opacity-40">GRID_REF: [H-02]</span>
-        <span className="absolute right-0 -bottom-3.5 font-mono text-[7px] opacity-40">X_CALIBRATED</span>
+        <span className="absolute left-0 -bottom-3.5 font-mono text-[7px] text-black/20 marker-color-target">GRID_REF: [H-02]</span>
+        <span className="absolute right-0 -bottom-3.5 font-mono text-[7px] text-black/20 marker-color-target">X_CALIBRATED</span>
       </div>
 
       {/* Vertical Left Guide Line */}
       <div 
         ref={lineV1Ref} 
-        className="absolute top-8 bottom-8 left-[10%] w-[1px] origin-top"
-        style={{ backgroundColor: 'var(--theme-line, rgba(28, 33, 53, 0.1))' }}
+        className="absolute top-8 bottom-8 left-[10%] w-[1px] bg-[#1c2135]/10 origin-top"
       >
-        <span className="absolute top-0 -left-6 font-mono text-[7px] rotate-[-90deg] origin-top-left opacity-40">AXIS_Y1</span>
+        <span className="absolute top-0 -left-6 font-mono text-[7px] text-black/20 rotate-[-90deg] origin-top-left marker-color-target">AXIS_Y1</span>
       </div>
 
       {/* Vertical Right Guide Line */}
       <div 
         ref={lineV2Ref} 
-        className="absolute top-8 bottom-8 right-[10%] w-[1px] origin-bottom"
-        style={{ backgroundColor: 'var(--theme-line, rgba(28, 33, 53, 0.1))' }}
+        className="absolute top-8 bottom-8 right-[10%] w-[1px] bg-[#1c2135]/10 origin-bottom"
       >
-        <span className="absolute bottom-0 -right-2 font-mono text-[7px] rotate-[90deg] origin-bottom-right opacity-40">AXIS_Y2</span>
+        <span className="absolute bottom-0 -right-2 font-mono text-[7px] text-black/20 rotate-[90deg] origin-bottom-right marker-color-target">AXIS_Y2</span>
       </div>
 
       {/* Corner Intersection Crosshairs */}
-      <div 
-        className="absolute top-[60px] left-[9.7%] font-mono text-[10px] font-bold pointer-events-none"
-        style={{ color: 'var(--theme-line, rgba(28, 33, 53, 0.2))' }}
-      >
-        +
-      </div>
-      <div 
-        className="absolute top-[60px] right-[9.7%] font-mono text-[10px] font-bold pointer-events-none"
-        style={{ color: 'var(--theme-line, rgba(28, 33, 53, 0.2))' }}
-      >
-        +
-      </div>
-      <div 
-        className="absolute bottom-[75px] left-[9.7%] font-mono text-[10px] font-bold pointer-events-none"
-        style={{ color: 'var(--theme-line, rgba(28, 33, 53, 0.2))' }}
-      >
-        +
-      </div>
-      <div 
-        className="absolute bottom-[75px] right-[9.7%] font-mono text-[10px] font-bold pointer-events-none"
-        style={{ color: 'var(--theme-line, rgba(28, 33, 53, 0.2))' }}
-      >
-        +
-      </div>
+      <div className="absolute top-[60px] left-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
+      <div className="absolute top-[60px] right-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
+      <div className="absolute bottom-[75px] left-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
+      <div className="absolute bottom-[75px] right-[9.7%] font-mono text-[10px] text-[#1c2135]/20 font-bold pointer-events-none marker-color-target">+</div>
 
       {/* Floating CAD Widget Left: Compass / Protractor */}
       <div 
         ref={compassRef} 
         className="absolute left-[3%] top-[30%] hidden xl:block rotate-[15deg] pointer-events-none filter drop-shadow-sm select-none"
-        style={{ 
-          transformOrigin: 'center center',
-          color: 'var(--theme-accent, #8A7FE8)',
-          opacity: 0.25 
-        }}
+        style={{ transformOrigin: 'center center' }}
       >
-        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-current">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-[#1c2135]/15">
           <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 3" />
           <path d="M 50 5 L 50 95 M 5 50 L 95 50" stroke="currentColor" strokeWidth="0.5" />
           <path d="M 50 50 L 80 20" stroke="currentColor" strokeWidth="1" />
-          <path d="M 75 20 A 35 35 0 0 0 50 15" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="50" cy="50" r="3" fill="currentColor" />
+          <path d="M 75 20 A 35 35 0 0 0 50 15" stroke="#E58B88" strokeWidth="1.5" />
+          <circle cx="50" cy="50" r="3" fill="#1c2135" />
         </svg>
-        <div className="text-[6px] font-mono text-center opacity-65 mt-1">PROTRACTOR_MD-08</div>
+        <div className="text-[6px] font-mono text-center text-black/20 mt-1">PROTRACTOR_MD-08</div>
       </div>
 
       {/* Floating CAD Widget Right: Vector Spiral Helix */}
       <div 
         ref={spiralRef} 
         className="absolute right-[3%] bottom-[25%] hidden xl:block rotate-[-20deg] pointer-events-none filter drop-shadow-sm select-none"
-        style={{ 
-          transformOrigin: 'center center',
-          color: 'var(--theme-accent, #8A7FE8)',
-          opacity: 0.25 
-        }}
+        style={{ transformOrigin: 'center center' }}
       >
-        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-current">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="text-[#1c2135]/15">
           {/* Fibonacci style nested spiral */}
           <path d="M 50 50 A 5 5 0 0 1 55 50 A 10 10 0 0 1 45 50 A 15 15 0 0 1 60 50 A 20 20 0 0 1 40 50 A 25 25 0 0 1 65 50 A 30 30 0 0 1 35 50" stroke="currentColor" strokeWidth="0.75" />
-          <circle cx="50" cy="50" r="1.5" fill="currentColor" />
-          <line x1="50" y1="50" x2="35" y2="50" stroke="currentColor" strokeWidth="1" />
+          <circle cx="50" cy="50" r="1.5" fill="#B2BEE2" />
+          <line x1="50" y1="50" x2="35" y2="50" stroke="#B2BEE2" strokeWidth="1" />
         </svg>
-        <div className="text-[6px] font-mono text-center opacity-65 mt-1">HELIX_V_CALIBRATOR</div>
+        <div className="text-[6px] font-mono text-center text-black/20 mt-1">HELIX_V_CALIBRATOR</div>
       </div>
 
       {/* Main Content Layout */}
@@ -322,8 +340,7 @@ export function HomeIntro() {
         {/* Large, Eye-Catching Greeting Headline */}
         <h1 
           ref={nameRef} 
-          className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] mb-8 tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2"
-          style={{ color: 'var(--theme-text, #1c2135)' }}
+          className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] text-[#1c2135] mb-8 tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2"
         >
           <span className="flex">
             {part1.map((char, index) => (
@@ -332,7 +349,7 @@ export function HomeIntro() {
               </span>
             ))}
           </span>
-          <span className="font-premium-serif flex italic font-light" style={{ color: 'var(--theme-accent, #8A7FE8)' }}>
+          <span className="font-premium-serif text-[#8A7FE8] flex italic font-light accent-text-target">
             {part2.map((char, index) => (
               <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
                 {char === " " ? "\u00A0" : char}
@@ -343,13 +360,7 @@ export function HomeIntro() {
             ref={handRef}
             animate={{ rotate: [0, -18, 18, -18, 18, 0] }}
             transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 1.2, ease: "easeInOut" }}
-            style={{ 
-              display: "inline-block", 
-              transformOrigin: "80% 80%", 
-              opacity: 0, 
-              scale: 0,
-              color: 'var(--theme-accent, #8A7FE8)' 
-            }}
+            style={{ display: "inline-block", transformOrigin: "80% 80%", opacity: 0, scale: 0 }}
             className="text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] lg:text-[3.2rem] -mt-2 ml-2"
           >
             👋
@@ -359,17 +370,13 @@ export function HomeIntro() {
         {/* Philosophical Tagline Badge */}
         <div 
           ref={badgeRef}
-          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-10 opacity-0 select-none border px-5 py-2 rounded-sm"
-          style={{ 
-            borderColor: 'var(--theme-line, rgba(28, 33, 53, 0.1))',
-            backgroundColor: 'rgba(228, 106, 74, 0.02)'
-          }}
+          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mb-10 opacity-0 select-none"
         >
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] font-bold opacity-60">
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#1c2135]/40 font-bold marker-color-target">
             [ PERSPECTIVE // 01 ]
           </span>
-          <span className="hidden sm:inline w-1 h-1 rounded-full" style={{ backgroundColor: 'var(--theme-accent, #8A7FE8)' }} />
-          <span className="font-premium-serif text-[15px] italic font-light tracking-wide lowercase" style={{ color: 'var(--theme-accent, #8A7FE8)' }}>
+          <span className="hidden sm:inline w-1 h-1 rounded-full bg-[#8A7FE8] accent-bg-target" />
+          <span className="font-premium-serif text-[15px] text-[#8A7FE8] italic font-light tracking-wide lowercase accent-text-target">
             shaping digital matter into interactive poetry
           </span>
         </div>
@@ -377,8 +384,7 @@ export function HomeIntro() {
         {/* Masterpiece Split-Word Calligraphy Headline */}
         <h2 
           ref={headlineRef}
-          className="font-display font-semibold text-3xl sm:text-4xl md:text-[2.8rem] lg:text-[3.6rem] xl:text-[4.2rem] leading-[1.15] tracking-tight max-w-[90%] md:max-w-[85%] flex flex-wrap justify-center gap-x-3 gap-y-2.5 overflow-hidden py-2 px-4"
-          style={{ color: 'var(--theme-text, #1c2135)' }}
+          className="font-display font-semibold text-3xl sm:text-4xl md:text-[2.8rem] lg:text-[3.6rem] xl:text-[4.2rem] text-[#1c2135] leading-[1.15] tracking-tight max-w-[90%] md:max-w-[85%] flex flex-wrap justify-center gap-x-3 gap-y-2.5 overflow-hidden py-2 px-4"
         >
           {words.map((word, i) => (
             <span 
@@ -392,7 +398,7 @@ export function HomeIntro() {
         </h2>
 
         {/* Coordinates status label bottom */}
-        <div className="mt-12 flex gap-4 font-mono text-[7px] uppercase tracking-wider opacity-60">
+        <div className="mt-12 flex gap-4 font-mono text-[7px] text-black/25 uppercase tracking-wider marker-color-target">
           <span>SCALE: 1.000</span>
           <span>•</span>
           <span>CURSOR: [{mousePos.x}, {mousePos.y}]</span>
