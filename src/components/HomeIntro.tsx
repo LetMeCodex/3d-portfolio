@@ -9,6 +9,7 @@ export function HomeIntro() {
   const containerRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
   const handRef = useRef<HTMLSpanElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const lineH1Ref = useRef<HTMLDivElement>(null);
   const lineH2Ref = useRef<HTMLDivElement>(null);
@@ -41,10 +42,19 @@ export function HomeIntro() {
       .fromTo(lineV1Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2')
       .fromTo(lineV2Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2');
 
-    // 2. Character-by-character elastic scatter reveal for the big name title
+    // 2. Coordinated GSAP scroll timeline for all text elements
+    const textTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 75%',
+        toggleActions: 'play none none reverse',
+      }
+    });
+
+    // Step A: Character-by-character elastic scatter reveal for greeting title
     if (nameRef.current) {
       const chars = nameRef.current.querySelectorAll('.name-char');
-      gsap.fromTo(chars,
+      textTimeline.fromTo(chars,
         {
           opacity: 0,
           y: () => Math.random() * 100 - 50,
@@ -58,53 +68,62 @@ export function HomeIntro() {
           x: 0,
           scale: 1,
           rotate: 0,
-          duration: 1.1,
+          duration: 1.0,
           stagger: {
             each: 0.03,
             from: "random"
           },
-          ease: "back.out(2)",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 75%',
-            toggleActions: 'play none none reverse',
-          },
-          onComplete: () => {
-            // Pop the waving hand emoji
-            if (handRef.current) {
-              gsap.to(handRef.current, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.5,
-                ease: "back.out(2)"
-              });
-            }
-          }
+          ease: "back.out(1.8)"
         }
       );
     }
 
-    // 3. Word-by-word typewriter slide-up stagger reveal for the description
+    // Step B: Pop the waving hand emoji (starts slightly before the name finishes scattering)
+    if (handRef.current) {
+      textTimeline.to(handRef.current, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(2)"
+      }, "-=0.3");
+    }
+
+    // Step C: Scale-reveal the "What I Bring to the Table?" badge
+    if (badgeRef.current) {
+      textTimeline.fromTo(badgeRef.current,
+        {
+          opacity: 0,
+          scaleX: 0.4,
+          y: 20
+        },
+        {
+          opacity: 1,
+          scaleX: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "back.out(1.5)"
+        },
+        "-=0.2"
+      );
+    }
+
+    // Step D: Word-by-word stagger reveal for the main description statement
     if (headlineRef.current) {
-      gsap.fromTo(headlineRef.current.children,
-        { y: 60, opacity: 0, rotate: 1.5 },
+      textTimeline.fromTo(headlineRef.current.children,
+        { y: 50, opacity: 0, rotate: 1.5 },
         {
           y: 0,
           opacity: 1,
           rotate: 0,
-          stagger: 0.04,
-          duration: 0.9,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none reverse',
-          }
-        }
+          stagger: 0.03,
+          duration: 0.8,
+          ease: 'power4.out'
+        },
+        "-=0.3"
       );
     }
 
-    // 4. Coordinate tracker tracking mouse move for magnetic reaction
+    // 3. Coordinate tracker tracking mouse move for magnetic reaction
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       setMousePos({ x: clientX, y: clientY });
@@ -268,6 +287,18 @@ export function HomeIntro() {
             👋
           </motion.span>
         </h1>
+
+        {/* "What I Bring to the Table?" Tagline Badge */}
+        <div 
+          ref={badgeRef}
+          className="py-2 px-5 border border-[#1c2135]/10 bg-[#1c2135]/5 rounded-sm inline-flex items-center gap-2 mb-8 overflow-hidden opacity-0 select-none"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
+          <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#1c2135]/60 font-bold">
+            What I Bring to the Table?
+          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
+        </div>
 
         {/* Masterpiece Split-Word Calligraphy Headline */}
         <h2 
