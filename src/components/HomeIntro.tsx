@@ -32,8 +32,34 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
 
   const part1 = "Hello, I'm ".split("");
   const part2 = "Disha Jain".split("");
-  const sentence = "A creative developer specializing in high-fidelity interfaces, fluid motion design, and engineering products that feel alive.";
-  const words = sentence.split(" ");
+  
+  // Tagline segments for Bato-style scroll reveals
+  const segments = [
+    { text: "A creative ", isSpecial: false },
+    { 
+      text: "developer", 
+      isSpecial: true, 
+      img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=400&auto=format&fit=crop"
+    },
+    { text: " specializing in high-fidelity ", isSpecial: false },
+    { 
+      text: "interfaces,", 
+      isSpecial: true, 
+      img: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=400&auto=format&fit=crop"
+    },
+    { text: " fluid ", isSpecial: false },
+    { 
+      text: "motion", 
+      isSpecial: true, 
+      img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop"
+    },
+    { text: " design, and engineering products that feel ", isSpecial: false },
+    { 
+      text: "alive.", 
+      isSpecial: true, 
+      img: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=400&auto=format&fit=crop"
+    }
+  ];
 
   useEffect(() => {
     // Dynamically fetch Lottie file
@@ -72,7 +98,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       .fromTo(lineV1Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2')
       .fromTo(lineV2Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2');
 
-    // 2. Coordinated GSAP timeline for fast title intro reveal (starts at top 80%)
+    // 2. Coordinated GSAP scroll timeline for all text elements (starts simultaneously at top 80%)
     const textTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
@@ -141,109 +167,244 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       );
     }
 
-    // 3. Pinned Scroll-Driven Cinematic Text Reveal & Color Shift Timeline (scrubs over scroll track)
-    const scrubTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=150%',
-        scrub: 1,
-        pin: true,
-        markers: false
+    // Step D: Stagger color reveal for all description characters on scroll (Bato style)
+    if (headlineRef.current) {
+      const scrollChars = headlineRef.current.querySelectorAll('.scroll-char');
+      if (scrollChars.length > 0) {
+        gsap.fromTo(scrollChars,
+          { color: "rgba(28, 33, 53, 0.25)" },
+          {
+            color: "#E35F38", // Warm orange theme color
+            stagger: 0.015,
+            scrollTrigger: {
+              trigger: headlineRef.current,
+              start: "top 80%",
+              end: "bottom 30%",
+              scrub: 0.5,
+            }
+          }
+        );
       }
-    });
+    }
 
-    // Scrub reveal target words sequentially with blur and translateY transformations
-    const targetWords = headlineRef.current ? headlineRef.current.querySelectorAll('.word') : [];
-    if (targetWords.length > 0) {
-      scrubTimeline.to(targetWords, {
-        opacity: 1,
-        filter: 'blur(0px)',
-        y: 0,
-        stagger: 0.1,
-        ease: 'power2.out'
+    // Step E: Word image reveal slides (Bato style)
+    if (containerRef.current) {
+      const specialWords = containerRef.current.querySelectorAll('.text-animation__word');
+      specialWords.forEach((word) => {
+        const wrapper = word.querySelector('.text-animation__image-wrapper');
+        const revealLeft = word.querySelector('.text-animation__reveal.left');
+        const revealRight = word.querySelector('.text-animation__reveal.right');
+        const wordText = word.querySelector('.text-animation__word-text');
+
+        if (wrapper && revealLeft && revealRight) {
+          gsap.set(wrapper, { width: 0 });
+          gsap.set([revealLeft, revealRight], { xPercent: 0 });
+
+          ScrollTrigger.create({
+            trigger: word,
+            start: "top 85%",
+            end: "bottom 15%",
+            onEnter: () => {
+              gsap.to(wrapper, {
+                width: "12vw",
+                duration: 0.6,
+                ease: "power3.out"
+              });
+              gsap.to(revealLeft, {
+                xPercent: -100,
+                duration: 0.6,
+                ease: "power3.out"
+              });
+              gsap.to(revealRight, {
+                xPercent: 100,
+                duration: 0.6,
+                ease: "power3.out",
+                delay: 0.05
+              });
+              if (wordText) {
+                gsap.to(wordText, {
+                  color: "#E35F38",
+                  duration: 0.4
+                });
+              }
+            },
+            onLeaveBack: () => {
+              gsap.to(wrapper, {
+                width: 0,
+                duration: 0.6,
+                ease: "power3.inOut"
+              });
+              gsap.to(revealLeft, {
+                xPercent: 0,
+                duration: 0.6,
+                ease: "power3.inOut"
+              });
+              gsap.to(revealRight, {
+                xPercent: 0,
+                duration: 0.6,
+                ease: "power3.inOut",
+                delay: 0.05
+              });
+              if (wordText) {
+                gsap.to(wordText, {
+                  color: "rgba(28, 33, 53, 0.25)",
+                  duration: 0.4
+                });
+              }
+            }
+          });
+        }
       });
     }
 
-    // Fade in button wrapper and draw curly arrow at the end of scroll track
+    // Step F: Fade in button wrapper and draw curly arrow
     if (buttonWrapperRef.current) {
-      scrubTimeline.fromTo(buttonWrapperRef.current,
+      textTimeline.fromTo(buttonWrapperRef.current,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "back.out(1.5)"
+        },
         "-=0.4"
       );
     }
 
     if (arrowPathRef.current) {
-      scrubTimeline.fromTo(arrowPathRef.current,
+      textTimeline.fromTo(arrowPathRef.current,
         { strokeDashoffset: 100 },
-        { strokeDashoffset: 0, duration: 1.0, ease: "power2.out" },
-        "-=0.6"
+        {
+          strokeDashoffset: 0,
+          duration: 0.9,
+          ease: "power2.out"
+        },
+        "-=0.5"
       );
     }
 
-    // Parallel Color Shifts synced directly to scroll scrubbing
-    const dishaChars = containerRef.current?.querySelectorAll('.disha-char');
-    const accentDots = containerRef.current?.querySelectorAll('.accent-dot');
-    const taglineTexts = containerRef.current?.querySelectorAll('.tagline-text');
-    const cadSvgs = containerRef.current?.querySelectorAll('.cad-svg');
-    const gridLines = containerRef.current?.querySelectorAll('.grid-line');
-    const gridTexts = containerRef.current?.querySelectorAll('.grid-text');
-    const aboutButton = containerRef.current?.querySelector('.about-button');
-
+    // 3. Dynamic Color Palette Shift on Scroll (Claude aesthetic orange)
     if (containerRef.current) {
-      scrubTimeline.fromTo(containerRef.current,
+      const dishaChars = containerRef.current.querySelectorAll('.disha-char');
+      const accentDots = containerRef.current.querySelectorAll('.accent-dot');
+      const taglineTexts = containerRef.current.querySelectorAll('.tagline-text');
+      const cadSvgs = containerRef.current.querySelectorAll('.cad-svg');
+      const gridLines = containerRef.current.querySelectorAll('.grid-line');
+      const gridTexts = containerRef.current.querySelectorAll('.grid-text');
+      const aboutButton = containerRef.current.querySelector('.about-button');
+
+      // Container background color shift
+      gsap.fromTo(containerRef.current,
         { backgroundColor: '#F5F4F0' },
-        { backgroundColor: '#FAF5ED', duration: 1.0, ease: 'power1.inOut' },
-        0
+        {
+          backgroundColor: '#FAF5ED', // Cozy warm cream
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
       );
-    }
 
-    if (dishaChars && dishaChars.length > 0) {
-      scrubTimeline.fromTo([dishaChars, taglineTexts],
+      // Text colors transition (disha-char & tagline-text)
+      gsap.fromTo([dishaChars, taglineTexts],
         { color: '#8A7FE8' },
-        { color: '#E35F38', duration: 1.0, ease: 'power1.inOut' },
-        0
+        {
+          color: '#E35F38', // Claude aesthetic warm orange
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
       );
-    }
 
-    if (accentDots && accentDots.length > 0) {
-      scrubTimeline.fromTo(accentDots,
+      // Accent dots background color transition
+      gsap.fromTo(accentDots,
         { backgroundColor: '#8A7FE8' },
-        { backgroundColor: '#E35F38', duration: 1.0, ease: 'power1.inOut' },
-        0
+        {
+          backgroundColor: '#E35F38',
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
       );
-    }
 
-    if (aboutButton) {
-      scrubTimeline.fromTo(aboutButton,
-        { '--btn-accent': '#8A7FE8' },
-        { '--btn-accent': '#E35F38', duration: 1.0, ease: 'power1.inOut' },
-        0
-      );
-    }
+      // Custom button accent variable shift
+      if (aboutButton) {
+        gsap.fromTo(aboutButton,
+          { '--btn-accent': '#8A7FE8' },
+          {
+            '--btn-accent': '#E35F38',
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top 60%',
+              end: 'bottom 40%',
+              toggleActions: 'play reverse play reverse',
+            }
+          }
+        );
+      }
 
-    if (cadSvgs && cadSvgs.length > 0) {
-      scrubTimeline.fromTo(cadSvgs,
+      // CAD vector stroke lines shift
+      gsap.fromTo(cadSvgs,
         { color: 'rgba(28, 33, 53, 0.15)' },
-        { color: 'rgba(227, 95, 56, 0.25)', duration: 1.0, ease: 'power1.inOut' },
-        0
+        {
+          color: 'rgba(227, 95, 56, 0.25)', // Claude orange soft stroke tint
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
       );
-    }
 
-    if (gridLines && gridLines.length > 0) {
-      scrubTimeline.fromTo(gridLines,
+      // Grid dividers shift
+      gsap.fromTo(gridLines,
         { backgroundColor: 'rgba(28, 33, 53, 0.1)' },
-        { backgroundColor: 'rgba(227, 95, 56, 0.12)', duration: 1.0, ease: 'power1.inOut' },
-        0
+        {
+          backgroundColor: 'rgba(227, 95, 56, 0.12)',
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
       );
-    }
 
-    if (gridTexts && gridTexts.length > 0) {
-      scrubTimeline.fromTo(gridTexts,
+      // Grid metadata labels & crosshairs shift
+      gsap.fromTo(gridTexts,
         { color: 'rgba(28, 33, 53, 0.2)' },
-        { color: 'rgba(227, 95, 56, 0.35)', duration: 1.0, ease: 'power1.inOut' },
-        0
+        {
+          color: 'rgba(227, 95, 56, 0.35)',
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            toggleActions: 'play reverse play reverse',
+          }
+        }
       );
     }
 
@@ -428,18 +589,48 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
           </span>
         </div>
 
-        {/* Masterpiece Split-Word Calligraphy Headline with Scroll-Driven Cinematic Blur Reveal */}
+        {/* Masterpiece Split-Word Calligraphy Headline with Bato-Style Text and Image reveal */}
         <h2 
           ref={headlineRef}
-          className="font-display font-semibold text-2xl sm:text-3xl md:text-[2.2rem] lg:text-[2.8rem] xl:text-[3.2rem] text-[#1c2135] leading-[1.3] tracking-tight max-w-[90%] md:max-w-[85%] flex flex-wrap justify-center py-2 px-4 mb-12 select-none"
+          className="font-display font-medium text-2xl sm:text-3xl md:text-[2.2rem] lg:text-[2.8rem] xl:text-[3.2rem] text-[#1c2135]/25 leading-[1.4] tracking-tight max-w-[95%] md:max-w-[85%] text-center mb-12 select-none flex flex-wrap justify-center items-center gap-x-2 gap-y-2"
         >
-          {words.map((word, i) => (
-            <span key={i} className="word-wrapper">
-              <span className="word">
-                {word}
-              </span>
-            </span>
-          ))}
+          {segments.map((seg, sIdx) => {
+            if (seg.isSpecial) {
+              return (
+                <span key={sIdx} className="text-animation__word inline-flex items-center mx-1">
+                  <span className="text-animation__blur">
+                    <span className="text-animation__image-wrapper inline-block">
+                      <img 
+                        className="text-animation__animated-img" 
+                        src={seg.img} 
+                        alt={seg.text} 
+                        loading="lazy" 
+                      />
+                      <div className="text-animation__reveal left bg-[#FAF5ED]"></div>
+                      <div className="text-animation__reveal right bg-[#FAF5ED]"></div>
+                    </span>
+                  </span>
+                  <span className="text-animation__word-text text-[#1c2135]/25 transition-colors duration-300">
+                    {seg.text.split("").map((char, cIdx) => (
+                      <span key={cIdx} className="scroll-char inline-block">
+                        {char}
+                      </span>
+                    ))}
+                  </span>
+                </span>
+              );
+            } else {
+              return (
+                <span key={sIdx} className="inline-flex flex-wrap">
+                  {seg.text.split("").map((char, cIdx) => (
+                    <span key={cIdx} className="scroll-char inline-block">
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
+                </span>
+              );
+            }
+          })}
         </h2>
 
         {/* Interactive 3D Tactile Button & Cursive Annotation Wrapper */}

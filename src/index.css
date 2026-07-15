@@ -600,21 +600,96 @@
   color: #FAF5ED;
 }
 
-/* ─── Scroll-Driven Cinematic Text Reveal ─── */
-.word-wrapper {
-  display: inline-block;
+/* ─── Bato-Style Scroll Text & Image Animation ─── */
+.text-animation__blur {
   position: relative;
-  overflow: hidden;
-  vertical-align: top;
-  margin-right: 0.25em; /* Simulates natural word spacing */
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.word {
-  display: inline-block;
-  opacity: 0.08; /* Starting dim state */
-  filter: blur(6px);
-  transform: translateY(20px);
-  will-change: transform, opacity, filter;
-  transition: color 0.5s ease;
+.text-animation__blur::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  border-radius: 50%;
+  background-color: rgba(227, 95, 56, 0.15); /* matching theme orange */
+  filter: blur(15px);
+  z-index: 0;
+  pointer-events: none;
 }
+
+.text-animation__word {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.text-animation__image-wrapper {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin: 0 8px;
+  width: 0; /* Animated via GSAP */
+  height: 2.8rem;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .text-animation__image-wrapper {
+    height: 3.2rem;
+  }
+}
+@media (min-width: 768px) {
+  .text-animation__image-wrapper {
+    height: 4.2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .text-animation__image-wrapper {
+    height: 4.8rem;
+  }
+}
+
+.text-animation__animated-img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 12vw;
+  min-width: 120px;
+  height: 100%;
+  object-fit: cover;
+  transform: translateX(-50%);
+}
+
+.text-animation__reveal {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  width: 50%;
+  height: 100%;
+  pointer-events: none;
+  background-color: #FAF5ED; /* matches background shift color */
+  transition: background-color 0.8s ease;
+}
+
+.text-animation__reveal.left {
+  left: 0;
+}
+
+.text-animation__reveal.right {
+  right: 0;
+}
+
+.scroll-char {
+  transition: color 0.15s ease;
+}
+
 
