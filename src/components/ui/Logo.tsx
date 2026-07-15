@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -11,6 +12,8 @@ interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showText?: boolean;
 }
+
+import { useEffect, useRef, useState } from 'react';
 
 export function Logo({ className, size = 'md' }: LogoProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,56 +37,33 @@ export function Logo({ className, size = 'md' }: LogoProps) {
     img.src = '/assets/logo.png';
     
     img.onload = () => {
-      const dpr = window.devicePixelRatio || 1;
-      
-      // Set the buffer size matching Retina/High-DPI displays
-      canvas.width = img.width * dpr;
-      canvas.height = img.height * dpr;
-      
-      // Keep canvas display styling standard
-      canvas.style.width = '100%';
-      canvas.style.height = '100%';
-      
-      // Scale ctx to draw at high DPI
-      ctx.scale(dpr, dpr);
-      ctx.drawImage(img, 0, 0, img.width, img.height);
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
       
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
       
-      // Smooth linear-alpha keying with edge-boosting to sharpen borders
+      // Loop through pixels and extract signature with smooth anti-aliased borders
       for (let i = 0; i < data.length; i += 4) {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
         
-        // Luminance-based brightness
+        // Luminance-based threshold
         const brightness = (r * 299 + g * 587 + b * 114) / 1000;
         
-        const minBright = 90;  // Solid ink threshold
-        const maxBright = 242; // Transparent background threshold
+        // Smooth feathering transition:
+        // Brightness above 240 is fully transparent.
+        // Brightness below 90 is fully opaque.
+        // In between, we transition smoothly to prevent jagged, incomplete borders.
+        const alpha = Math.max(0, Math.min(255, ((240 - brightness) / (240 - 90)) * 255));
         
-        if (brightness >= maxBright) {
-          data[i + 3] = 0; // Fully transparent
-        } else if (brightness <= minBright) {
-          // Color exactly to brand ink navy #1C2135
-          data[i] = 28;
-          data[i + 1] = 33;
-          data[i + 2] = 53;
-          data[i + 3] = 255;
-        } else {
-          // Linear interpolation for transparency
-          const ratio = (brightness - minBright) / (maxBright - minBright);
-          
-          // Color pixels with brand ink navy #1C2135
-          data[i] = 28;
-          data[i + 1] = 33;
-          data[i + 2] = 53;
-          
-          // Apply power curve (exponent < 1) to boost border opacity and sharpen edges
-          const alpha = Math.pow(1 - ratio, 0.45);
-          data[i + 3] = Math.round(alpha * 255);
-        }
+        // Convert signature stroke color to matching dark navy ink (#1C2135)
+        data[i] = 28;     // R
+        data[i + 1] = 33; // G
+        data[i + 2] = 53; // B
+        data[i + 3] = alpha;
       }
       
       ctx.putImageData(imageData, 0, 0);
@@ -94,14 +74,31 @@ export function Logo({ className, size = 'md' }: LogoProps) {
   return (
     <div 
       className={cn("cursor-pointer select-none relative flex flex-col items-start", sizeMap[size], className)}
-      style={{ opacity: isReady ? 1 : 0, transition: 'opacity 0.3s ease' }}
+      style={{ opacity: isReady ? 1 : 0 }}
     >
       <div className="relative w-full aspect-[2/1]">
-        {/* The high-DPI antialiased signature canvas */}
+        {/* The "Digitized" Signature Canvas */}
         <canvas 
           ref={canvasRef}
           className="w-full h-full object-contain pointer-events-none"
         />
+
+        {/* Underline Flourish - Kinetic brand touch */}
+        <svg 
+          viewBox="0 0 400 100" 
+          className="absolute -bottom-4 left-0 w-full h-12 overflow-visible pointer-events-none"
+        >
+          <motion.path 
+            d="M80 20 Q 200 -10 320 15" 
+            fill="none" 
+            stroke="#1D1D1F" 
+            strokeWidth="2.5" 
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.8 }}
+            transition={{ delay: 0.8, duration: 1.5, ease: "easeOut" }}
+          />
+        </svg>
       </div>
     </div>
   );

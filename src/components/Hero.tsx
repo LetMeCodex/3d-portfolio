@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight } from 'lucide-react';
+import { Logo } from './ui/Logo';
 import { DishaNBCard } from './ui/DishaNBCard';
 import { HandDrawnDoodle } from './ui/HandDrawnDoodle';
 import { SleepingCat } from './ui/SleepingCat';
@@ -106,7 +107,10 @@ export function Hero({ onOpenResume }: HeroProps) {
       ref={containerRef}
       className="relative w-full bg-[#F5F4F0] font-sans overflow-visible isolation-isolate"
     >
-
+      {/* Brand Signature */}
+      <div className="absolute top-6 left-6 md:top-8 md:left-8 z-40">
+        <Logo size="md" />
+      </div>
 
       {/* ── PAGE 1 TEXT ── */}
       <div className="relative z-10 w-full min-h-screen flex flex-col justify-between pt-[22vh] pb-[4vh] px-6 md:px-12 pointer-events-none">
