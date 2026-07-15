@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Hero } from "./components/Hero";
+import { HomeIntro } from "./components/HomeIntro";
 import { IntroSection } from "./components/IntroSection";
 import { ProjectsSection } from "./components/ProjectsSection";
 import { AchievementsSection } from "./components/AchievementsSection";
@@ -99,6 +100,7 @@ export default function App() {
                 <BackgroundDoodles />
                 <div className="relative z-10">
                   <Hero onOpenResume={handleOpenResume} />
+                  <HomeIntro />
                   <IntroSection onOpenAbout={handleOpenAbout} />
                   <AchievementsSection />
                   <MarqueeDivider />
