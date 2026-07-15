@@ -605,6 +605,8 @@
   position: relative;
   display: inline-block;
   vertical-align: middle;
+  /* Premium drop shadow that inherits the animated organic blob shape */
+  filter: drop-shadow(0 10px 25px rgba(227, 95, 56, 0.12));
 }
 
 .text-animation__blur::before {
@@ -613,11 +615,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 120%;
-  height: 120%;
+  width: 130%;
+  height: 130%;
   border-radius: 50%;
-  background-color: rgba(227, 95, 56, 0.15); /* matching theme orange */
-  filter: blur(15px);
+  background-color: rgba(227, 95, 56, 0.18); /* matching theme orange backing glow */
+  filter: blur(20px);
   z-index: 0;
   pointer-events: none;
 }
@@ -635,11 +637,43 @@
   vertical-align: middle;
   flex-shrink: 0;
   overflow: hidden;
-  margin: 0 8px;
+  margin: 0 10px;
   width: 0; /* Animated via GSAP */
   height: 2.8rem;
-  border-radius: 6px;
   z-index: 1;
+  /* Default border radius transition fallback */
+  transition: width 0.1s ease-out, border-radius 0.5s ease;
+}
+
+/* Four unique morphing animations to make the images feel organically alive */
+.text-animation__image-wrapper.blob-1 {
+  animation: morph-blob-1 8s ease-in-out infinite;
+}
+.text-animation__image-wrapper.blob-2 {
+  animation: morph-blob-2 9s ease-in-out infinite;
+}
+.text-animation__image-wrapper.blob-3 {
+  animation: morph-blob-3 7s ease-in-out infinite;
+}
+.text-animation__image-wrapper.blob-4 {
+  animation: morph-blob-4 10s ease-in-out infinite;
+}
+
+@keyframes morph-blob-1 {
+  0%, 100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+  50%      { border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%; }
+}
+@keyframes morph-blob-2 {
+  0%, 100% { border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%; }
+  50%      { border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%; }
+}
+@keyframes morph-blob-3 {
+  0%, 100% { border-radius: 50% 50% 30% 70% / 50% 30% 70% 50%; }
+  50%      { border-radius: 70% 30% 70% 30% / 30% 70% 30% 70%; }
+}
+@keyframes morph-blob-4 {
+  0%, 100% { border-radius: 45% 55% 45% 55% / 55% 45% 55% 45%; }
+  50%      { border-radius: 55% 45% 55% 45% / 45% 55% 45% 55%; }
 }
 
 @media (min-width: 640px) {
@@ -667,6 +701,8 @@
   height: 100%;
   object-fit: cover;
   transform: translateX(-50%);
+  /* Warm editorial sepia filter so images blend beautifully with the cream canvas */
+  filter: sepia(0.18) contrast(0.95) saturate(1.08);
 }
 
 .text-animation__reveal {
@@ -676,8 +712,9 @@
   width: 50%;
   height: 100%;
   pointer-events: none;
-  background-color: #FAF5ED; /* matches background shift color */
-  transition: background-color 0.8s ease;
+  /* Dynamically uses the active page background color from GSAP variable for a flawless overlay */
+  background-color: var(--current-bg, #F5F4F0);
+  transition: background-color 0.3s ease;
 }
 
 .text-animation__reveal.left {
