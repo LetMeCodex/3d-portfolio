@@ -213,13 +213,12 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
         }
       );
 
-      // 3D tactile button shadow/border shift
+      // Custom button accent variable shift
       if (aboutButton) {
         gsap.fromTo(aboutButton,
-          { boxShadow: '6px 6px 0px #8A7FE8', borderColor: '#8A7FE8' },
+          { '--btn-accent': '#8A7FE8' },
           {
-            boxShadow: '6px 6px 0px #E35F38',
-            borderColor: '#E35F38',
+            '--btn-accent': '#E35F38',
             duration: 0.8,
             ease: 'power2.out',
             scrollTrigger: {
@@ -507,15 +506,12 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             </svg>
           </div>
 
-          {/* Tactile 3D Button */}
+          {/* Nakampz Uiverse Button Design */}
           <button 
             onClick={onOpenAbout}
-            className="about-button group relative px-8 py-4 bg-[#1c2135] text-[#FAF5ED] font-mono text-[11px] uppercase tracking-[0.25em] font-bold rounded-sm border border-[#1c2135] shadow-[6px_6px_0px_#8A7FE8] hover:shadow-[1px_1px_0px_#8A7FE8] hover:translate-x-[5px] hover:translate-y-[5px] active:translate-x-[6px] active:translate-y-[6px] transition-all duration-300 z-10"
+            className="about-button uiverse-about-btn select-none"
           >
-            <span className="relative z-10 group-hover:text-white transition-colors duration-300">
-              Explore Archives // About Me
-            </span>
-            <div className="absolute inset-0 bg-[#E35F38] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom z-0" />
+            Explore Archives // About Me
           </button>
         </div>
 

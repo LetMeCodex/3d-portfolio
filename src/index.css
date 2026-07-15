@@ -551,3 +551,52 @@
   }
 }
 
+/* ─── Uiverse Nakampz Button Design ─── */
+.uiverse-about-btn {
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--btn-color, #1c2135);
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 10;
+  transition: color 0.5s ease;
+  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uiverse-about-btn::before {
+  content: "";
+  border: 2px solid var(--btn-accent, #8A7FE8);
+  position: absolute;
+  left: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 60px;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-sizing: border-box;
+}
+
+.uiverse-about-btn:hover::before {
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(100% + 32px);
+  height: calc(100% + 16px);
+  background-color: var(--btn-accent, #8A7FE8);
+  z-index: -1;
+}
+
+.uiverse-about-btn:hover {
+  color: #FAF5ED;
+}
+
