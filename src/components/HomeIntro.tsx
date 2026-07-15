@@ -7,6 +7,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function HomeIntro() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const handRef = useRef<HTMLSpanElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const lineH1Ref = useRef<HTMLDivElement>(null);
   const lineH2Ref = useRef<HTMLDivElement>(null);
@@ -18,6 +20,8 @@ export function HomeIntro() {
   const compassRef = useRef<HTMLDivElement>(null);
   const spiralRef = useRef<HTMLDivElement>(null);
 
+  const part1 = "Hello, I'm ".split("");
+  const part2 = "Disha Jain".split("");
   const sentence = "A creative developer specializing in high-fidelity interfaces, fluid motion design, and engineering products that feel alive.";
   const words = sentence.split(" ");
 
@@ -37,7 +41,50 @@ export function HomeIntro() {
       .fromTo(lineV1Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2')
       .fromTo(lineV2Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2');
 
-    // 2. Word-by-word typewriter slide-up stagger reveal
+    // 2. Character-by-character elastic scatter reveal for the big name title
+    if (nameRef.current) {
+      const chars = nameRef.current.querySelectorAll('.name-char');
+      gsap.fromTo(chars,
+        {
+          opacity: 0,
+          y: () => Math.random() * 100 - 50,
+          x: () => Math.random() * 30 - 15,
+          scale: 0.3,
+          rotate: () => Math.random() * 60 - 30
+        },
+        {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          scale: 1,
+          rotate: 0,
+          duration: 1.1,
+          stagger: {
+            each: 0.03,
+            from: "random"
+          },
+          ease: "back.out(2)",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 75%',
+            toggleActions: 'play none none reverse',
+          },
+          onComplete: () => {
+            // Pop the waving hand emoji
+            if (handRef.current) {
+              gsap.to(handRef.current, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.5,
+                ease: "back.out(2)"
+              });
+            }
+          }
+        }
+      );
+    }
+
+    // 3. Word-by-word typewriter slide-up stagger reveal for the description
     if (headlineRef.current) {
       gsap.fromTo(headlineRef.current.children,
         { y: 60, opacity: 0, rotate: 1.5 },
@@ -57,7 +104,7 @@ export function HomeIntro() {
       );
     }
 
-    // 3. Coordinate tracker tracking mouse move for magnetic reaction
+    // 4. Coordinate tracker tracking mouse move for magnetic reaction
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       setMousePos({ x: clientX, y: clientY });
@@ -191,28 +238,36 @@ export function HomeIntro() {
 
       {/* Main Content Layout */}
       <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center">
-        {/* Intro Subheading Tagline */}
-        <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className="flex items-center gap-3 mb-8"
+        
+        {/* Large, Eye-Catching Greeting Headline */}
+        <h1 
+          ref={nameRef} 
+          className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] text-[#1c2135] mb-8 tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.35em] text-black/35 font-bold flex items-center gap-2 select-none">
-            Hello, I'm Disha Jain
-            <motion.span 
-              animate={{ rotate: [0, -18, 18, -18, 18, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 1.2, ease: "easeInOut" }}
-              style={{ display: "inline-block", transformOrigin: "80% 80%" }}
-              className="text-[12px] -mt-1"
-            >
-              👋
-            </motion.span>
+          <span className="flex">
+            {part1.map((char, index) => (
+              <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#8A7FE8] animate-pulse" />
-        </motion.div>
+          <span className="font-premium-serif text-[#8A7FE8] flex italic font-light">
+            {part2.map((char, index) => (
+              <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </span>
+          <motion.span 
+            ref={handRef}
+            animate={{ rotate: [0, -18, 18, -18, 18, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, repeatDelay: 1.2, ease: "easeInOut" }}
+            style={{ display: "inline-block", transformOrigin: "80% 80%", opacity: 0, scale: 0 }}
+            className="text-[1.8rem] sm:text-[2.2rem] md:text-[2.6rem] lg:text-[3.2rem] -mt-2 ml-2"
+          >
+            👋
+          </motion.span>
+        </h1>
 
         {/* Masterpiece Split-Word Calligraphy Headline */}
         <h2 
