@@ -76,7 +76,9 @@ export function ResumePage({ onBack }: ResumePageProps) {
     const skills = [
       "React.js", "Node.js", "TypeScript", "MySQL", 
       "HTML/CSS", "Three.js", "GSAP", "TailwindCSS",
-      "Next.js", "Python", "Java", "C++"
+      "Next.js", "Python", "Java", "C++",
+      "Artificial Intelligence (AI)", "Prompt Engineering",
+      "Amazon Web Services (AWS)", "Data Structures (DSA)"
     ];
 
     return (
@@ -335,8 +337,36 @@ export function ResumePage({ onBack }: ResumePageProps) {
                 />
             </ResumeSection>
 
+            {/* Certifications & Achievements */}
+            <ResumeSection title="Achievements" number="05">
+                <ResumeItem 
+                    title="Microsoft AI Skills Fest"
+                    subtitle="Microsoft Graduate"
+                    date="2026"
+                    description="Gained deep practical expertise in Generative AI development, Azure AI services, Microsoft Copilot, and autonomous agent systems."
+                />
+                <ResumeItem 
+                    title="AWS Academy Cloud Foundations"
+                    subtitle="Amazon Web Services"
+                    date="2026"
+                    description="Successfully completed training in core cloud architectures, containerized deployments, and serverless compute models."
+                />
+                <ResumeItem 
+                    title="AICTE Innovation & Entrepreneurship Program"
+                    subtitle="AICTE / Institution's Innovation Council (IIC)"
+                    date="2025"
+                    description="Participated in high-level technical paradigms and design-thinking frameworks to drive product innovation."
+                />
+                <ResumeItem 
+                    title="Daksh SparkFest Hackathon"
+                    subtitle="Collaborative Contributor"
+                    date="2023"
+                    description="Designed and pitched innovative technical prototypes under pressure, focusing on collaborative engineering and rapid ideation."
+                />
+            </ResumeSection>
+
             {/* Connect - Stacking Cards Reveal */}
-            <ResumeSection title="Connect" number="05">
+            <ResumeSection title="Connect" number="06">
                 <div className="flex flex-col gap-12 pb-32">
                     {/* Card 1: Email (Sticky Stacking) */}
                     <motion.div 
@@ -362,7 +392,7 @@ export function ResumePage({ onBack }: ResumePageProps) {
                             <div className="absolute inset-3 border border-dashed border-[#1c2135]/5 rounded-[2.2rem] pointer-events-none" />
 
                             {/* CAD labels */}
-                            <span className="absolute top-6 right-8 font-mono text-[8px] uppercase tracking-widest text-[#1c2135]/30 select-none pointer-events-none">SYS_REF: [05-EMAIL]</span>
+                            <span className="absolute top-6 right-8 font-mono text-[8px] uppercase tracking-widest text-[#1c2135]/30 select-none pointer-events-none">SYS_REF: [06-EMAIL]</span>
                             <span className="absolute bottom-6 left-8 font-mono text-[8px] uppercase tracking-widest text-[#1c2135]/30 select-none pointer-events-none">COORD: [X:42, Y:128]</span>
 
                             <div className="absolute top-0 right-0 p-8 opacity-[0.015] group-hover:opacity-[0.04] transition-opacity">
@@ -418,7 +448,7 @@ export function ResumePage({ onBack }: ResumePageProps) {
                             <div className="absolute inset-3 border border-dashed border-[#1c2135]/5 rounded-[1.7rem] pointer-events-none" />
 
                             {/* CAD labels */}
-                            <span className="absolute top-5 right-6 font-mono text-[8px] uppercase tracking-widest text-[#1c2135]/30 select-none pointer-events-none">SYS_REF: [05-LNKD]</span>
+                            <span className="absolute top-5 right-6 font-mono text-[8px] uppercase tracking-widest text-[#1c2135]/30 select-none pointer-events-none">SYS_REF: [06-LNKD]</span>
 
                             <div className="flex items-center justify-between relative z-10">
                                 <div className="w-12 h-12 rounded-full bg-[#1c2135]/5 group-hover:bg-[#E58B88]/10 flex items-center justify-center relative transition-colors duration-500">
@@ -455,7 +485,7 @@ export function ResumePage({ onBack }: ResumePageProps) {
                             <div className="absolute inset-3 border border-dashed border-[#1c2135]/5 rounded-[1.7rem] pointer-events-none" />
 
                             {/* CAD labels */}
-                            <span className="absolute top-5 right-6 font-mono text-[8px] uppercase tracking-widest text-[#1c2135]/30 select-none pointer-events-none">SYS_REF: [05-GTHB]</span>
+                            <span className="absolute top-5 right-6 font-mono text-[8px] uppercase tracking-widest text-[#1c2135]/30 select-none pointer-events-none">SYS_REF: [06-GTHB]</span>
 
                             <div className="flex items-center justify-between relative z-10">
                                 <div className="w-12 h-12 rounded-full bg-[#1c2135]/5 group-hover:bg-[#E58B88]/10 flex items-center justify-center relative transition-colors duration-500">

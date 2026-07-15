@@ -9,6 +9,14 @@ gsap.registerPlugin(ScrollTrigger);
 const achievements = [
   {
     year: "2026",
+    category: "Artificial Intelligence",
+    title: "Microsoft AI Skills Fest",
+    issuer: "Microsoft",
+    desc: "Completed the Microsoft AI Skills Fest, gaining hands-on proficiency in Generative AI, Azure AI services, Microsoft Copilot, and autonomous agent systems.",
+    imageUrl: "/certificates/microsoft-ai.png"
+  },
+  {
+    year: "2026",
     category: "Cloud Architecture",
     title: "AWS Academy Cloud Foundations",
     issuer: "Amazon Web Services (AWS)",
