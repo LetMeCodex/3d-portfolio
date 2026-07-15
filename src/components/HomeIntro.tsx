@@ -217,7 +217,7 @@ export function HomeIntro() {
         {/* Masterpiece Split-Word Calligraphy Headline */}
         <h2 
           ref={headlineRef}
-          className="font-display font-light text-[3.8vw] md:text-[2.6rem] lg:text-[3rem] text-[#1c2135] leading-[1.3] tracking-tight max-w-4xl flex flex-wrap justify-center gap-x-2 gap-y-3 overflow-hidden py-1 px-4"
+          className="font-display font-semibold text-3xl sm:text-4xl md:text-[2.8rem] lg:text-[3.6rem] xl:text-[4.2rem] text-[#1c2135] leading-[1.15] tracking-tight max-w-[90%] md:max-w-[85%] flex flex-wrap justify-center gap-x-3 gap-y-2.5 overflow-hidden py-2 px-4"
         >
           {words.map((word, i) => (
             <span 
