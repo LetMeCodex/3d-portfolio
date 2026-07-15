@@ -37,8 +37,8 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
   const words = sentence.split(" ");
 
   useEffect(() => {
-    // Dynamically fetch Lottie file to prevent compile issues on empty workspaces
-    fetch('/character.json')
+    // Dynamically fetch Lottie file
+    fetch('/Female%20Character%20Waving.json')
       .then((res) => {
         if (res.ok) return res.json();
         throw new Error('Not in public folder');
@@ -46,13 +46,13 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       .then((data) => setAnimationData(data))
       .catch(() => {
         // Try fallback location using a variable to prevent compile-time type errors
-        const assetPath = '../assets/character.json';
+        const assetPath = '../assets/Female Character Waving.json';
         import(/* @vite-ignore */ assetPath)
           .then((module) => {
             setAnimationData(module.default || module);
           })
           .catch((e) => {
-            console.log('Lottie character.json file not loaded yet:', e);
+            console.log('Lottie Female Character Waving.json file not loaded yet:', e);
           });
       });
   }, []);
