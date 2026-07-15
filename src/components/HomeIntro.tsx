@@ -115,7 +115,7 @@ export function HomeIntro() {
   return (
     <div 
       ref={containerRef} 
-      className="relative min-h-[75vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 py-24 bg-transparent select-none z-10"
+      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center overflow-hidden px-8 pt-32 pb-40 bg-transparent select-none z-10"
     >
       {/* ─── Architectural Drafting Lines overlaying this section ─── */}
       {/* Horizontal Top Guide Line */}
