@@ -98,7 +98,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       .fromTo(lineV1Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2')
       .fromTo(lineV2Ref.current, { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: 'power3.out' }, '<0.2');
 
-    // 2. Coordinated GSAP scroll timeline for all text elements (starts simultaneously at top 80%)
+    // 2. Coordinated GSAP scroll timeline for name title entry
     const textTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
@@ -167,27 +167,27 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       );
     }
 
-    // Step D: Stagger color reveal for all description characters on scroll (Bato style)
+    // Step D: Buttery smooth stagger color reveal for all description characters on scroll
     if (headlineRef.current) {
       const scrollChars = headlineRef.current.querySelectorAll('.scroll-char');
       if (scrollChars.length > 0) {
         gsap.fromTo(scrollChars,
           { color: "rgba(28, 33, 53, 0.25)" },
           {
-            color: "#E35F38", // Warm orange theme color
+            color: "#E35F38", // Warm theme orange color
             stagger: 0.015,
             scrollTrigger: {
               trigger: headlineRef.current,
-              start: "top 80%",
-              end: "bottom 30%",
-              scrub: 0.5,
+              start: "top 88%",
+              end: "bottom 38%",
+              scrub: 1.2, // buttery smooth scroll lag/inertia
             }
           }
         );
       }
     }
 
-    // Step E: Word image reveal slides (Bato style)
+    // Step E: Word image reveal slides tied directly to scroll (scrubbed for absolute fluid timing)
     if (containerRef.current) {
       const specialWords = containerRef.current.querySelectorAll('.text-animation__word');
       specialWords.forEach((word) => {
@@ -200,59 +200,22 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
           gsap.set(wrapper, { width: 0 });
           gsap.set([revealLeft, revealRight], { xPercent: 0 });
 
-          ScrollTrigger.create({
-            trigger: word,
-            start: "top 85%",
-            end: "bottom 15%",
-            onEnter: () => {
-              gsap.to(wrapper, {
-                width: "12vw",
-                duration: 0.6,
-                ease: "power3.out"
-              });
-              gsap.to(revealLeft, {
-                xPercent: -100,
-                duration: 0.6,
-                ease: "power3.out"
-              });
-              gsap.to(revealRight, {
-                xPercent: 100,
-                duration: 0.6,
-                ease: "power3.out",
-                delay: 0.05
-              });
-              if (wordText) {
-                gsap.to(wordText, {
-                  color: "#E35F38",
-                  duration: 0.4
-                });
-              }
-            },
-            onLeaveBack: () => {
-              gsap.to(wrapper, {
-                width: 0,
-                duration: 0.6,
-                ease: "power3.inOut"
-              });
-              gsap.to(revealLeft, {
-                xPercent: 0,
-                duration: 0.6,
-                ease: "power3.inOut"
-              });
-              gsap.to(revealRight, {
-                xPercent: 0,
-                duration: 0.6,
-                ease: "power3.inOut",
-                delay: 0.05
-              });
-              if (wordText) {
-                gsap.to(wordText, {
-                  color: "rgba(28, 33, 53, 0.25)",
-                  duration: 0.4
-                });
-              }
+          const wordTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: word,
+              start: "top 92%", // triggers slightly before center to reveal
+              end: "top 62%",   // opens fully as user scrolls past
+              scrub: 1.2,       // buttery smooth sync matching scroll chars
             }
           });
+
+          wordTimeline.to(wrapper, { width: "12vw", ease: "power2.out" }, 0)
+            .to(revealLeft, { xPercent: -100, ease: "power2.out" }, 0)
+            .to(revealRight, { xPercent: 100, ease: "power2.out" }, 0);
+          
+          if (wordText) {
+            wordTimeline.to(wordText, { color: "#E35F38", ease: "power2.out" }, 0);
+          }
         }
       });
     }
@@ -283,7 +246,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       );
     }
 
-    // 3. Dynamic Color Palette Shift on Scroll (Claude aesthetic orange)
+    // 3. Dynamic Color Palette Shift on Scroll (Coordinated buttery smooth scrubs)
     if (containerRef.current) {
       const dishaChars = containerRef.current.querySelectorAll('.disha-char');
       const accentDots = containerRef.current.querySelectorAll('.accent-dot');
@@ -293,116 +256,102 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
       const gridTexts = containerRef.current.querySelectorAll('.grid-text');
       const aboutButton = containerRef.current.querySelector('.about-button');
 
-      // Container background color shift
+      // Container background color shift (Scrubbed)
       gsap.fromTo(containerRef.current,
         { backgroundColor: '#F5F4F0' },
         {
           backgroundColor: '#FAF5ED', // Cozy warm cream
-          duration: 0.8,
-          ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: 'top 80%',
             end: 'bottom 40%',
-            toggleActions: 'play reverse play reverse',
+            scrub: 1.2,
           }
         }
       );
 
-      // Text colors transition (disha-char & tagline-text)
+      // Text colors transition (disha-char & tagline-text) (Scrubbed)
       gsap.fromTo([dishaChars, taglineTexts],
         { color: '#8A7FE8' },
         {
           color: '#E35F38', // Claude aesthetic warm orange
-          duration: 0.8,
-          ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: 'top 80%',
             end: 'bottom 40%',
-            toggleActions: 'play reverse play reverse',
+            scrub: 1.2,
           }
         }
       );
 
-      // Accent dots background color transition
+      // Accent dots background color transition (Scrubbed)
       gsap.fromTo(accentDots,
         { backgroundColor: '#8A7FE8' },
         {
           backgroundColor: '#E35F38',
-          duration: 0.8,
-          ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: 'top 80%',
             end: 'bottom 40%',
-            toggleActions: 'play reverse play reverse',
+            scrub: 1.2,
           }
         }
       );
 
-      // Custom button accent variable shift
+      // Custom button accent variable shift (Scrubbed)
       if (aboutButton) {
         gsap.fromTo(aboutButton,
           { '--btn-accent': '#8A7FE8' },
           {
             '--btn-accent': '#E35F38',
-            duration: 0.8,
-            ease: 'power2.out',
             scrollTrigger: {
               trigger: containerRef.current,
-              start: 'top 60%',
+              start: 'top 80%',
               end: 'bottom 40%',
-              toggleActions: 'play reverse play reverse',
+              scrub: 1.2,
             }
           }
         );
       }
 
-      // CAD vector stroke lines shift
+      // CAD vector stroke lines shift (Scrubbed)
       gsap.fromTo(cadSvgs,
         { color: 'rgba(28, 33, 53, 0.15)' },
         {
           color: 'rgba(227, 95, 56, 0.25)', // Claude orange soft stroke tint
-          duration: 0.8,
-          ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: 'top 80%',
             end: 'bottom 40%',
-            toggleActions: 'play reverse play reverse',
+            scrub: 1.2,
           }
         }
       );
 
-      // Grid dividers shift
+      // Grid dividers shift (Scrubbed)
       gsap.fromTo(gridLines,
         { backgroundColor: 'rgba(28, 33, 53, 0.1)' },
         {
           backgroundColor: 'rgba(227, 95, 56, 0.12)',
-          duration: 0.8,
-          ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: 'top 80%',
             end: 'bottom 40%',
-            toggleActions: 'play reverse play reverse',
+            scrub: 1.2,
           }
         }
       );
 
-      // Grid metadata labels & crosshairs shift
+      // Grid metadata labels & crosshairs shift (Scrubbed)
       gsap.fromTo(gridTexts,
         { color: 'rgba(28, 33, 53, 0.2)' },
         {
           color: 'rgba(227, 95, 56, 0.35)',
-          duration: 0.8,
-          ease: 'power2.out',
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 60%',
+            start: 'top 80%',
             end: 'bottom 40%',
-            toggleActions: 'play reverse play reverse',
+            scrub: 1.2,
           }
         }
       );
