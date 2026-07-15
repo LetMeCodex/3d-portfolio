@@ -108,7 +108,7 @@ export function Hero({ onOpenResume }: HeroProps) {
       className="relative w-full bg-[#F5F4F0] font-sans overflow-visible isolation-isolate"
     >
       {/* Brand Signature */}
-      <div className="absolute top-6 left-6 md:top-8 md:left-8 z-40">
+      <div className="absolute top-0 left-0 z-40">
         <Logo size="md" />
       </div>
 
