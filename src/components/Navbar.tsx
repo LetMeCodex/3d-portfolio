@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useMotionValue } from 'motion/react';
 import { useSeason } from '../context/SeasonContext';
+import { Logo } from './ui/Logo';
 
 const NAV_ITEMS = [
   { 
@@ -88,6 +89,11 @@ export function Navbar({ onOpenResume, onOpenAbout }: NavbarProps) {
 
   return (
     <>
+      {/* Brand Signature - Fixed in upper-left corner */}
+      <div className="fixed top-4 left-6 md:top-6 md:left-8 z-[100] pointer-events-auto">
+        <Logo size="sm" className="hover:scale-105 transition-transform duration-300" />
+      </div>
+
       {/* Menu Toggle Button - Fixed in upper-right corner */}
       <div className="fixed top-6 right-6 md:top-8 md:right-8 z-[100] pointer-events-auto">
          <motion.button
