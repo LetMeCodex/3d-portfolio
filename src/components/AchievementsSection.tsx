@@ -17,6 +17,14 @@ const achievements = [
   },
   {
     year: "2026",
+    category: "Hackathon",
+    title: "Elite Coders Open Source Hackathon",
+    issuer: "Elite Coders",
+    desc: "Successfully qualified the Pre-Assessment Round of the Open Source Hackathon 2026, demonstrating strong logical design, technical creativity, and dedication.",
+    imageUrl: "/certificates/elite-coders.png"
+  },
+  {
+    year: "2026",
     category: "Data Analytics",
     title: "GenAI Powered Data Analytics",
     issuer: "TATA Group / Forage",

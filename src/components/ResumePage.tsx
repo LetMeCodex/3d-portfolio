@@ -346,6 +346,12 @@ export function ResumePage({ onBack }: ResumePageProps) {
                     description="Gained deep practical expertise in Generative AI development, Azure AI services, Microsoft Copilot, and autonomous agent systems."
                 />
                 <ResumeItem 
+                    title="Elite Coders Open Source Hackathon"
+                    subtitle="Elite Coders Qualifier"
+                    date="2026"
+                    description="Successfully qualified the Pre-Assessment Round of the Open Source Hackathon 2026, demonstrating strong logical design, technical creativity, and dedication."
+                />
+                <ResumeItem 
                     title="GenAI Powered Data Analytics"
                     subtitle="TATA Group / Forage"
                     date="2026"
