@@ -600,3 +600,21 @@
   color: #FAF5ED;
 }
 
+/* ─── Scroll-Driven Cinematic Text Reveal ─── */
+.word-wrapper {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: top;
+  margin-right: 0.25em; /* Simulates natural word spacing */
+}
+
+.word {
+  display: inline-block;
+  opacity: 0.08; /* Starting dim state */
+  filter: blur(6px);
+  transform: translateY(20px);
+  will-change: transform, opacity, filter;
+  transition: color 0.5s ease;
+}
+
