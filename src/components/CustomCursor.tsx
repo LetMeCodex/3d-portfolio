@@ -7,6 +7,39 @@ interface Point {
   time: number;
 }
 
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  color: string;
+  alpha: number;
+  life: number;
+  maxLife: number;
+  type: 'star' | 'heart' | 'sparkle' | 'swirl' | 'circle' | 'spark';
+  angle: number;
+  spin: number;
+}
+
+interface Ripple {
+  x: number;
+  y: number;
+  radius: number;
+  maxRadius: number;
+  alpha: number;
+  life: number;
+  maxLife: number;
+}
+
+const hexToRgba = (hex: string, alpha: number) => {
+  if (hex.startsWith('rgb')) return hex;
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 export function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
@@ -21,6 +54,8 @@ export function CustomCursor() {
 
   // Mouse trajectory points history for blueprint line drawings
   const pointsRef = useRef<Point[]>([]);
+  const particlesRef = useRef<Particle[]>([]);
+  const ripplesRef = useRef<Ripple[]>([]);
 
   // Smooth springs for trailing magnetic focus box
   const boxX = useSpring(mouseX, { damping: 25, stiffness: 200, mass: 0.5 });
@@ -65,6 +100,63 @@ export function CustomCursor() {
       // Track coordinates for calling technical lines trail
       pointsRef.current.push({ x: cx, y: cy, time: Date.now() });
 
+      // Spawn wobbly doodle particles based on speed
+      const lastPoint = pointsRef.current[pointsRef.current.length - 2];
+      let speed = 0;
+      let vx = 0;
+      let vy = 0;
+      if (lastPoint) {
+        vx = cx - lastPoint.x;
+        vy = cy - lastPoint.y;
+        speed = Math.hypot(vx, vy);
+      }
+
+      // Proportional particle spawning
+      const spawnCount = Math.min(Math.floor(speed * 0.14) + 1, 4);
+      
+      const colors = [
+        '#FFB7B2', // Peach/Pink
+        '#FFDAC1', // Apricot
+        '#C7CEEA', // Lavender Blue
+        '#B5EAD7', // Mint Green
+        '#FF9AA2', // Rose Pink
+        '#E2F0CB', // Sage Green
+      ];
+
+      const types: ('star' | 'heart' | 'sparkle' | 'swirl' | 'circle')[] = [
+        'star', 'heart', 'sparkle', 'swirl', 'circle'
+      ];
+
+      for (let i = 0; i < spawnCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 8;
+        const px = cx + Math.cos(angle) * distance;
+        const py = cy + Math.sin(angle) * distance;
+
+        const pvx = vx * 0.1 + (Math.random() - 0.5) * 1.2;
+        const pvy = vy * 0.1 + (Math.random() - 0.5) * 1.2;
+
+        const size = Math.random() * 10 + 6; // slightly larger size for doodle details
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const maxLife = Math.random() * 45 + 30; // 30 to 75 frames for slow, hand-drawn look
+        const type = types[Math.floor(Math.random() * types.length)];
+
+        particlesRef.current.push({
+          x: px,
+          y: py,
+          vx: pvx,
+          vy: pvy,
+          size,
+          color,
+          alpha: 1,
+          life: 0,
+          maxLife,
+          type,
+          angle: Math.random() * Math.PI * 2,
+          spin: (Math.random() - 0.5) * 0.05,
+        });
+      }
+
       // Scan target element for layout focus snapping
       const target = e.target as HTMLElement;
       if (target) {
@@ -102,8 +194,54 @@ export function CustomCursor() {
       }
     };
 
-    const handleMouseDown = () => {
+    const handleMouseDown = (e: MouseEvent) => {
       setIsClicked(true);
+
+      const cx = e.clientX;
+      const cy = e.clientY;
+
+      // Spawn a wobbly ripple ring
+      ripplesRef.current.push({
+        x: cx,
+        y: cy,
+        radius: 4,
+        maxRadius: Math.random() * 25 + 60, // 60 to 85px
+        alpha: 1,
+        life: 0,
+        maxLife: 40,
+      });
+
+      // Spawn a burst of hand-drawn sparks and flares
+      const colors = [
+        '#FFB7B2', '#FFDAC1', '#C7CEEA', '#B5EAD7', '#FF9AA2', '#E2F0CB'
+      ];
+
+      const sparkCount = Math.floor(Math.random() * 5) + 12;
+      for (let i = 0; i < sparkCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 2;
+        const pvx = Math.cos(angle) * speed;
+        const pvy = Math.sin(angle) * speed;
+
+        const size = Math.random() * 6 + 5;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const maxLife = Math.random() * 25 + 20;
+
+        particlesRef.current.push({
+          x: cx,
+          y: cy,
+          vx: pvx,
+          vy: pvy,
+          size,
+          color,
+          alpha: 1,
+          life: 0,
+          maxLife,
+          type: 'spark',
+          angle: Math.random() * Math.PI * 2,
+          spin: (Math.random() - 0.5) * 0.12,
+        });
+      }
     };
 
     const handleMouseUp = () => {
@@ -136,7 +274,7 @@ export function CustomCursor() {
     };
   }, [isVisible, mouseX, mouseY, boxX, boxY, boxWidth, boxHeight, boxRadius]);
 
-  // Canvas calligraphic parallel-line drafting trail loop
+  // Canvas custom cursor rendering and particle trail loop
   useEffect(() => {
     let animationId: number;
 
@@ -153,49 +291,193 @@ export function CustomCursor() {
       pointsRef.current = pointsRef.current.filter(p => now - p.time < 500);
       const points = pointsRef.current;
 
-      if (points.length > 2) {
-        // Draw 3 fine parallel calligraphic wireframe lines (converging drafting pen effect)
-        for (let lineOffset = -1.5; lineOffset <= 1.5; lineOffset += 1.5) {
+      // 1. Draw smooth ribbon trail (sketchy double pencil line effect)
+      if (points.length > 1) {
+        for (let i = 1; i < points.length; i++) {
+          const p1 = points[i - 1];
+          const p2 = points[i];
+          
+          const age = now - p2.time;
+          const lifeRatio = Math.max(0, 1 - age / 500); // 1 at cursor, 0 at tail
+          
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          
+          // First fine sketch stroke
           ctx.beginPath();
-          
-          // Color fading gradient along path
-          const grad = ctx.createLinearGradient(
-            points[0].x, points[0].y, 
-            points[points.length - 1].x, points[points.length - 1].y
-          );
-          grad.addColorStop(0, 'rgba(178, 190, 226, 0)'); // fade trail start
-          grad.addColorStop(0.5, 'rgba(138, 127, 232, 0.4)'); // soft violet middle
-          grad.addColorStop(1, 'rgba(124, 58, 237, 0.7)'); // violet-600 near cursor
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(138, 127, 232, ${lifeRatio * 0.4})`;
+          ctx.lineWidth = lifeRatio * 2.5;
+          ctx.stroke();
 
-          ctx.strokeStyle = grad;
-          ctx.lineWidth = lineOffset === 0 ? 1 : 0.5; // middle line slightly more solid
-          
-          for (let i = 1; i < points.length; i++) {
-            const p1 = points[i - 1];
-            const p2 = points[i];
+          // Second offset fine stroke to simulate hand sketching
+          ctx.beginPath();
+          ctx.moveTo(p1.x + (Math.sin(p1.y * 0.1) * 0.8), p1.y + (Math.cos(p1.x * 0.1) * 0.8));
+          ctx.lineTo(p2.x + (Math.sin(p2.y * 0.1) * 0.8), p2.y + (Math.cos(p2.x * 0.1) * 0.8));
+          ctx.strokeStyle = `rgba(178, 190, 226, ${lifeRatio * 0.25})`;
+          ctx.lineWidth = lifeRatio * 1.2;
+          ctx.stroke();
+        }
+      }
 
-            // Direction vector to offset perpendicular lines
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
-            const len = Math.hypot(dx, dy);
+      // 2. Update and draw Sketchy Doodle Particles
+      const particles = particlesRef.current;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.life++;
+        
+        if (p.life >= p.maxLife) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        // Apply physics
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        if (p.type === 'spark') {
+          p.vy += 0.1; // gravity pull
+        } else {
+          p.vy -= 0.04; // float upward
+          p.vx += (Math.random() - 0.5) * 0.1; // minor wind drift
+        }
+
+        p.alpha = 1 - p.life / p.maxLife;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.strokeStyle = hexToRgba(p.color, p.alpha);
+        ctx.lineWidth = 1.2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        const s = p.size * (0.4 + p.alpha * 0.6); // slight scale down as it fades
+
+        if (p.type === 'star') {
+          // Hand-drawn 5-point star
+          ctx.beginPath();
+          for (let step = 0; step < 5; step++) {
+            const aOuter = (step * Math.PI * 2) / 5 - Math.PI / 2;
+            const aInner = aOuter + Math.PI / 5;
             
-            let nx = 0;
-            let ny = 0;
-            if (len > 0.1) {
-              nx = -dy / len;
-              ny = dx / len;
-            }
-
-            const scaleOffset = lineOffset * (1 + (len * 0.1)); // converge/disperse based on speed
-
-            const cx = (p2.x + p1.x) / 2 + nx * scaleOffset;
-            const cy = (p2.y + p1.y) / 2 + ny * scaleOffset;
-
-            if (i === 1) {
-              ctx.moveTo(p1.x + nx * scaleOffset, p1.y + ny * scaleOffset);
-            }
-            ctx.quadraticCurveTo(p1.x + nx * scaleOffset, p1.y + ny * scaleOffset, cx, cy);
+            // Jitter for sketchy hand-made look
+            const rOuter = s * (1 + (Math.sin(step * 1.5) * 0.08));
+            const rInner = s * 0.4 * (1 + (Math.cos(step * 1.5) * 0.08));
+            
+            const ox = Math.cos(aOuter) * rOuter;
+            const oy = Math.sin(aOuter) * rOuter;
+            const ix = Math.cos(aInner) * rInner;
+            const iy = Math.sin(aInner) * rInner;
+            
+            if (step === 0) ctx.moveTo(ox, oy);
+            else ctx.lineTo(ox, oy);
+            ctx.lineTo(ix, iy);
           }
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fillStyle = hexToRgba(p.color, p.alpha * 0.15); // soft color fill
+          ctx.fill();
+        } else if (p.type === 'heart') {
+          // Hand-drawn heart
+          ctx.beginPath();
+          ctx.moveTo(0, -s * 0.2);
+          // Left curve
+          ctx.bezierCurveTo(-s * 0.6, -s * 0.8, -s * 1.1, -s * 0.3, 0, s * 0.7);
+          // Right curve
+          ctx.bezierCurveTo(s * 1.1, -s * 0.3, s * 0.6, -s * 0.8, 0, -s * 0.2);
+          ctx.stroke();
+          ctx.fillStyle = hexToRgba(p.color, p.alpha * 0.15);
+          ctx.fill();
+        } else if (p.type === 'sparkle') {
+          // 4-point hand-drawn sparkle (+)
+          ctx.beginPath();
+          ctx.moveTo(-s, 0);
+          ctx.quadraticCurveTo(0, 0, 0, -s);
+          ctx.quadraticCurveTo(0, 0, s, 0);
+          ctx.quadraticCurveTo(0, 0, 0, s);
+          ctx.quadraticCurveTo(0, 0, -s, 0);
+          ctx.stroke();
+          ctx.fillStyle = hexToRgba(p.color, p.alpha * 0.1);
+          ctx.fill();
+        } else if (p.type === 'swirl') {
+          // Sketchy swirl/spiral
+          ctx.beginPath();
+          for (let theta = 0; theta < Math.PI * 3.5; theta += 0.15) {
+            const r = (s * theta) / (Math.PI * 3.5);
+            const wobble = 1 + Math.sin(theta * 3) * 0.06;
+            const px = Math.cos(theta) * r * wobble;
+            const py = Math.sin(theta) * r * wobble;
+            if (theta === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        } else if (p.type === 'circle') {
+          // Doodle circle with overlap
+          ctx.beginPath();
+          for (let theta = 0; theta < Math.PI * 2.15; theta += 0.15) {
+            const r = s * (1 + Math.sin(theta * 4) * 0.05);
+            const px = Math.cos(theta) * r;
+            const py = Math.sin(theta) * r;
+            if (theta === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        } else if (p.type === 'spark') {
+          // Click spark - tiny sketchy cross
+          ctx.beginPath();
+          ctx.moveTo(-s * 0.6, 0);
+          ctx.lineTo(s * 0.6, 0);
+          ctx.moveTo(0, -s * 0.6);
+          ctx.lineTo(0, s * 0.6);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+
+      // 3. Update and draw wobbly concentric ripples
+      const ripples = ripplesRef.current;
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        r.life++;
+
+        if (r.life >= r.maxLife) {
+          ripples.splice(i, 1);
+          continue;
+        }
+
+        r.radius += (r.maxRadius - r.radius) * 0.08;
+        r.alpha = 1 - r.life / r.maxLife;
+
+        // Draw wobbly, sketchy outer ring
+        ctx.beginPath();
+        for (let theta = 0; theta < Math.PI * 2.1; theta += 0.15) {
+          const w = r.radius * (1 + Math.sin(theta * 6 + r.life * 0.1) * 0.03);
+          const px = r.x + Math.cos(theta) * w;
+          const py = r.y + Math.sin(theta) * w;
+          if (theta === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = `rgba(138, 127, 232, ${r.alpha * 0.4})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Secondary sketchy inner wobbly ring
+        if (r.radius > 20) {
+          ctx.beginPath();
+          for (let theta = 0; theta < Math.PI * 2.1; theta += 0.15) {
+            const w = (r.radius - 12) * (1 + Math.cos(theta * 5 - r.life * 0.15) * 0.04);
+            const px = r.x + Math.cos(theta) * w;
+            const py = r.y + Math.sin(theta) * w;
+            if (theta === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.strokeStyle = `rgba(255, 133, 193, ${r.alpha * 0.25})`;
+          ctx.lineWidth = 0.8;
           ctx.stroke();
         }
       }
@@ -207,10 +489,11 @@ export function CustomCursor() {
     return () => cancelAnimationFrame(animationId);
   }, []);
 
-  if (!isVisible) return null;
-
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden hidden md:block">
+    <div 
+      style={{ opacity: isVisible ? 1 : 0 }}
+      className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden hidden md:block transition-opacity duration-300"
+    >
       {/* Calligraphy Drafting Canvas Trail */}
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[9998]" />
 
