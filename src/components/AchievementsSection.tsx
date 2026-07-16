@@ -1,8 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
 import { X, ArrowUpRight, ArrowLeft } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +16,38 @@ const achievements = [
     issuer: "Microsoft",
     desc: "Completed the Microsoft AI Skills Fest, gaining hands-on proficiency in Generative AI, Azure AI services, Microsoft Copilot, and autonomous agent systems.",
     imageUrl: "/certificates/microsoft-ai.png"
+  },
+  {
+    year: "2026",
+    category: "Hackathon / Competition",
+    title: "TRIQ - Think Twice",
+    issuer: "OutThinkX",
+    desc: "Awarded Certificate of Achievement in the TRIQ - Think Twice contest by OutThinkX, demonstrating quick thinking, reasoning, and exceptional knowledge under pressure.",
+    imageUrl: "/certificates/outthinkx-triq.png"
+  },
+  {
+    year: "2026",
+    category: "Cloud Architecture",
+    title: "AWS Cloud Practitioner Essentials",
+    issuer: "Amazon Web Services (AWS)",
+    desc: "Successfully completed training on AWS cloud models, security, networking, pricing, and infrastructure design for core web systems.",
+    imageUrl: "/certificates/aws-practitioner.png"
+  },
+  {
+    year: "2026",
+    category: "Professional Growth",
+    title: "TCS iON Career Edge - Young Professional",
+    issuer: "Tata Consultancy Services (TCS)",
+    desc: "Completed training on communication, soft skills, presentation skills, resume writing, group discussions, and fundamental IT and AI skills.",
+    imageUrl: "/certificates/tcs-ion.png"
+  },
+  {
+    year: "2026",
+    category: "Communication",
+    title: "Master Business English",
+    issuer: "Udemy / Course Completion",
+    desc: "Completed training on 160 essential business phrases for professional discussions, presentation delivery, executive meetings, and corporate interactions.",
+    imageUrl: "/certificates/udemy-english.png"
   },
   {
     year: "2026",
@@ -138,95 +172,105 @@ function TypewriterText({ text, className }: { text: string; className?: string 
 export function AchievementsSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeCert, setActiveCert] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <section
-      id="achievements"
-      ref={containerRef}
-      className="relative w-full py-24 md:py-32 px-4 md:px-12 flex flex-col items-center justify-center bg-transparent overflow-hidden"
-    >
-      <div className="w-full max-w-[1200px] mx-auto z-10">
+    <>
+      <section
+        id="achievements"
+        ref={containerRef}
+        className="relative w-full py-24 md:py-32 px-4 md:px-12 flex flex-col items-center justify-center bg-transparent overflow-hidden"
+      >
+        <div className="w-full max-w-[1200px] mx-auto z-10">
 
-        {/* Minimalist Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-24 md:mb-32">
-          <div>
-            <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-[#1c2135]/40 mb-6 block">
-              03 — Recognition
-            </span>
-            <h2 className="font-serif italic text-5xl md:text-7xl font-light text-[#1c2135] tracking-tight">
-              Honors & <br/> Certificates
-            </h2>
+          {/* Minimalist Header */}
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-24 md:mb-32">
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-[#1c2135]/40 mb-6 block">
+                03 — Recognition
+              </span>
+              <h2 className="font-serif italic text-5xl md:text-7xl font-light text-[#1c2135] tracking-tight">
+                Honors & <br/> Certificates
+              </h2>
+            </div>
+            <p className="font-sans font-light text-sm text-[#1c2135]/60 max-w-[280px] mt-8 md:mt-0">
+              A curated selection of technical milestones, hackathons, and professional growth.
+            </p>
           </div>
-          <p className="font-sans font-light text-sm text-[#1c2135]/60 max-w-[280px] mt-8 md:mt-0">
-            A curated selection of technical milestones, hackathons, and professional growth.
-          </p>
+
+          {/* Achievement List */}
+          <div className="w-full flex flex-col border-t border-[#1c2135]/10">
+            {achievements.map((item, index) => (
+              <AchievementRow
+                key={index}
+                item={item}
+                index={index}
+                onClick={() => setActiveCert(index)}
+              />
+            ))}
+          </div>
+
         </div>
+      </section>
 
-        {/* Achievement List */}
-        <div className="w-full flex flex-col border-t border-[#1c2135]/10">
-          {achievements.map((item, index) => (
-            <AchievementRow
-              key={index}
-              item={item}
-              index={index}
-              onClick={() => setActiveCert(index)}
-            />
-          ))}
-        </div>
+      {/* Certificate Modal (Portal) */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {activeCert !== null && (
+            <motion.div
+              className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.3 } }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            >
+              <div className="absolute inset-0 cursor-pointer" onClick={() => setActiveCert(null)} />
 
-      </div>
-
-      {/* Certificate Modal */}
-      <AnimatePresence>
-        {activeCert !== null && (
-          <motion.div
-            className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.3 } }}
-            exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          >
-            <div className="absolute inset-0 cursor-pointer" onClick={() => setActiveCert(null)} />
-
-            {achievements[activeCert] && (
-              <motion.div
-                initial={{ y: 20, scale: 0.95, opacity: 0 }}
-                animate={{ y: 0, scale: 1, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }}
-                exit={{ y: 20, scale: 0.95, opacity: 0 }}
-                className="relative w-full max-w-[1000px] max-h-[90vh] bg-[#0e0e0e] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 flex flex-col z-10"
-              >
-                {/* Header bar */}
-                <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-white/10 bg-[#121212]">
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => setActiveCert(null)}
-                      className="group flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all"
-                    >
-                      <ArrowLeft size={16} strokeWidth={2} className="group-hover:-translate-x-1 transition-transform" />
-                      <span className="font-sans text-[10px] md:text-[11px] font-bold tracking-[0.1em] uppercase hidden sm:block">Back</span>
-                    </button>
-                    <div className="flex flex-col">
-                      <span className="text-white font-serif italic text-base md:text-lg">{achievements[activeCert].title}</span>
-                      <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-white/40">{achievements[activeCert].issuer}</span>
+              {achievements[activeCert] && (
+                <motion.div
+                  initial={{ y: 20, scale: 0.95, opacity: 0 }}
+                  animate={{ y: 0, scale: 1, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }}
+                  exit={{ y: 20, scale: 0.95, opacity: 0 }}
+                  className="relative w-full max-w-[1000px] max-h-[90vh] bg-[#0e0e0e] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 flex flex-col z-10"
+                >
+                  {/* Header bar */}
+                  <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-white/10 bg-[#121212]">
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => setActiveCert(null)}
+                        className="group flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all"
+                      >
+                        <ArrowLeft size={16} strokeWidth={2} className="group-hover:-translate-x-1 transition-transform" />
+                        <span className="font-sans text-[10px] md:text-[11px] font-bold tracking-[0.1em] uppercase hidden sm:block">Back</span>
+                      </button>
+                      <div className="flex flex-col">
+                        <span className="text-white font-serif italic text-base md:text-lg">{achievements[activeCert].title}</span>
+                        <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-white/40">{achievements[activeCert].issuer}</span>
+                      </div>
                     </div>
+                    <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-widest text-white/30 border border-white/10 px-3 py-1 rounded-full hidden sm:block">
+                      {achievements[activeCert].year}
+                    </span>
                   </div>
-                  <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-widest text-white/30 border border-white/10 px-3 py-1 rounded-full hidden sm:block">
-                    {achievements[activeCert].year}
-                  </span>
-                </div>
-                {/* Image */}
-                <div className="relative flex-1 w-full h-full min-h-0 bg-black/50 p-4 md:p-8 flex items-center justify-center overflow-hidden">
-                  <img
-                    src={achievements[activeCert].imageUrl}
-                    alt="Certificate"
-                    className="w-full h-full object-contain rounded-md"
-                  />
-                </div>
-              </motion.div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
+                  {/* Image */}
+                  <div className="relative flex-1 w-full h-full min-h-0 bg-black/50 p-4 md:p-8 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={achievements[activeCert].imageUrl}
+                      alt="Certificate"
+                      className="w-full h-full object-contain rounded-md"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
 }
 

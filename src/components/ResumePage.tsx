@@ -346,6 +346,30 @@ export function ResumePage({ onBack }: ResumePageProps) {
                     description="Gained deep practical expertise in Generative AI development, Azure AI services, Microsoft Copilot, and autonomous agent systems."
                 />
                 <ResumeItem 
+                    title="TRIQ - Think Twice"
+                    subtitle="OutThinkX"
+                    date="2026"
+                    description="Awarded Certificate of Achievement in the TRIQ - Think Twice contest by OutThinkX, demonstrating quick thinking, reasoning, and exceptional knowledge under pressure."
+                />
+                <ResumeItem 
+                    title="AWS Cloud Practitioner Essentials"
+                    subtitle="Amazon Web Services"
+                    date="2026"
+                    description="Successfully completed training on AWS cloud models, security, networking, pricing, and infrastructure design for core web systems."
+                />
+                <ResumeItem 
+                    title="TCS iON Career Edge - Young Professional"
+                    subtitle="Tata Consultancy Services"
+                    date="2026"
+                    description="Completed training on communication, soft skills, presentation skills, resume writing, group discussions, and fundamental IT and AI skills."
+                />
+                <ResumeItem 
+                    title="Master Business English"
+                    subtitle="Udemy"
+                    date="2026"
+                    description="Completed training on 160 essential business phrases for professional discussions, presentation delivery, executive meetings, and corporate interactions."
+                />
+                <ResumeItem 
                     title="Elite Coders Open Source Hackathon"
                     subtitle="Elite Coders Qualifier"
                     date="2026"

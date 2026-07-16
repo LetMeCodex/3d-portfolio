@@ -55,19 +55,19 @@ export function ProjectsSection() {
   return (
     <section 
       id="work" 
-      className="relative w-full min-h-screen bg-[#F5F4F0] z-10 py-24 md:py-32"
+      className="relative w-full min-h-screen bg-[#111013] z-10 py-24 md:py-32"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Header Panel */}
         <div className="mb-20 md:mb-32 flex flex-col justify-center">
-          <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-[#1c2135]/40 mb-6 block">
+          <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-[#FAF8F5]/40 mb-6 block">
             04 — Selected Work
           </span>
-          <h2 className="font-serif italic text-6xl md:text-[7rem] font-light text-[#1c2135] tracking-tight leading-[1.1]">
+          <h2 className="font-serif italic text-6xl md:text-[7rem] font-light text-[#FAF8F5] tracking-tight leading-[1.1]">
             Hackathons &<br/> Applications
           </h2>
           <div className="w-16 h-[1px] bg-[#E84855] my-10"></div>
-          <p className="font-sans font-light text-base md:text-lg text-[#1c2135]/60 max-w-sm leading-relaxed">
+          <p className="font-sans font-light text-base md:text-lg text-[#FAF8F5]/60 max-w-sm leading-relaxed">
             A curated selection of technical milestones, intensive hackathons, and robust software engineering growth. Scroll vertically to explore.
           </p>
         </div>
@@ -118,7 +118,7 @@ export function ProjectsSection() {
             transform: scale(0.9) translateY(-5vh) rotateX(-5deg);
             filter: brightness(0.6);
             border-radius: 20px;
-            box-shadow: 0 50px 80px -10px rgba(0,0,0,0.1);
+            box-shadow: 0 50px 80px -10px rgba(0,0,0,0.3);
           }
         }
 
@@ -146,40 +146,40 @@ const ProjectCard = ({ item, index }: { item: any; index: number }) => {
       style={{ top: `calc(10vh + ${index * 30}px)` }}
     >
       <div className="stack-card-reveal w-full h-full">
-        <div className="stack-card-content relative w-full flex flex-col md:flex-row items-center justify-between group cursor-pointer py-10 md:py-20 px-6 md:px-12 rounded-3xl bg-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-[#1c2135]/5 overflow-hidden">
+        <div className="stack-card-content relative w-full flex flex-col md:flex-row items-center justify-between group cursor-pointer py-10 md:py-20 px-6 md:px-12 rounded-3xl bg-[#18171B] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border border-white/5 overflow-hidden">
         
         {/* Giant Floating Ambient Number */}
         <div className="absolute -left-5 -top-5 md:-left-10 md:-top-10 z-0 select-none opacity-5 group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none">
-            <span className="font-serif italic text-[15rem] md:text-[20rem] text-[#1c2135] font-light leading-none tracking-tighter">
+            <span className="font-serif italic text-[15rem] md:text-[20rem] text-[#FAF8F5] font-light leading-none tracking-tighter">
               {number}
             </span>
         </div>
         
         {/* Left Side: Content Block */}
-        <div className="relative z-10 w-full md:w-[45%] border-l border-[#1c2135]/10 group-hover:border-[#E84855] pl-6 md:pl-10 transition-colors duration-700 h-fit">
+        <div className="relative z-10 w-full md:w-[45%] border-l border-white/10 group-hover:border-[#E84855] pl-6 md:pl-10 transition-colors duration-700 h-fit">
             <div className="flex items-center gap-4 mb-6 md:mb-8">
-                <div className="text-[#1c2135]/40 group-hover:text-[#E84855] transition-colors duration-700">
+                <div className="text-[#FAF8F5]/40 group-hover:text-[#E84855] transition-colors duration-700">
                     <IconComponent size={24} strokeWidth={1.5} />
                 </div>
-                <span className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-[#1c2135]/60 font-medium">
+                <span className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-[#FAF8F5]/60 font-medium">
                   {item.type}
                 </span>
             </div>
             
-            <h3 className="font-serif italic font-light text-4xl md:text-6xl text-[#1c2135] tracking-tight leading-[1] mb-6 md:mb-8 group-hover:text-[#E84855] transition-colors duration-700">
+            <h3 className="font-serif italic font-light text-4xl md:text-6xl text-[#FAF8F5] tracking-tight leading-[1] mb-6 md:mb-8 group-hover:text-[#E84855] transition-colors duration-700">
               {item.title}
             </h3>
 
             {/* Editorial Project Details */}
             <div className="mb-8 max-w-xl">
-              <p className="font-sans font-light text-sm md:text-base text-[#1c2135]/80 leading-relaxed mb-6">
+              <p className="font-sans font-light text-sm md:text-base text-[#FAF8F5]/80 leading-relaxed mb-6">
                 {item.details[0]}
               </p>
               <div className="space-y-4">
                 {item.details.slice(1).map((detail: string, idx: number) => (
                   <div key={idx} className="flex items-start gap-4 group/detail">
-                    <div className="w-1 h-1 rounded-full bg-[#1c2135]/20 mt-2.5 shrink-0 group-hover/detail:bg-[#E84855] transition-colors duration-300" />
-                    <p className="font-sans font-light text-xs md:text-sm text-[#1c2135]/60 group-hover/detail:text-[#1c2135]/90 transition-colors duration-300 leading-relaxed">
+                    <div className="w-1 h-1 rounded-full bg-white/20 mt-2.5 shrink-0 group-hover/detail:bg-[#E84855] transition-colors duration-300" />
+                    <p className="font-sans font-light text-xs md:text-sm text-[#FAF8F5]/60 group-hover/detail:text-[#FAF8F5]/90 transition-colors duration-300 leading-relaxed">
                       {detail}
                     </p>
                   </div>
@@ -189,7 +189,7 @@ const ProjectCard = ({ item, index }: { item: any; index: number }) => {
 
             <div className="flex flex-wrap gap-x-6 gap-y-3">
               {item.stack.map((tech: string, i: number) => (
-                <span key={i} className="font-mono text-[10px] text-[#1c2135]/40 font-bold tracking-[0.2em] uppercase">
+                <span key={i} className="font-mono text-[10px] text-[#FAF8F5]/40 font-bold tracking-[0.2em] uppercase">
                   {tech}
                 </span>
               ))}
@@ -198,17 +198,17 @@ const ProjectCard = ({ item, index }: { item: any; index: number }) => {
 
         {/* Right Side: Image with floating mockup effect */}
         <div className="relative w-full md:w-[45%] h-[35vh] md:h-[50vh] mt-10 md:mt-0">
-          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border border-[#1c2135]/5 bg-white">
+          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border border-white/5 bg-[#18171B]">
             <img 
               src={item.imageUrl} 
               alt={item.title}
               className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1c2135]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           </div>
 
           {/* Floating Arrow CTA */}
-          <div className="absolute -right-4 -bottom-4 w-14 h-14 md:w-16 md:h-16 rounded-full bg-white shadow-xl flex items-center justify-center text-[#1c2135] group-hover:bg-[#E84855] group-hover:text-white transition-all duration-500 transform hover:scale-110 z-20">
+          <div className="absolute -right-4 -bottom-4 w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#18171B] border border-white/10 shadow-2xl flex items-center justify-center text-[#FAF8F5] group-hover:bg-[#E84855] group-hover:text-white transition-all duration-500 transform hover:scale-110 z-20">
             <ArrowUpRight size={24} strokeWidth={1.5} />
           </div>
         </div>

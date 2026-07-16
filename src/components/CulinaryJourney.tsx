@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Pizza, Dessert, ArrowRight, RotateCcw } from 'lucide-react';
 import { FoodieSpecial } from './FoodieSpecial';
@@ -11,6 +11,51 @@ gsap.registerPlugin(ScrollTrigger);
 export function CulinaryJourney() {
   const [choice, setChoice] = useState<'none' | 'savory' | 'sweet'>('none');
   const containerRef = useRef<HTMLDivElement>(null);
+  const choiceSectionRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<SVGCircleElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Smooth ScrollTrigger Iris Zoom Transition (no pinning to prevent glitches)
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: choiceSectionRef.current,
+        start: 'top bottom',
+        end: 'top top',
+        scrub: 0.5,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          // Grow circle from 0 to 2200px as section scrolls onto screen
+          const r = self.progress * 2200;
+          if (circleRef.current) {
+            circleRef.current.setAttribute('r', String(r));
+          }
+          // Smoothly fade out overlay in the last 15% of progress
+          if (overlayRef.current) {
+            if (self.progress > 0.85) {
+              const opacity = (1 - self.progress) / 0.15;
+              overlayRef.current.style.opacity = String(opacity);
+            } else {
+              overlayRef.current.style.opacity = '1';
+            }
+          }
+        },
+        onLeave: () => {
+          if (overlayRef.current) {
+            overlayRef.current.style.display = 'none';
+          }
+        },
+        onEnterBack: () => {
+          if (overlayRef.current) {
+            overlayRef.current.style.display = 'block';
+            overlayRef.current.style.opacity = '1';
+          }
+        }
+      });
+    }, choiceSectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   useEffect(() => {
     // Critical: Refresh triggers whenever a component is added to the DOM
@@ -47,7 +92,10 @@ export function CulinaryJourney() {
       style={{ isolation: 'isolate' }}
     >
       {/* Choice Section */}
-      <section className="relative z-30 w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-[#F5F4F0]">
+      <section 
+        ref={choiceSectionRef}
+        className="relative z-30 w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-[#F5F4F0] overflow-hidden"
+      >
         <div className="text-center max-w-4xl w-full">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -164,6 +212,41 @@ export function CulinaryJourney() {
               </motion.button>
             )}
           </AnimatePresence>
+        </div>
+
+        {/* Dark Cinematic Iris Overlay */}
+        <div 
+          ref={overlayRef}
+          className="absolute inset-0 w-full h-full z-40 pointer-events-none"
+        >
+          <svg 
+            viewBox="0 0 1920 1080" 
+            preserveAspectRatio="xMidYMid slice" 
+            className="w-full h-full"
+          >
+            <defs>
+              <mask id="food-iris-mask">
+                {/* White covers everything */}
+                <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                {/* Circle mask starting at 0 radius */}
+                <circle 
+                  ref={circleRef} 
+                  cx="960" 
+                  cy="540" 
+                  r="0" 
+                  fill="black" 
+                />
+              </mask>
+            </defs>
+            <rect 
+              x="0" 
+              y="0" 
+              width="100%" 
+              height="100%" 
+              fill="#111013" 
+              mask="url(#food-iris-mask)" 
+            />
+          </svg>
         </div>
       </section>
 

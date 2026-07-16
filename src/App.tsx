@@ -20,6 +20,7 @@ import { CulinaryJourney } from "./components/CulinaryJourney";
 import Preloader from "./components/ui/Preloader";
 import { WeatherSystem } from "./components/WeatherSystem";
 import { CloudDivider } from "./components/ui/CloudDivider";
+import { ZoomRevealSection } from "./components/ZoomRevealSection";
 
 
 export default function App() {
@@ -104,8 +105,10 @@ export default function App() {
                   <IntroSection onOpenAbout={handleOpenAbout} />
                   <AchievementsSection />
                   <MarqueeDivider />
+                  <ZoomRevealSection />
                   <ProjectsSection />
                   <CulinaryJourney />
+
                 </div>
                 <CloudDivider bgColor="#F5F4F0" />
               </div>
