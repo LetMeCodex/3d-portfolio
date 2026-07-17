@@ -110,7 +110,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Project Cards Stacking Container using CardSwap */}
-        <div className="relative w-full flex justify-center items-center pt-44 pb-20 overflow-visible min-h-[600px] md:min-h-[700px]">
+        <div className="w-full block pt-16 pb-20 overflow-visible min-h-[600px] md:min-h-[700px]">
           <CardSwap
             width={850}
             height={480}

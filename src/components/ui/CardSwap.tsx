@@ -34,6 +34,8 @@ const placeNow = (el: HTMLElement | null, slot: Slot, skew: number) => {
     x: slot.x,
     y: slot.y,
     z: slot.z,
+    opacity: 1,
+    scale: 1,
     xPercent: -50,
     yPercent: -50,
     skewY: skew,
@@ -101,6 +103,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const intervalRef = useRef<number | undefined>(undefined);
   const container = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Scroll Triggered Stacking Effect
   useEffect(() => {
@@ -121,21 +124,25 @@ const CardSwap: React.FC<CardSwapProps> = ({
       const elFront = refs[cardFront].current;
       const backSlot = makeSlot(total - 1, cardDistance, verticalDistance, total);
 
-      // 1. Front card drops down
+      // 1. Front card drops down and fades out
       tl.to(elFront, {
-        y: '+=500',
+        y: '+=300',
+        opacity: 0,
+        scale: 0.85,
         duration: 0.5,
         ease: 'power1.inOut'
       }, timeStart);
 
-      // Swap zIndex at mid-point when it is fully dropped
+      // Swap zIndex at mid-point when it is fully dropped (and invisible)
       tl.set(elFront, { zIndex: backSlot.zIndex }, timeMid);
 
-      // Return to back slot
+      // Return to back slot and fade back in
       tl.to(elFront, {
         x: backSlot.x,
         y: backSlot.y,
         z: backSlot.z,
+        opacity: 1,
+        scale: 1,
         duration: 0.5,
         ease: 'power1.inOut'
       }, timeMid);
@@ -161,12 +168,12 @@ const CardSwap: React.FC<CardSwapProps> = ({
       }
     }
 
-    const triggerElement = container.current;
+    const triggerElement = wrapperRef.current;
     if (triggerElement) {
       const trigger = ScrollTrigger.create({
         trigger: triggerElement,
-        start: "top 28%",
-        end: `+=${total * 450}`, // scroll length proportional to card counts
+        start: "top 18%", // pin lower to stay completely clear of header text
+        end: `+=${total * 400}`, // scroll length proportional to card counts
         pin: true,
         scrub: 1, // buttery smooth scrub with GSAP lag easing
         animation: tl,
@@ -194,8 +201,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
       const tl = gsap.timeline();
       tlRef.current = tl;
 
+      // Front card drops down and fades out
       tl.to(elFront, {
-        y: '+=500',
+        y: '+=300',
+        opacity: 0,
+        scale: 0.85,
         duration: config.durDrop,
         ease: config.ease
       });
@@ -227,12 +237,15 @@ const CardSwap: React.FC<CardSwapProps> = ({
         [],
         'return'
       );
+      // Return to back slot and fade back in
       tl.to(
         elFront,
         {
           x: backSlot.x,
           y: backSlot.y,
           z: backSlot.z,
+          opacity: 1,
+          scale: 1,
           duration: config.durReturn,
           ease: config.ease
         },
@@ -287,8 +300,10 @@ const CardSwap: React.FC<CardSwapProps> = ({
   });
 
   return (
-    <div ref={container} className="card-swap-container" style={{ width, height }}>
-      {rendered}
+    <div ref={wrapperRef} className="card-swap-wrapper w-full flex justify-center items-center overflow-visible">
+      <div ref={container} className="card-swap-container" style={{ width, height }}>
+        {rendered}
+      </div>
     </div>
   );
 };
