@@ -20,10 +20,11 @@ import { CulinaryJourney } from "./components/CulinaryJourney";
 import { WeatherSystem } from "./components/WeatherSystem";
 import { CloudDivider } from "./components/ui/CloudDivider";
 import { ZoomRevealSection } from "./components/ZoomRevealSection";
+import { Preloader } from "./components/Preloader";
 
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPreloader, setShowPreloader] = useState(true);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [clickCoords, setClickCoords] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
@@ -55,7 +56,10 @@ export default function App() {
     <SmoothScroll>
       <div className="min-h-screen flex flex-col bg-transparent font-sans relative">
 
-        {/* Cinematic Preloader (Disabled) */}
+        {/* Cinematic Preloader */}
+        {showPreloader && (
+          <Preloader onComplete={() => setShowPreloader(false)} />
+        )}
 
         {/* Global Weather System (Renders across the entire website) */}
         <WeatherSystem />
@@ -65,10 +69,10 @@ export default function App() {
 
 
         {/* Custom cursor and interactive trail */}
-        {!isLoading && <CustomCursor />}
+        {!showPreloader && <CustomCursor />}
 
         <AnimatePresence>
-          {!isResumeOpen && !isAboutOpen && !isLoading && (
+          {!isResumeOpen && !isAboutOpen && !showPreloader && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
