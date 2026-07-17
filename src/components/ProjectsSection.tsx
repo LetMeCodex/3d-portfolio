@@ -130,6 +130,7 @@ export function ProjectsSection() {
         }
 
         .stack-card-content {
+          background-color: #18171B !important;
           transform-origin: 50% 0%;
           will-change: transform, filter;
           animation: scale-card linear forwards;
@@ -139,11 +140,9 @@ export function ProjectsSection() {
 
         @keyframes reveal-card {
           0% {
-            opacity: 0;
             transform: translateY(15vh) scale(0.95);
           }
           100% {
-            opacity: 1;
             transform: translateY(0) scale(1);
           }
         }
