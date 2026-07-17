@@ -161,13 +161,13 @@ const CardSwap: React.FC<CardSwapProps> = ({
       }
     }
 
-    const triggerElement = container.current;
+    const triggerElement = document.getElementById('work') || container.current;
     if (triggerElement) {
       const trigger = ScrollTrigger.create({
         trigger: triggerElement,
-        start: "top 28%",
+        start: triggerElement.id === 'work' ? "top top" : "top 28%",
         end: `+=${total * 450}`, // scroll length proportional to card counts
-        pin: true,
+        pin: triggerElement.id === 'work' ? (window.innerWidth > 1024) : true,
         scrub: 1, // buttery smooth scrub with GSAP lag easing
         animation: tl,
         invalidateOnRefresh: true,

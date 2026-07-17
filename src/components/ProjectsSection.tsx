@@ -92,7 +92,7 @@ export function ProjectsSection() {
   return (
     <section 
       id="work" 
-      className="relative w-full min-h-screen bg-[#111013] z-10 py-24 md:py-32"
+      className="relative w-full min-h-screen lg:h-screen lg:flex lg:items-center bg-[#111013] z-10 py-24 md:py-32 lg:py-0 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
         {/* Left Column: Header Panel */}
@@ -110,7 +110,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Right Column: Project Cards Stacking Container using CardSwap */}
-        <div className="lg:col-span-8 relative w-full flex justify-center items-center py-10 lg:py-20 overflow-visible min-h-[500px] md:min-h-[600px]">
+        <div className="lg:col-span-8 relative w-full flex justify-center items-center py-10 lg:py-0 overflow-visible">
           <CardSwap
             width={720}
             height={420}
