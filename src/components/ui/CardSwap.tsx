@@ -165,7 +165,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
     if (triggerElement) {
       const trigger = ScrollTrigger.create({
         trigger: triggerElement,
-        start: "top 20%",
+        start: "top 28%",
         end: `+=${total * 450}`, // scroll length proportional to card counts
         pin: true,
         scrub: 1, // buttery smooth scrub with GSAP lag easing
