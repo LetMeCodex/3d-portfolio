@@ -94,26 +94,26 @@ export function ProjectsSection() {
       id="work" 
       className="relative w-full min-h-screen bg-[#111013] z-10 py-24 md:py-32"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* Header Panel */}
-        <div className="mb-20 md:mb-32 flex flex-col justify-center">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+        {/* Left Column: Header Panel */}
+        <div className="lg:col-span-4 lg:sticky lg:top-[20vh] flex flex-col justify-center">
           <span className="font-mono text-[10px] uppercase tracking-[0.4em] text-[#FAF8F5]/40 mb-6 block">
             04 — Selected Work
           </span>
-          <h2 className="font-serif italic text-6xl md:text-[7rem] font-light text-[#FAF8F5] tracking-tight leading-[1.1]">
+          <h2 className="font-serif italic text-6xl md:text-7xl font-light text-[#FAF8F5] tracking-tight leading-[1.1]">
             Hackathons &<br/> Applications
           </h2>
           <div className="w-16 h-[1px] bg-[#E84855] my-10"></div>
-          <p className="font-sans font-light text-base md:text-lg text-[#FAF8F5]/60 max-w-sm leading-relaxed">
+          <p className="font-sans font-light text-base md:text-lg text-[#FAF8F5]/60 leading-relaxed">
             A curated selection of technical milestones, intensive hackathons, and robust software engineering growth. Scroll to stack and swap cards.
           </p>
         </div>
 
-        {/* Project Cards Stacking Container using CardSwap */}
-        <div className="w-full block pt-16 pb-20 overflow-visible min-h-[600px] md:min-h-[700px]">
+        {/* Right Column: Project Cards Stacking Container using CardSwap */}
+        <div className="lg:col-span-8 relative w-full flex justify-center items-center py-10 lg:py-20 overflow-visible min-h-[500px] md:min-h-[600px]">
           <CardSwap
-            width={850}
-            height={480}
+            width={720}
+            height={420}
             cardDistance={20}
             verticalDistance={15}
             delay={4000}
@@ -125,16 +125,16 @@ export function ProjectsSection() {
               const number = String(index + 1).padStart(2, '0');
               return (
                 <Card key={index} className="shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] border border-white/5 bg-[#18171B] rounded-[24px] overflow-hidden group">
-                  <div className="relative w-full h-full flex flex-row items-center justify-between py-6 px-10">
+                  <div className="relative w-full h-full flex flex-row items-center justify-between py-6 px-8">
                     {/* Giant Floating Ambient Number */}
                     <div className="absolute -left-5 -top-5 md:-left-8 md:-top-8 z-0 select-none opacity-5 group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none">
-                      <span className="font-serif italic text-[12rem] md:text-[14rem] text-[#FAF8F5] font-light leading-none tracking-tighter">
+                      <span className="font-serif italic text-[10rem] md:text-[12rem] text-[#FAF8F5] font-light leading-none tracking-tighter">
                         {number}
                       </span>
                     </div>
 
                     {/* Left Side: Content Block */}
-                    <div className="relative z-10 w-[48%] border-l border-white/10 group-hover:border-[#E84855] pl-6 h-full flex flex-col justify-center transition-colors duration-700">
+                    <div className="relative z-10 w-[50%] border-l border-white/10 group-hover:border-[#E84855] pl-5 h-full flex flex-col justify-center transition-colors duration-700">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="text-[#FAF8F5]/40 group-hover:text-[#E84855] transition-colors duration-700">
                           <IconComponent size={20} strokeWidth={1.5} />
@@ -144,19 +144,19 @@ export function ProjectsSection() {
                         </span>
                       </div>
                       
-                      <h3 className="font-serif italic font-light text-3xl md:text-4xl text-[#FAF8F5] tracking-tight leading-[1.1] mb-4 group-hover:text-[#E84855] transition-colors duration-700">
+                      <h3 className="font-serif italic font-light text-2xl md:text-3xl text-[#FAF8F5] tracking-tight leading-[1.1] mb-4 group-hover:text-[#E84855] transition-colors duration-700">
                         {item.title}
                       </h3>
 
                       <div className="mb-4">
-                        <p className="font-sans font-light text-xs md:text-sm text-[#FAF8F5]/85 leading-relaxed mb-4">
+                        <p className="font-sans font-light text-[11px] md:text-xs text-[#FAF8F5]/85 leading-relaxed mb-4">
                           {item.details[0]}
                         </p>
                         <div className="space-y-2 hidden md:block">
                           {item.details.slice(1).map((detail: string, idx: number) => (
                             <div key={idx} className="flex items-start gap-3">
                               <div className="w-1 h-1 rounded-full bg-white/20 mt-1.5 shrink-0" />
-                              <p className="font-sans font-light text-[11px] text-[#FAF8F5]/60 leading-relaxed">
+                              <p className="font-sans font-light text-[10px] text-[#FAF8F5]/60 leading-relaxed">
                                 {detail}
                               </p>
                             </div>
@@ -174,7 +174,7 @@ export function ProjectsSection() {
                     </div>
 
                     {/* Right Side: Image */}
-                    <div className="relative w-[48%] h-[85%] rounded-2xl overflow-hidden shadow-lg border border-white/5 bg-[#18171B]">
+                    <div className="relative w-[46%] h-[85%] rounded-[18px] overflow-hidden shadow-lg border border-white/5 bg-[#18171B]">
                       <img 
                         src={item.imageUrl} 
                         alt={item.title}
@@ -183,8 +183,8 @@ export function ProjectsSection() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                       
                       {/* Floating Arrow CTA */}
-                      <div className="absolute -right-3 -bottom-3 w-12 h-12 rounded-full bg-[#18171B] border border-white/10 shadow-2xl flex items-center justify-center text-[#FAF8F5] group-hover:bg-[#E84855] group-hover:text-white transition-all duration-500 transform hover:scale-105 z-20">
-                        <ArrowUpRight size={18} strokeWidth={1.5} />
+                      <div className="absolute -right-3 -bottom-3 w-10 h-10 rounded-full bg-[#18171B] border border-white/10 shadow-2xl flex items-center justify-center text-[#FAF8F5] group-hover:bg-[#E84855] group-hover:text-white transition-all duration-500 transform hover:scale-105 z-20">
+                        <ArrowUpRight size={16} strokeWidth={1.5} />
                       </div>
                     </div>
                   </div>
