@@ -164,6 +164,12 @@ export function CustomCursor() {
       const cx = e.clientX;
       const cy = e.clientY;
 
+      // Bypass cursor ripples and sparks when interacting with the Rubik's Cube widget
+      const target = e.target as HTMLElement;
+      if (target && target.closest('.the-cube-game, .ui__game')) {
+        return;
+      }
+
       // Spawn a wobbly ripple ring
       ripplesRef.current.push({
         x: cx,
