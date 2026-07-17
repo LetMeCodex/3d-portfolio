@@ -152,13 +152,13 @@ function TypewriterText({ text, className }: { text: string; className?: string 
     const ctx = gsap.context(() => {
       gsap.to(chars, {
         opacity: 1,
-        stagger: 0.015,
+        stagger: 0.003,
+        duration: 0.2,
         ease: 'none',
         scrollTrigger: {
           trigger: el.current,
-          start: 'top 85%',
-          end: 'bottom 60%',
-          scrub: true,
+          start: 'top 90%',
+          toggleActions: 'play none none none',
         }
       });
     });

@@ -161,21 +161,12 @@ const CardSwap: React.FC<CardSwapProps> = ({
       }
     }
 
-    // At the end of the card swaps, fade out the entire section's foreground content (cards and text)
-    // to reveal a clean dark space before the next section begins.
-    const finalFadeStart = (total - 1) * 0.5;
-    tl.to([container.current, '#work-header'], {
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power1.inOut'
-    }, finalFadeStart);
-
     const triggerElement = document.getElementById('work') || container.current;
     if (triggerElement) {
       const trigger = ScrollTrigger.create({
         trigger: triggerElement,
         start: triggerElement.id === 'work' ? "top top" : "top 28%",
-        end: `+=${(total + 1.2) * 450}`, // scroll length proportional to card counts + spacing buffer
+        end: `+=${total * 450}`, // scroll length proportional to card counts
         pin: triggerElement.id === 'work' ? (window.innerWidth > 1024) : true,
         scrub: 1, // buttery smooth scrub with GSAP lag easing
         animation: tl,
