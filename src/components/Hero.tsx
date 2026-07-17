@@ -143,7 +143,7 @@ export function Hero({ onOpenResume }: HeroProps) {
 
         <div className="hero-title-line mt-12 md:mt-0 ml-0 md:ml-[15vw] max-w-[380px] pointer-events-auto relative">
           <p className="font-bold text-[16px] md:text-[20px] leading-[1.3] text-[#121212] uppercase">
-            SHAPING IDEAS INTO VISUALS THAT SPEAK, CONNECT, AND LEAVE AN IMPACT.
+            CRAFTING INTERACTIVE SPACES WHERE COMPLEX LOGIC MEETS INTUITIVE VISUAL SOUL.
           </p>
           <HandDrawnDoodle
             type="squiggle"
