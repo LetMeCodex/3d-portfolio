@@ -44,13 +44,15 @@ function TypewriterText({ text, delay = 0, className = "" }: { text: string, del
 }
 
 const polaroids = [
-  { id: 1, src: "", caption: "when i went to the awesome place and mets lots of fish", rotate: -8, top: "10%", left: "15%" },
-  { id: 2, src: "", caption: "in poondi near kodaikanal where we somehow managed to get this close to the sheep...", rotate: 6, top: "45%", left: "5%" },
-  { id: 3, src: "", caption: "in landour bakehouse eating tart and spinach pot pie (yum).", rotate: -4, top: "50%", left: "45%" },
-  { id: 4, src: "", caption: "a beautiful memory from the mountains that feels like yesterday.", rotate: 12, top: "15%", left: "48%" },
+  { id: 1, src: "/about-sunset.png", caption: "Chasing Jaipur's golden hour at Nahargarh Fort. Sunsets look better from the top of the world.", rotate: -8, top: "10%", left: "15%" },
+  { id: 2, src: "/about-pizza.png", caption: "Signature thin-crust and double cheese. A cheat day isn't complete without artisanal personal pizzas!", rotate: 6, top: "45%", left: "5%" },
+  { id: 3, src: "/about-vrindavan.png", caption: "Spiritual vibes in Vrindavan at the beautiful Chaar Dham. Divine peace and intricate gold architecture.", rotate: -4, top: "50%", left: "45%" },
+  { id: 4, src: "/about-video.mp4", caption: "A snapshot of peaceful morning walks and quiet moments. The little details make the journey special.", rotate: 12, top: "15%", left: "48%" },
 ];
 
 function Polaroid({ data, dragRef }: { data: any, dragRef: React.RefObject<HTMLDivElement> }) {
+  const isVideo = data.src?.endsWith('.mp4') || data.src?.endsWith('.webm');
+
   return (
     <motion.div
       drag
@@ -63,7 +65,18 @@ function Polaroid({ data, dragRef }: { data: any, dragRef: React.RefObject<HTMLD
     >
       <div className="w-full h-[200px] bg-[#ebebeb] overflow-hidden relative">
         {data.src ? (
-          <img src={data.src} className="w-full h-full object-cover pointer-events-none" alt="Memory" />
+          isVideo ? (
+            <video 
+              src={data.src} 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              className="w-full h-full object-cover pointer-events-none" 
+            />
+          ) : (
+            <img src={data.src} className="w-full h-full object-cover pointer-events-none" alt="Memory" />
+          )
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 font-mono text-xs border border-dashed border-gray-300">
             <span>[ paste image here ]</span>
