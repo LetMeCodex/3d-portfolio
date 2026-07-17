@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Hero } from "./components/Hero";
 import { HomeIntro } from "./components/HomeIntro";
 import { IntroSection } from "./components/IntroSection";
-import { ProjectsSection } from "./components/ProjectsSection";
 import { AchievementsSection } from "./components/AchievementsSection";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { motion, AnimatePresence } from "motion/react";
@@ -105,7 +104,6 @@ export default function App() {
                   <AchievementsSection />
                   <MarqueeDivider />
                   <ZoomRevealSection />
-                  <ProjectsSection />
                   <CulinaryJourney />
 
                 </div>
