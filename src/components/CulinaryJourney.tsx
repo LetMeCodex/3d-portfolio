@@ -12,7 +12,8 @@ export function CulinaryJourney() {
   const [choice, setChoice] = useState<'none' | 'savory' | 'sweet'>('none');
   const containerRef = useRef<HTMLDivElement>(null);
   const choiceSectionRef = useRef<HTMLDivElement>(null);
-  const circleRef = useRef<SVGCircleElement>(null);
+  const circleBgRef = useRef<SVGCircleElement>(null);
+  const circleMaskRef = useRef<SVGCircleElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Smooth ScrollTrigger Iris Zoom Transition (no pinning to prevent glitches)
@@ -27,8 +28,11 @@ export function CulinaryJourney() {
         onUpdate: (self) => {
           // Grow circle from 0 to 2200px as section scrolls onto screen
           const r = self.progress * 2200;
-          if (circleRef.current) {
-            circleRef.current.setAttribute('r', String(r));
+          if (circleBgRef.current) {
+            circleBgRef.current.setAttribute('r', String(r));
+          }
+          if (circleMaskRef.current) {
+            circleMaskRef.current.setAttribute('r', String(r));
           }
           // Smoothly fade out overlay in the last 15% of progress
           if (overlayRef.current) {
@@ -94,7 +98,7 @@ export function CulinaryJourney() {
       {/* Choice Section */}
       <section 
         ref={choiceSectionRef}
-        className="relative z-30 w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-[#F5F4F0] overflow-hidden"
+        className="relative z-30 w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-[#F5F4F0]"
       >
         <div className="text-center max-w-4xl w-full">
           <motion.div 
@@ -218,11 +222,13 @@ export function CulinaryJourney() {
         <div 
           ref={overlayRef}
           className="absolute inset-0 w-full h-full z-40 pointer-events-none"
+          style={{ overflow: 'visible' }}
         >
           <svg 
             viewBox="0 0 1920 1080" 
             preserveAspectRatio="xMidYMid slice" 
             className="w-full h-full"
+            style={{ overflow: 'visible' }}
           >
             <defs>
               <mask id="food-iris-mask">
@@ -230,7 +236,7 @@ export function CulinaryJourney() {
                 <rect x="0" y="0" width="100%" height="100%" fill="white" />
                 {/* Circle mask starting at 0 radius */}
                 <circle 
-                  ref={circleRef} 
+                  ref={circleMaskRef} 
                   cx="960" 
                   cy="540" 
                   r="0" 
@@ -238,6 +244,15 @@ export function CulinaryJourney() {
                 />
               </mask>
             </defs>
+            {/* Cream circle background expanding past the section fold */}
+            <circle 
+              ref={circleBgRef} 
+              cx="960" 
+              cy="540" 
+              r="0" 
+              fill="#F5F4F0" 
+            />
+            {/* Dark cover with hole masking */}
             <rect 
               x="0" 
               y="0" 
