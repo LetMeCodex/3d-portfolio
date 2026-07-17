@@ -47,7 +47,7 @@ const polaroids = [
   { id: 1, src: "/about-sunset.png", caption: "Chasing Jaipur's golden hour at Nahargarh Fort. Sunsets look better from the top of the world.", rotate: -8, top: "10%", left: "15%" },
   { id: 2, src: "/about-pizza.png", caption: "Signature thin-crust and double cheese. A cheat day isn't complete without artisanal personal pizzas!", rotate: 6, top: "45%", left: "5%" },
   { id: 3, src: "/about-vrindavan.png", caption: "Spiritual vibes in Vrindavan at the beautiful Chaar Dham. Divine peace and intricate gold architecture.", rotate: -4, top: "50%", left: "45%" },
-  { id: 4, src: "/about-video.mp4", caption: "A snapshot of peaceful morning walks and quiet moments. The little details make the journey special.", rotate: 12, top: "15%", left: "48%" },
+  { id: 4, src: "/about-video.mp4", caption: "A snapshot of peaceful morning walks and quiet moments. The little details make the journey special.", rotate: 12, top: "15%", left: "48%", objectPosition: "top" },
 ];
 
 function Polaroid({ data, dragRef }: { data: any, dragRef: React.RefObject<HTMLDivElement> }) {
@@ -83,9 +83,15 @@ function Polaroid({ data, dragRef }: { data: any, dragRef: React.RefObject<HTMLD
               muted 
               playsInline 
               className="w-full h-full object-cover pointer-events-none" 
+              style={{ objectPosition: data.objectPosition || 'center' }}
             />
           ) : (
-            <img src={data.src} className="w-full h-full object-cover pointer-events-none" alt="Memory" />
+            <img 
+              src={data.src} 
+              className="w-full h-full object-cover pointer-events-none" 
+              alt="Memory" 
+              style={{ objectPosition: data.objectPosition || 'center' }}
+            />
           )
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 font-mono text-xs border border-dashed border-gray-300">
