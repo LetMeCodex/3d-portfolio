@@ -1,6 +1,42 @@
-import { ArrowUpRight, Database, Cloud, Code, Trophy } from 'lucide-react';
+import { ArrowUpRight, Database, Cloud, Code, Trophy, Shield, Cpu, Wifi } from 'lucide-react';
 
 const projects = [
+  {
+    title: "LeakMap AI",
+    type: "Global South AI Safety Hackathon",
+    stack: ["AI Governance", "Prompt Analysis", "Privacy Engine", "Risk Mapping"],
+    details: [
+      "Developed LeakMap AI, an AI governance platform, at the Global South AI Safety Hackathon organized by Secure AI Futures Lab (SAFL) at IIT Delhi.",
+      "Designed a real-time prompt risk analysis engine that identifies and redacts sensitive parameters before they hit public LLM endpoints.",
+      "Engineered an interactive exposure mapping visualization that maps subprocessor networks and compliance data flow paths."
+    ],
+    imageUrl: "/projects/leakmap.png",
+    icon: Shield
+  },
+  {
+    title: "AgentForge Workbench",
+    type: "IronLabs AI Hackathon",
+    stack: ["AI Optimization", "Agentic Workflows", "Enterprise Benchmarking", "Next.js"],
+    details: [
+      "Built an Enterprise AI Workbench from scratch at the AIC Delhi x IronLabs AI Hackathon 2026, competing in the highly technical AI Optimization Track (AIOPL).",
+      "Engineered a system to benchmark and reduce LLM hallucinations, ensuring reliability and structural compliance for automated corporate agents.",
+      "Developed an agent optimization pipeline designed to run complex relational workflows under strict enterprise rules."
+    ],
+    imageUrl: "/projects/agentforge.png",
+    icon: Cpu
+  },
+  {
+    title: "ResQMesh",
+    type: "Hack-The-Den Hackathon",
+    stack: ["Mesh Networks", "P2P Protocols", "LoRa Simulation", "Decentralized Infrastructure"],
+    details: [
+      "Designed and built ResQMesh for Hack-The-Den 2026, selecting as a Top 40 project out of 200+ submissions in an offline hackathon sprint at Coding Blocks.",
+      "Created a decentralized, offline-first emergency communication system that operates entirely without cellular towers or internet access.",
+      "Leveraged peer-to-peer protocols including Wi-Fi Direct and Bluetooth Low Energy along with Heltec V3 LoRa hardware simulations to enable mesh communication during disasters."
+    ],
+    imageUrl: "/projects/resqmesh.png",
+    icon: Wifi
+  },
   {
     title: "Student Management System",
     type: "Full-Stack Architecture",
