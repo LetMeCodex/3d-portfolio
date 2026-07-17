@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lottie from 'lottie-react';
 import { Motion3DCanvas } from './ui/Motion3DCanvas';
+import { SpotifyPlayer } from './ui/SpotifyPlayer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -488,6 +489,11 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
           <circle cx="50" cy="50" r="3" fill="currentColor" />
         </svg>
         <div className="text-[6px] font-mono text-center text-black/20 mt-1 grid-text">PROTRACTOR_MD-08</div>
+      </div>
+
+      {/* Floating Spotify Music Player Widget */}
+      <div className="absolute left-[2.5%] bottom-[20%] hidden xl:block z-30 pointer-events-auto filter drop-shadow-md select-none">
+        <SpotifyPlayer />
       </div>
 
       {/* Floating CAD Widget Right: Vector Spiral Helix */}
