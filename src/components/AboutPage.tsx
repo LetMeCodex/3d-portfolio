@@ -218,11 +218,16 @@ export function AboutPage({ onBack }: AboutPageProps) {
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setAge(calculateAge());
     }, 100);
     return () => clearInterval(timer);
   }, []);
+
 
 
   return (
