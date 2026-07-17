@@ -121,9 +121,9 @@ const CardSwap: React.FC<CardSwapProps> = ({
       const elFront = refs[cardFront].current;
       const backSlot = makeSlot(total - 1, cardDistance, verticalDistance, total);
 
-      // 1. Front card drops down
+      // 1. Front card slides out to the right
       tl.to(elFront, {
-        y: '+=500',
+        x: '+=450',
         duration: 0.5,
         ease: 'power1.inOut'
       }, timeStart);
@@ -195,7 +195,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       tlRef.current = tl;
 
       tl.to(elFront, {
-        y: '+=500',
+        x: '+=450',
         duration: config.durDrop,
         ease: config.ease
       });
