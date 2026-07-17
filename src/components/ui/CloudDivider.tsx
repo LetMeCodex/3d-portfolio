@@ -26,7 +26,7 @@ export function CloudDivider({ bgColor = '#F5F4F0' }: CloudDividerProps) {
           trigger: containerRef.current,
           start: 'top bottom', // Start animating when the divider top enters the viewport bottom
           end: 'bottom bottom', // End when fully scrolled to the bottom
-          scrub: 1, // Smooth scrub interaction
+          scrub: true, // Snap to smooth scroll
         }
       });
 

@@ -181,7 +181,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
               trigger: headlineRef.current,
               start: "top 88%",
               end: "bottom 38%",
-              scrub: 1.2, // buttery smooth scroll lag/inertia
+              scrub: true,
             }
           }
         );
@@ -206,7 +206,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
               trigger: word,
               start: "top 92%", // triggers slightly before center to reveal
               end: "top 62%",   // opens fully as user scrolls past
-              scrub: 1.2,       // buttery smooth sync matching scroll chars
+              scrub: true,
             }
           });
 
@@ -266,7 +266,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             trigger: containerRef.current,
             start: 'top 80%',
             end: 'bottom 40%',
-            scrub: 1.2,
+            scrub: true,
           }
         }
       );
@@ -280,7 +280,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             trigger: containerRef.current,
             start: 'top 80%',
             end: 'bottom 40%',
-            scrub: 1.2,
+            scrub: true,
           }
         }
       );
@@ -294,7 +294,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             trigger: containerRef.current,
             start: 'top 80%',
             end: 'bottom 40%',
-            scrub: 1.2,
+            scrub: true,
           }
         }
       );
@@ -309,7 +309,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
               trigger: containerRef.current,
               start: 'top 80%',
               end: 'bottom 40%',
-              scrub: 1.2,
+              scrub: true,
             }
           }
         );
@@ -324,7 +324,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             trigger: containerRef.current,
             start: 'top 80%',
             end: 'bottom 40%',
-            scrub: 1.2,
+            scrub: true,
           }
         }
       );
@@ -338,7 +338,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             trigger: containerRef.current,
             start: 'top 80%',
             end: 'bottom 40%',
-            scrub: 1.2,
+            scrub: true,
           }
         }
       );
@@ -352,7 +352,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             trigger: containerRef.current,
             start: 'top 80%',
             end: 'bottom 40%',
-            scrub: 1.2,
+            scrub: true,
           }
         }
       );

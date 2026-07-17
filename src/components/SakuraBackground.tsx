@@ -22,6 +22,7 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
     let particles: Particle[] = [];
     let animationFrameId: number;
 
+    const isMobile = window.innerWidth < 768;
     const settings = {
         bgColor: "transparent",
         minWind: aggressive ? 1.0 : 0.2,
@@ -35,7 +36,7 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
         rotationSpeed: aggressive ? 0.05 : 0.01,
         tumbleStrength: aggressive ? 0.6 : 0.2,
         staticTilt: 0,
-        particleCount: aggressive ? 150 : 60,
+        particleCount: isMobile ? (aggressive ? 50 : 20) : (aggressive ? 120 : 50),
         direction: -1
     };
 

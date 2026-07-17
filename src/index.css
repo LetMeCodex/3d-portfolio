@@ -94,6 +94,34 @@
   animation-play-state: paused;
 }
 
+/* GPU-Accelerated Wiggle & Pulse animations for hand-drawn doodles */
+@keyframes doodle-wiggle {
+  0% { transform: rotate(0deg) translate(0px, 0px); }
+  25% { transform: rotate(-1deg) translate(-1px, 0.5px); }
+  50% { transform: rotate(1.2deg) translate(1px, -0.5px); }
+  75% { transform: rotate(-0.8deg) translate(-0.5px, -0.2px); }
+  100% { transform: rotate(0deg) translate(0px, 0px); }
+}
+
+.doodle-wiggle {
+  animation: doodle-wiggle 0.35s infinite linear;
+  display: inline-block;
+  transform-origin: center center;
+}
+
+@keyframes doodle-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.doodle-pulse {
+  animation: doodle-pulse 1.3s infinite ease-in-out;
+  display: inline-block;
+  transform-origin: center center;
+}
+
+
 /* Infinite Marquee Animations */
 @keyframes marquee-scroll-left {
   0%   { transform: translateX(0); }

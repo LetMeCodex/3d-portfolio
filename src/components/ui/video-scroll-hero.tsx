@@ -44,7 +44,7 @@ export function VideoScrollHero({
             trigger: containerRef.current,
             start: "top 78%", 
             end: "top 15%", // Finish faster for "one scroll" feel
-            scrub: 1.2, 
+            scrub: 0.15, 
           }
         }
       );

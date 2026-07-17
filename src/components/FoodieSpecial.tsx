@@ -33,7 +33,7 @@ export function FoodieSpecial() {
           trigger: containerRef.current,
           start: "top top",
           end: "+=1500",
-          scrub: 1,
+          scrub: true,
           pin: true,
           anticipatePin: 1,
         }

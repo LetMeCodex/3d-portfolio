@@ -88,8 +88,10 @@ export function Motion3DCanvas() {
     scene.add(mesh2);
 
     let animationFrameId: number;
+    let isVisible = true;
 
     const animate = () => {
+      if (!isVisible) return;
       mesh1.rotateOnWorldAxis(new THREE.Vector3(-1, 1, 0), -0.005);
       mesh2.rotateOnWorldAxis(new THREE.Vector3(1, 1, 0), 0.005);
       
@@ -97,9 +99,24 @@ export function Motion3DCanvas() {
       animationFrameId = requestAnimationFrame(animate);
     };
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          cancelAnimationFrame(animationFrameId);
+          animate();
+        } else {
+          cancelAnimationFrame(animationFrameId);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(container);
+
     animate();
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
       if (renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

@@ -33,7 +33,7 @@ export function CakeSpecial() {
           trigger: containerRef.current,
           start: "top top",
           end: "+=2000",
-          scrub: 1.5,
+          scrub: 0.15,
           pin: true,
           anticipatePin: 1,
         }

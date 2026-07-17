@@ -22,7 +22,7 @@ export function CulinaryJourney() {
         trigger: choiceSectionRef.current,
         start: 'top bottom',
         end: 'top top',
-        scrub: 0.5,
+        scrub: true,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           // Grow circle from 0 to 2200px as section scrolls onto screen

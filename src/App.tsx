@@ -17,14 +17,13 @@ import { ArchitecturalGrid } from "./components/ui/ArchitecturalGrid";
 import { BackgroundDoodles } from "./components/ui/BackgroundDoodles";
 import { CustomCursor } from "./components/CustomCursor";
 import { CulinaryJourney } from "./components/CulinaryJourney";
-import Preloader from "./components/ui/Preloader";
 import { WeatherSystem } from "./components/WeatherSystem";
 import { CloudDivider } from "./components/ui/CloudDivider";
 import { ZoomRevealSection } from "./components/ZoomRevealSection";
 
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [clickCoords, setClickCoords] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
@@ -55,8 +54,7 @@ export default function App() {
     <SmoothScroll>
       <div className="min-h-screen flex flex-col bg-transparent font-sans relative">
 
-        {/* Cinematic Preloader */}
-        {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+        {/* Cinematic Preloader (Disabled) */}
 
         {/* Global Weather System (Renders across the entire website) */}
         <WeatherSystem />

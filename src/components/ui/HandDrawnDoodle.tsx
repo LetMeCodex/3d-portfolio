@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 
 type DoodleType = 'scribble' | 'arrow' | 'sparkle' | 'circle' | 'underline' | 'tornado' | 'star' | 'swirl' | 'squiggle' | 'signature' | 'rose' | 'disha-signature' | 'burst' | 'spring' | 'zig-zag' | 'crown' | 'loop' | 'heart';
@@ -19,19 +19,8 @@ export const HandDrawnDoodle = ({
   duration = 0.5 
 }: HandDrawnDoodleProps) => {
   
-  // Hand-drawn wiggle animation
-  const wiggleTransition = {
-    rotate: [0, -1, 1, -0.5, 0],
-    x: [0, -1, 1, 0],
-    y: [0, 1, -1, 0],
-    transition: {
-      duration: 0.3,
-      repeat: Infinity,
-      repeatType: "mirror" as const,
-      ease: "linear" as const,
-      delay: Math.random() * 2
-    }
-  };
+  // Hand-drawn wiggle animation disabled in favor of GPU-accelerated CSS keyframes
+  const wiggleTransition = undefined;
 
   const viewportConfig = { once: true, margin: "200px" };
 
@@ -340,9 +329,22 @@ export const HandDrawnDoodle = ({
     }
   };
 
+  const randomDelayRef = useRef(Math.random() * -2);
+  const isSparkle = type === 'sparkle';
+
   return (
     <span className={`pointer-events-none select-none ${className}`}>
-      {renderDoodle()}
+      <span 
+        className={isSparkle ? 'doodle-pulse' : 'doodle-wiggle'} 
+        style={{ 
+          animationDelay: `${randomDelayRef.current}s`, 
+          display: 'inline-block', 
+          width: '100%', 
+          height: '100%' 
+        }}
+      >
+        {renderDoodle()}
+      </span>
     </span>
   );
 };

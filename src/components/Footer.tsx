@@ -56,7 +56,7 @@ export function Footer({ onOpenResume }: FooterProps) {
           trigger: footerRef.current,
           start: isHomepage ? "top 80%" : () => ScrollTrigger.maxScroll(window) * 0.7, 
           end: isHomepage ? "top 30%" : () => ScrollTrigger.maxScroll(window) * 0.95,
-          scrub: 1.5,
+          scrub: 0.15,
         }
       });
 
@@ -69,7 +69,7 @@ export function Footer({ onOpenResume }: FooterProps) {
           trigger: footerRef.current,
           start: isHomepage ? "top 80%" : () => ScrollTrigger.maxScroll(window) * 0.7,
           end: isHomepage ? "top 30%" : () => ScrollTrigger.maxScroll(window) * 0.95,
-          scrub: 1.5,
+          scrub: 0.15,
         }
       });
 
@@ -84,7 +84,7 @@ export function Footer({ onOpenResume }: FooterProps) {
             trigger: footerRef.current,
             start: isHomepage ? "top 75%" : () => ScrollTrigger.maxScroll(window) * 0.7,
             end: isHomepage ? "top 25%" : () => ScrollTrigger.maxScroll(window),
-            scrub: 1,
+            scrub: true,
           }
         }
       );
@@ -97,7 +97,7 @@ export function Footer({ onOpenResume }: FooterProps) {
           trigger: footerRef.current,
           start: isHomepage ? "top 40%" : () => ScrollTrigger.maxScroll(window) * 0.8,
           end: isHomepage ? "top 10%" : () => ScrollTrigger.maxScroll(window),
-          scrub: 1,
+          scrub: true,
         }
       });
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from "../lib/utils";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { Mail, Phone, MapPin, Download, Globe, Github, Linkedin, ArrowUpRight, Eye, FileText, Quote } from 'lucide-react';
@@ -67,6 +67,11 @@ interface ResumePageProps {
 export function ResumePage({ onBack }: ResumePageProps) {
     const [isCVViewerOpen, setIsCVViewerOpen] = useState(false);
     const [cvCoords, setCvCoords] = useState({ x: 0, y: 0 });
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
     const { scrollY } = useScroll();
     const photoScale = useTransform(scrollY, [0, 500], [1, 1.05]);
     const photoY = useTransform(scrollY, [0, 500], [0, 30]);
@@ -79,6 +84,51 @@ export function ResumePage({ onBack }: ResumePageProps) {
       "Next.js", "Python", "Java", "C++",
       "Artificial Intelligence (AI)", "Prompt Engineering",
       "Amazon Web Services (AWS)", "Data Structures (DSA)"
+    ];
+
+    const journeyMilestones = [
+      {
+        year: "2026",
+        title: "AI Integration & Cloud Architecture",
+        company: "Microsoft AI Skills Fest & AWS Practitioner",
+        desc: "Deepened expertise in Generative AI systems, Azure AI services, and AWS cloud models. Architected secure, resilient cloud infrastructure and integrated LLM workflows.",
+        skills: ["Azure AI", "AWS Cloud", "Prompt Engineering", "System Design"]
+      },
+      {
+        year: "2026",
+        title: "Hackathons & Open Source",
+        company: "Elite Coders & TRIQ by OutThinkX",
+        desc: "Qualified for the Open Source Hackathon and achieved high ranking in the TRIQ contest. Solved real-time algorithmic challenges and built open-source tools under tight constraints.",
+        skills: ["Algorithms", "Next.js", "GSAP", "Problem Solving"]
+      },
+      {
+        year: "2026",
+        title: "Full-Stack Web Engineering",
+        company: "CodSoft Web Internship",
+        desc: "Built high-performance full-stack web modules, transitioning codebase items to TypeScript and structuring complex interactive interfaces.",
+        skills: ["TypeScript", "React.js", "Node.js", "TailwindCSS"]
+      },
+      {
+        year: "2025",
+        title: "Innovation & Design Thinking",
+        company: "AICTE / Institution's Innovation Council",
+        desc: "Explored technical entrepreneurship and collaborative prototyping. Worked on rapid ideation and validation frameworks.",
+        skills: ["Design Thinking", "Entrepreneurship", "Prototyping"]
+      },
+      {
+        year: "2024",
+        title: "Entering Web Systems",
+        company: "SkillCraft Technology Web Internship",
+        desc: "First professional internship experience. Engineered front-end architectures and optimized data-fetching query sets with SQL databases.",
+        skills: ["React.js", "MySQL", "JavaScript", "HTML/CSS"]
+      },
+      {
+        year: "2024 — Present",
+        title: "B.Tech Computer Science & IT",
+        company: "G.L. Bajaj Institute of Technology & Management",
+        desc: "Acquiring deep knowledge in system designs, networking layers, database systems, and data structures.",
+        skills: ["C++", "Data Structures", "Java", "Computer Networks"]
+      }
     ];
 
     return (
@@ -337,92 +387,53 @@ export function ResumePage({ onBack }: ResumePageProps) {
                 />
             </ResumeSection>
 
-            {/* Certifications & Achievements */}
-            <ResumeSection title="Achievements" number="05">
-                <ResumeItem 
-                    title="Microsoft AI Skills Fest"
-                    subtitle="Microsoft Graduate"
-                    date="2026"
-                    description="Gained deep practical expertise in Generative AI development, Azure AI services, Microsoft Copilot, and autonomous agent systems."
-                />
-                <ResumeItem 
-                    title="TRIQ - Think Twice"
-                    subtitle="OutThinkX"
-                    date="2026"
-                    description="Awarded Certificate of Achievement in the TRIQ - Think Twice contest by OutThinkX, demonstrating quick thinking, reasoning, and exceptional knowledge under pressure."
-                />
-                <ResumeItem 
-                    title="AWS Cloud Practitioner Essentials"
-                    subtitle="Amazon Web Services"
-                    date="2026"
-                    description="Successfully completed training on AWS cloud models, security, networking, pricing, and infrastructure design for core web systems."
-                />
-                <ResumeItem 
-                    title="TCS iON Career Edge - Young Professional"
-                    subtitle="Tata Consultancy Services"
-                    date="2026"
-                    description="Completed training on communication, soft skills, presentation skills, resume writing, group discussions, and fundamental IT and AI skills."
-                />
-                <ResumeItem 
-                    title="Master Business English"
-                    subtitle="Udemy"
-                    date="2026"
-                    description="Completed training on 160 essential business phrases for professional discussions, presentation delivery, executive meetings, and corporate interactions."
-                />
-                <ResumeItem 
-                    title="Elite Coders Open Source Hackathon"
-                    subtitle="Elite Coders Qualifier"
-                    date="2026"
-                    description="Successfully qualified the Pre-Assessment Round of the Open Source Hackathon 2026, demonstrating strong logical design, technical creativity, and dedication."
-                />
-                <ResumeItem 
-                    title="GenAI Powered Data Analytics"
-                    subtitle="TATA Group / Forage"
-                    date="2026"
-                    description="Completed simulation model tackling real-world business challenges, leveraging GenAI alongside advanced data analysis, risk profiling, and storytelling."
-                />
-                <ResumeItem 
-                    title="Professional Networking"
-                    subtitle="HP LIFE / HP Foundation"
-                    date="2026"
-                    description="Completed training for building professional networks, personal branding, and leveraging digital tools to expand professional reach."
-                />
-                <ResumeItem 
-                    title="Innovexis Participation"
-                    subtitle="Innovexis"
-                    date="2026"
-                    description="Awarded for active participation and dedication throughout the program, focusing on open-source ecosystems, web engineering, and collaborative development."
-                />
-                <ResumeItem 
-                    title="Yuva AI for All"
-                    subtitle="IndiaAI & nasscom"
-                    date="2026"
-                    description="Completed certification program covering AI/ML foundations, CRAFT prompt engineering, and FAST responsible AI frameworks."
-                />
-                <ResumeItem 
-                    title="CodSoft Web Dev Intern"
-                    subtitle="CodSoft Selection"
-                    date="2026"
-                    description="Selected for a one-month intensive Web Development internship focusing on building responsive modules, backend systems, and web projects."
-                />
-                <ResumeItem 
-                    title="AWS Academy Cloud Foundations"
-                    subtitle="Amazon Web Services"
-                    date="2026"
-                    description="Successfully completed training in core cloud architectures, containerized deployments, and serverless compute models."
-                />
-                <ResumeItem 
-                    title="AICTE Innovation & Entrepreneurship Program"
-                    subtitle="AICTE / Institution's Innovation Council (IIC)"
-                    date="2025"
-                    description="Participated in high-level technical paradigms and design-thinking frameworks to drive product innovation."
-                />
-                <ResumeItem 
-                    title="Daksh SparkFest Hackathon"
-                    subtitle="Collaborative Contributor"
-                    date="2023"
-                    description="Designed and pitched innovative technical prototypes under pressure, focusing on collaborative engineering and rapid ideation."
-                />
+            {/* Journey Timeline */}
+            <ResumeSection title="Journey" number="05">
+                <div className="relative pl-6 md:pl-8 border-l border-dashed border-black/20 space-y-16 py-4">
+                    {journeyMilestones.map((milestone, idx) => (
+                        <motion.div 
+                            key={idx}
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: idx * 0.1 }}
+                            className="relative group"
+                        >
+                            {/* Milestone Marker Dot */}
+                            <div className="absolute -left-[31px] md:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-black/20 flex items-center justify-center group-hover:border-[#E58B88] group-hover:scale-125 transition-all duration-300">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#E58B88] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </div>
+                            
+                            <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-2 mb-2">
+                                <div className="flex flex-col">
+                                    <h3 className="text-xl font-bold text-black group-hover:text-[#E58B88] transition-colors duration-300">
+                                        {milestone.title}
+                                    </h3>
+                                    <span className="font-serif italic text-black/50 text-base">{milestone.company}</span>
+                                </div>
+                                <span className="font-mono text-[9px] text-[#E58B88] font-bold uppercase tracking-widest bg-[#E58B88]/10 px-3 py-1 rounded-full shrink-0">
+                                    {milestone.year}
+                                </span>
+                            </div>
+                            
+                            <p className="text-black/70 font-light leading-relaxed max-w-2xl mt-3 text-sm">
+                                {milestone.desc}
+                            </p>
+                            
+                            {/* Skills tags unlocked */}
+                            <div className="flex flex-wrap gap-2 mt-4">
+                                {milestone.skills.map((skill) => (
+                                    <span 
+                                        key={skill} 
+                                        className="font-mono text-[9px] uppercase tracking-wider bg-black/5 text-black/60 px-2.5 py-1 rounded-md border border-black/[0.03] hover:bg-[#E58B88]/10 hover:text-[#E58B88] hover:border-[#E58B88]/20 transition-all duration-300"
+                                    >
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
             </ResumeSection>
 
             {/* Connect - Stacking Cards Reveal */}

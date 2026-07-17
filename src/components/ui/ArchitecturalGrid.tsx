@@ -22,16 +22,72 @@ export const ArchitecturalGrid: React.FC<ArchitecturalGridProps> = ({
     let width = 0;
     let height = 0;
 
+    const staticCanvas = document.createElement('canvas');
+    let staticCtx: CanvasRenderingContext2D | null = null;
+    let staticGridCacheValid = false;
+
     // Measure parent container to dynamically size the canvas
     const handleResize = () => {
       if (!canvas || !canvas.parentElement) return;
       width = canvas.width = canvas.parentElement.clientWidth || window.innerWidth;
       height = canvas.height = canvas.parentElement.clientHeight || window.innerHeight;
+      staticCanvas.width = width;
+      staticCanvas.height = height;
+      staticCtx = staticCanvas.getContext('2d');
+      staticGridCacheValid = false;
     };
     
     // Initial size
     handleResize();
     window.addEventListener('resize', handleResize);
+
+    const renderStaticGrid = () => {
+      if (!staticCtx) return;
+      staticCtx.clearRect(0, 0, width, height);
+
+      // Clean warm paper background color
+      staticCtx.fillStyle = '#faf8f5';
+      staticCtx.fillRect(0, 0, width, height);
+
+      // Draw vertical lines
+      for (let gridX = 0; gridX < width + 40; gridX += 40) {
+        const isMajor = gridX % 200 === 0;
+        staticCtx.strokeStyle = isMajor ? 'rgba(207, 203, 192, 0.9)' : 'rgba(232, 230, 223, 0.75)';
+        staticCtx.lineWidth = isMajor ? 1 : 0.5;
+        staticCtx.beginPath();
+        staticCtx.moveTo(gridX, 0);
+        staticCtx.lineTo(gridX, height);
+        staticCtx.stroke();
+      }
+
+      // Draw horizontal lines
+      for (let gridY = 0; gridY < height + 40; gridY += 40) {
+        const isMajor = gridY % 200 === 0;
+        staticCtx.strokeStyle = isMajor ? 'rgba(207, 203, 192, 0.9)' : 'rgba(232, 230, 223, 0.75)';
+        staticCtx.lineWidth = isMajor ? 1 : 0.5;
+        staticCtx.beginPath();
+        staticCtx.moveTo(0, gridY);
+        staticCtx.lineTo(width, gridY);
+        staticCtx.stroke();
+      }
+
+      // Draw little crosshairs (+) at major intersections
+      staticCtx.strokeStyle = 'rgba(158, 153, 141, 0.8)';
+      staticCtx.lineWidth = 1;
+      const crossSize = 5;
+      for (let gridX = 200; gridX < width; gridX += 200) {
+        for (let gridY = 200; gridY < height; gridY += 200) {
+          staticCtx.beginPath();
+          staticCtx.moveTo(gridX - crossSize, gridY);
+          staticCtx.lineTo(gridX + crossSize, gridY);
+          staticCtx.moveTo(gridX, gridY - crossSize);
+          staticCtx.lineTo(gridX, gridY + crossSize);
+          staticCtx.stroke();
+        }
+      }
+
+      staticGridCacheValid = true;
+    };
 
     // Track mouse positioning globally (so lines warp even if elements are on top)
     const mouse = { x: -1000, y: -1000, active: false };
@@ -132,60 +188,84 @@ export const ArchitecturalGrid: React.FC<ArchitecturalGridProps> = ({
       if (width === 0 || height === 0) {
         handleResize();
       }
-      
-      ctx.clearRect(0, 0, width, height);
-
-      // Clean warm paper background color
-      ctx.fillStyle = '#faf8f5';
-      ctx.fillRect(0, 0, width, height);
 
       // Update click ripple state
-      if (rippleTime >= 0 && rippleTime < rippleDuration) {
+      const isRippleActive = rippleTime >= 0 && rippleTime < rippleDuration;
+      if (isRippleActive) {
         rippleTime++;
       }
 
-      // Draw minor and major grid lines with segment warping
-      for (let gridX = 0; gridX < width + 40; gridX += 40) {
-        const isMajor = gridX % 200 === 0;
-        ctx.strokeStyle = isMajor ? 'rgba(207, 203, 192, 0.9)' : 'rgba(232, 230, 223, 0.75)';
-        ctx.lineWidth = isMajor ? 1 : 0.5;
-
-        ctx.beginPath();
-        for (let y = 0; y <= height + 20; y += 20) {
-          const pt = getDistortedPoint(gridX, y);
-          if (y === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
+      // If no interactive mouse or ripple, draw the cached static grid in a single operation
+      if (!mouse.active && !isRippleActive) {
+        if (!staticGridCacheValid) {
+          renderStaticGrid();
         }
-        ctx.stroke();
-      }
+        ctx.drawImage(staticCanvas, 0, 0);
+      } else {
+        ctx.clearRect(0, 0, width, height);
 
-      for (let gridY = 0; gridY < height + 40; gridY += 40) {
-        const isMajor = gridY % 200 === 0;
-        ctx.strokeStyle = isMajor ? 'rgba(207, 203, 192, 0.9)' : 'rgba(232, 230, 223, 0.75)';
-        ctx.lineWidth = isMajor ? 1 : 0.5;
+        // Clean warm paper background color
+        ctx.fillStyle = '#faf8f5';
+        ctx.fillRect(0, 0, width, height);
 
-        ctx.beginPath();
-        for (let x = 0; x <= width + 20; x += 20) {
-          const pt = getDistortedPoint(x, gridY);
-          if (x === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
-        }
-        ctx.stroke();
-      }
+        // Draw minor and major grid lines with segment warping only when close to distortion triggers
+        for (let gridX = 0; gridX < width + 40; gridX += 40) {
+          const isMajor = gridX % 200 === 0;
+          ctx.strokeStyle = isMajor ? 'rgba(207, 203, 192, 0.9)' : 'rgba(232, 230, 223, 0.75)';
+          ctx.lineWidth = isMajor ? 1 : 0.5;
 
-      // Draw little crosshairs (+) at major intersections
-      ctx.strokeStyle = 'rgba(158, 153, 141, 0.8)';
-      ctx.lineWidth = 1;
-      const crossSize = 5;
-      for (let gridX = 200; gridX < width; gridX += 200) {
-        for (let gridY = 200; gridY < height; gridY += 200) {
-          const pt = getDistortedPoint(gridX, gridY);
+          const isNearMouse = mouse.active && Math.abs(gridX - mouse.x) < 260;
+
           ctx.beginPath();
-          ctx.moveTo(pt.x - crossSize, pt.y);
-          ctx.lineTo(pt.x + crossSize, pt.y);
-          ctx.moveTo(pt.x, pt.y - crossSize);
-          ctx.lineTo(pt.x, pt.y + crossSize);
+          if (isNearMouse || isRippleActive) {
+            for (let y = 0; y <= height + 20; y += 20) {
+              const pt = getDistortedPoint(gridX, y);
+              if (y === 0) ctx.moveTo(pt.x, pt.y);
+              else ctx.lineTo(pt.x, pt.y);
+            }
+          } else {
+            ctx.moveTo(gridX, 0);
+            ctx.lineTo(gridX, height);
+          }
           ctx.stroke();
+        }
+
+        for (let gridY = 0; gridY < height + 40; gridY += 40) {
+          const isMajor = gridY % 200 === 0;
+          ctx.strokeStyle = isMajor ? 'rgba(207, 203, 192, 0.9)' : 'rgba(232, 230, 223, 0.75)';
+          ctx.lineWidth = isMajor ? 1 : 0.5;
+
+          const isNearMouse = mouse.active && Math.abs(gridY - mouse.y) < 260;
+
+          ctx.beginPath();
+          if (isNearMouse || isRippleActive) {
+            for (let x = 0; x <= width + 20; x += 20) {
+              const pt = getDistortedPoint(x, gridY);
+              if (x === 0) ctx.moveTo(pt.x, pt.y);
+              else ctx.lineTo(pt.x, pt.y);
+            }
+          } else {
+            ctx.moveTo(0, gridY);
+            ctx.lineTo(width, gridY);
+          }
+          ctx.stroke();
+        }
+
+        // Draw little crosshairs (+) at major intersections
+        ctx.strokeStyle = 'rgba(158, 153, 141, 0.8)';
+        ctx.lineWidth = 1;
+        const crossSize = 5;
+        for (let gridX = 200; gridX < width; gridX += 200) {
+          for (let gridY = 200; gridY < height; gridY += 200) {
+            const isNearMouse = mouse.active && Math.hypot(gridX - mouse.x, gridY - mouse.y) < 260;
+            const pt = (isNearMouse || isRippleActive) ? getDistortedPoint(gridX, gridY) : { x: gridX, y: gridY };
+            ctx.beginPath();
+            ctx.moveTo(pt.x - crossSize, pt.y);
+            ctx.lineTo(pt.x + crossSize, pt.y);
+            ctx.moveTo(pt.x, pt.y - crossSize);
+            ctx.lineTo(pt.x, pt.y + crossSize);
+            ctx.stroke();
+          }
         }
       }
 

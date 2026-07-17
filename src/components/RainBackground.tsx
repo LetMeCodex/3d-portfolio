@@ -57,27 +57,6 @@ export default function RainBackground({ className = "", zIndex = -1, fast = fal
           this.reset(false);
         }
       }
-
-      draw() {
-        if (!ctx) return;
-        
-        const tailX = this.x - this.xSpeed * (this.length / this.speed);
-        const tailY = this.y - this.length;
-
-        const grad = ctx.createLinearGradient(tailX, tailY, this.x, this.y);
-        grad.addColorStop(0, `rgba(120, 130, 140, 0)`);        // Transparent tail
-        grad.addColorStop(0.7, `rgba(120, 130, 140, ${this.opacity * 0.5})`);
-        grad.addColorStop(1, `rgba(160, 170, 180, ${this.opacity})`); // Brighter head
-
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(tailX, tailY);
-        
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = this.thickness;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-      }
     }
 
     function resize() {
@@ -118,10 +97,39 @@ export default function RainBackground({ className = "", zIndex = -1, fast = fal
         lightningOpacity = 0;
       }
 
+      // Update drops
       for (const drop of drops) {
         drop.update();
-        drop.draw();
       }
+
+      ctx.lineCap = 'round';
+
+      // Batch 1: Thin background rain
+      ctx.beginPath();
+      ctx.strokeStyle = fast ? 'rgba(160, 170, 180, 0.25)' : 'rgba(120, 130, 140, 0.2)';
+      ctx.lineWidth = fast ? 1.2 : 0.8;
+      for (let i = 0; i < drops.length; i += 2) {
+        const drop = drops[i];
+        const tailX = drop.x - drop.xSpeed * (drop.length / drop.speed);
+        const tailY = drop.y - drop.length;
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(tailX, tailY);
+      }
+      ctx.stroke();
+
+      // Batch 2: Thick foreground rain
+      ctx.beginPath();
+      ctx.strokeStyle = fast ? 'rgba(190, 200, 210, 0.45)' : 'rgba(150, 160, 170, 0.35)';
+      ctx.lineWidth = fast ? 2.5 : 1.5;
+      for (let i = 1; i < drops.length; i += 2) {
+        const drop = drops[i];
+        const tailX = drop.x - drop.xSpeed * (drop.length / drop.speed);
+        const tailY = drop.y - drop.length;
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(tailX, tailY);
+      }
+      ctx.stroke();
+
       animationFrameId = requestAnimationFrame(animate);
     }
 

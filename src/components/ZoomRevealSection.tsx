@@ -113,7 +113,7 @@ export function ZoomRevealSection() {
           start: 'top top',
           end: '+=150%',
           pin: true,
-          scrub: 1, // Smooth scrub
+          scrub: 0.15, // Smooth, snappy scrub
           invalidateOnRefresh: true,
         }
       });

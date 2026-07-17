@@ -158,7 +158,7 @@ function TypewriterText({ text, className }: { text: string; className?: string 
           trigger: el.current,
           start: 'top 85%',
           end: 'bottom 60%',
-          scrub: 0.5,
+          scrub: true,
         }
       });
     });
