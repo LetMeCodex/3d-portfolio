@@ -174,6 +174,9 @@ export function ZoomRevealSection() {
 
     }, containerRef);
 
+    ScrollTrigger.sort();
+    ScrollTrigger.refresh();
+
     return () => ctx.revert();
   }, [imagesLoaded]);
 

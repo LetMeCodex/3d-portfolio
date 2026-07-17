@@ -173,6 +173,9 @@ const CardSwap: React.FC<CardSwapProps> = ({
         invalidateOnRefresh: true,
       });
 
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+
       return () => {
         trigger.kill();
       };
