@@ -14,49 +14,75 @@ export function CinematicTransition({ isActive, children, backComponent }: Cinem
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
 
+  const logoText = "Disha Jain";
+  const logoChars = logoText.split("");
+
   useEffect(() => {
     if (isActive !== displayActive && !isAnimating.current) {
       isAnimating.current = true;
       
       const tl = gsap.timeline();
       
-      // Lock scrolling during the masterpiece transition
+      // Lock scrolling during the transition
       document.body.style.overflow = 'hidden';
 
-      // Reset columns to starting position (below screen) with hardware-acceleration
-      gsap.set('.transition-col', {
-        y: '120%',
-        autoAlpha: 1,
-        force3D: true
-      });
+      // 1. Initial State Setup
+      gsap.set('.preloader-transition-container', { display: 'block', opacity: 0 });
+      gsap.set('.preloader-mask', { scale: 1, autoAlpha: 1 });
+      gsap.set('.preloader-progress-bar', { autoAlpha: 1 });
+      gsap.set('.preloader-bg', { scaleX: 0.1, autoAlpha: 1 });
+      gsap.set('.logo-char', { opacity: 0, y: 15 });
 
-      // 1. Sweep UP to cover screen (GPU translation)
-      tl.to('.col-layer-1', { y: '0%', duration: 0.8, stagger: 0.05, ease: 'expo.inOut', force3D: true }, 0)
-        .to('.col-layer-2', { y: '0%', duration: 0.8, stagger: 0.05, ease: 'expo.inOut', force3D: true }, 0.1)
-        .to('.col-layer-3', { y: '0%', duration: 0.8, stagger: 0.05, ease: 'expo.inOut', force3D: true }, 0.2);
-
-      // 2. Mid-point: Screen is COMPLETELY covered by Layer 3. 
-      // Instantly swap the DOM. No cross-fading, no lag!
-      tl.call(() => {
+      // 2. Animate Entry
+      tl.to('.preloader-transition-container', {
+        opacity: 1,
+        duration: 0.35,
+        ease: 'power2.out'
+      })
+      // Stagger logo text chars up
+      .to('.logo-char', {
+        opacity: 1,
+        y: 0,
+        stagger: 0.03,
+        duration: 0.45,
+        ease: 'power2.out'
+      }, 0.1)
+      // Progress bar loading animation
+      .to('.preloader-bg', {
+        scaleX: 1,
+        duration: 1.0,
+        ease: 'power2.inOut'
+      }, 0.2)
+      // DOM swap at the mid point
+      .call(() => {
         setDisplayActive(isActive);
-        // Reset incoming page opacity instantly
+        // Instantly reset page opacity
         gsap.set(pageContainerRef.current, { opacity: 1 });
-      }, [], 1.1);
-
-      // 3. Sweep UP to leave screen (exit through the top)
-      tl.to('.col-layer-1', { y: '-140%', duration: 0.8, stagger: 0.05, ease: 'expo.inOut', force3D: true }, 1.2)
-        .to('.col-layer-2', { y: '-140%', duration: 0.8, stagger: 0.05, ease: 'expo.inOut', force3D: true }, 1.3)
-        .to('.col-layer-3', { y: '-140%', duration: 0.8, stagger: 0.05, ease: 'expo.inOut', force3D: true }, 1.4)
-        .call(() => {
-          gsap.set('.transition-col', { autoAlpha: 0 }); // Hide smoothly
+      }, [], 1.25)
+      // Zoom out mask circle reveal
+      .to('.preloader-mask', {
+        scale: 8, // scale large enough to fully cover any viewport aspect ratio
+        duration: 0.9,
+        ease: 'expoScale(0.5, 7, power1.in)'
+      }, 1.3)
+      // Fade out background layers in sync
+      .to('.preloader-bg, .preloader-logo, .preloader-progress-bar', {
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      }, 1.3)
+      // Hide transition container completely
+      .to('.preloader-transition-container', {
+        opacity: 0,
+        duration: 0.2,
+        onComplete: () => {
+          gsap.set('.preloader-transition-container', { display: 'none' });
           document.body.style.overflow = '';
           isAnimating.current = false;
-        });
+        }
+      });
     }
   }, [isActive, displayActive]);
-
-  // 5 elegant slices per layer
-  const columns = [0, 1, 2, 3, 4];
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen">
@@ -66,29 +92,78 @@ export function CinematicTransition({ isActive, children, backComponent }: Cinem
         {displayActive ? backComponent : children}
       </div>
 
-      {/* ── The Masterpiece Curved Shutter Sweep (Fixed Overlay) ── */}
-      
-      {/* Layer 1: Charcoal Base */}
-      <div className="fixed -top-[20vh] left-0 w-full h-[140vh] z-[9997] pointer-events-none flex overflow-hidden">
-        {columns.map(i => (
-          <div key={`l1-${i}`} className="col-layer-1 transition-col flex-1 h-full bg-[#111111] will-change-transform opacity-0 invisible" style={{ transform: 'translateY(120%) scaleX(1.05)', borderRadius: '100px' }} />
-        ))}
-      </div>
+      {/* ── The Masterpiece Camera Shutter Mask Transition ── */}
+      <div className="preloader-transition-container fixed inset-0 z-[9999] pointer-events-none hidden" style={{ zIndex: 9999 }}>
+        <style>{`
+          .preloader-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            background-color: #1C1917;
+            -webkit-mask: linear-gradient(#fff, #fff), url('https://ik.imagekit.io/kg2nszxjp/ironstride-preloader/preloader-mask.svg') center/40% no-repeat;
+            -webkit-mask-composite: destination-out;
+            mask: linear-gradient(#fff, #fff), url('https://ik.imagekit.io/kg2nszxjp/ironstride-preloader/preloader-mask.svg') center/40% no-repeat;
+            mask-composite: subtract;
+            transform-origin: center center;
+            will-change: transform;
+            z-index: 10001;
+          }
+          
+          .preloader-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #2D2925;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
 
-      {/* Layer 2: Aesthetic Brand Pink */}
-      <div className="fixed -top-[20vh] left-0 w-full h-[140vh] z-[9998] pointer-events-none flex overflow-hidden">
-        {columns.map(i => (
-          <div key={`l2-${i}`} className="col-layer-2 transition-col flex-1 h-full bg-[#E58B88] will-change-transform opacity-0 invisible" style={{ transform: 'translateY(120%) scaleX(1.05)', borderRadius: '100px' }} />
-        ))}
-      </div>
+          .preloader-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #ffffff;
+            transform-origin: left center;
+            z-index: 9999;
+          }
 
-      {/* Layer 3: Cinematic Obsidian Black */}
-      <div className="fixed -top-[20vh] left-0 w-full h-[140vh] z-[9999] pointer-events-none flex overflow-hidden">
-        {columns.map(i => (
-          <div key={`l3-${i}`} className="col-layer-3 transition-col flex-1 h-full bg-[#0a0a0a] will-change-transform opacity-0 invisible" style={{ transform: 'translateY(120%) scaleX(1.05)', borderRadius: '100px' }} />
-        ))}
+          .preloader-logo {
+            z-index: 10002;
+            position: relative;
+            mix-blend-mode: difference;
+          }
+        `}</style>
+
+        {/* Solid white scaling bar */}
+        <div className="preloader-bg" />
+
+        {/* Shutter logo mask overlay */}
+        <div className="preloader-mask" />
+
+        {/* Black container enclosing the logo text */}
+        <div className="preloader-progress-bar">
+          <div className="preloader-logo">
+            <p className="logo-text text-white font-serif font-semibold italic text-5xl md:text-7xl tracking-wider select-none">
+              {logoChars.map((char, index) => (
+                <span key={index} className="logo-char inline-block">
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </p>
+          </div>
+        </div>
       </div>
 
     </div>
   );
 }
+
+CinematicTransition.displayName = "CinematicTransition";
