@@ -132,7 +132,6 @@ export function ProjectsSection() {
         .stack-card-content {
           transform-origin: 50% 0%;
           will-change: transform, filter;
-          transform-style: preserve-3d;
           animation: scale-card linear forwards;
           animation-timeline: view();
           animation-range: exit-crossing 0% exit-crossing 100%;
@@ -151,7 +150,7 @@ export function ProjectsSection() {
 
         @keyframes scale-card {
           to {
-            transform: scale(0.9) translateY(-5vh) rotateX(-5deg);
+            transform: scale(0.95) translateY(-5vh) rotateX(-5deg);
             filter: brightness(0.6);
             border-radius: 20px;
             box-shadow: 0 50px 80px -10px rgba(0,0,0,0.3);
@@ -179,7 +178,7 @@ const ProjectCard = ({ item, index }: { item: any; index: number }) => {
   return (
     <li 
       className="sticky w-full perspective-[1000px]"
-      style={{ top: `calc(10vh + ${index * 30}px)` }}
+      style={{ top: '12vh', zIndex: index + 10 }}
     >
       <div className="stack-card-reveal w-full h-full">
         <div className="stack-card-content relative w-full flex flex-col md:flex-row items-center justify-between group cursor-pointer py-10 md:py-20 px-6 md:px-12 rounded-3xl bg-[#18171B] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border border-white/5 overflow-hidden">
