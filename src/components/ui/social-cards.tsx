@@ -179,7 +179,7 @@ export function SocialCards() {
       <div className="down">
         {/* GitHub (Bottom-Left) */}
         <a 
-          href="https://github.com/disha-jain" 
+          href="https://github.com/dishajain27-ai" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="card3"

@@ -540,7 +540,7 @@ export function ResumePage({ onBack }: ResumePageProps) {
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            href="https://github.com" target="_blank" rel="noopener noreferrer" 
+                            href="https://github.com/dishajain27-ai" target="_blank" rel="noopener noreferrer" 
                             className="group p-8 bg-[#FAF8F5]/30 hover:bg-[#FAF8F5]/90 backdrop-blur-sm border-2 border-black/10 rounded-[2rem] hover:shadow-[0_20px_50px_rgba(229,139,136,0.1)] hover:border-[#E58B88]/60 hover:-translate-y-1.5 transition-all duration-700 flex flex-col gap-8 shadow-sm relative overflow-hidden"
                         >
                             {/* Tech grid hover shimmer */}
