@@ -113,11 +113,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
     // Create the master timelines for sequential swaps
     const tl = gsap.timeline();
 
-    for (let s = 0; s < total - 1; s++) {
+    for (let s = 0; s < total; s++) {
       const timeStart = s;
       const timeMid = s + 0.5;
 
-      const cardFront = s;
+      const cardFront = s % total;
       const elFront = refs[cardFront].current;
       const backSlot = makeSlot(total - 1, cardDistance, verticalDistance, total);
 
@@ -144,7 +144,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       for (let c = 0; c < total; c++) {
         if (c === cardFront) continue;
 
-        const nextSlotIndex = (c - (s + 1) + total) % total;
+        const nextSlotIndex = (c - (s + 1) + total * 2) % total;
         if (nextSlotIndex === total - 1) continue; // already handled above
 
         const el = refs[c].current;

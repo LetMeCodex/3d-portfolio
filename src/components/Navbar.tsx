@@ -30,13 +30,6 @@ const NAV_ITEMS = [
     type: "action",
     action: "resume",
     img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=400&auto=format&fit=crop" 
-  },
-  { 
-    title: "Contact", 
-    subtitle: "Say hello", 
-    type: "scroll",
-    target: "contact",
-    img: "https://images.unsplash.com/photo-1598255903908-6923cde0f135?q=80&w=400&auto=format&fit=crop" 
   }
 ];
 
