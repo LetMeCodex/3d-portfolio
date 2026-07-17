@@ -1,4 +1,5 @@
 import { ArrowUpRight, Database, Cloud, Code, Trophy, Shield, Cpu, Wifi } from 'lucide-react';
+import CardSwap, { Card } from './ui/CardSwap';
 
 const projects = [
   {
@@ -104,150 +105,95 @@ export function ProjectsSection() {
           </h2>
           <div className="w-16 h-[1px] bg-[#E84855] my-10"></div>
           <p className="font-sans font-light text-base md:text-lg text-[#FAF8F5]/60 max-w-sm leading-relaxed">
-            A curated selection of technical milestones, intensive hackathons, and robust software engineering growth. Scroll vertically to explore.
+            A curated selection of technical milestones, intensive hackathons, and robust software engineering growth. Scroll to stack and swap cards.
           </p>
         </div>
 
-        {/* Project Cards Stacking Container */}
-        <ul className="cards-container list-none p-0 flex flex-col gap-[10vh] pb-[20vh]">
-          {projects.map((item, index) => (
-            <ProjectCard key={index} item={item} index={index} />
-          ))}
-        </ul>
+        {/* Project Cards Stacking Container using CardSwap */}
+        <div className="relative w-full flex justify-center items-center py-20 overflow-visible min-h-[600px] md:min-h-[700px]">
+          <CardSwap
+            width={850}
+            height={480}
+            cardDistance={40}
+            verticalDistance={45}
+            delay={4000}
+            pauseOnHover={true}
+            scrollTriggered={true}
+          >
+            {projects.map((item, index) => {
+              const IconComponent = item.icon;
+              const number = String(index + 1).padStart(2, '0');
+              return (
+                <Card key={index} className="shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] border border-white/5 bg-[#18171B] rounded-[24px] overflow-hidden group">
+                  <div className="relative w-full h-full flex flex-row items-center justify-between py-6 px-10">
+                    {/* Giant Floating Ambient Number */}
+                    <div className="absolute -left-5 -top-5 md:-left-8 md:-top-8 z-0 select-none opacity-5 group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none">
+                      <span className="font-serif italic text-[12rem] md:text-[14rem] text-[#FAF8F5] font-light leading-none tracking-tighter">
+                        {number}
+                      </span>
+                    </div>
+
+                    {/* Left Side: Content Block */}
+                    <div className="relative z-10 w-[48%] border-l border-white/10 group-hover:border-[#E84855] pl-6 h-full flex flex-col justify-center transition-colors duration-700">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="text-[#FAF8F5]/40 group-hover:text-[#E84855] transition-colors duration-700">
+                          <IconComponent size={20} strokeWidth={1.5} />
+                        </div>
+                        <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#FAF8F5]/60 font-medium">
+                          {item.type}
+                        </span>
+                      </div>
+                      
+                      <h3 className="font-serif italic font-light text-3xl md:text-4xl text-[#FAF8F5] tracking-tight leading-[1.1] mb-4 group-hover:text-[#E84855] transition-colors duration-700">
+                        {item.title}
+                      </h3>
+
+                      <div className="mb-4">
+                        <p className="font-sans font-light text-xs md:text-sm text-[#FAF8F5]/85 leading-relaxed mb-4">
+                          {item.details[0]}
+                        </p>
+                        <div className="space-y-2 hidden md:block">
+                          {item.details.slice(1).map((detail: string, idx: number) => (
+                            <div key={idx} className="flex items-start gap-3">
+                              <div className="w-1 h-1 rounded-full bg-white/20 mt-1.5 shrink-0" />
+                              <p className="font-sans font-light text-[11px] text-[#FAF8F5]/60 leading-relaxed">
+                                {detail}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                        {item.stack.map((tech: string, i: number) => (
+                          <span key={i} className="font-mono text-[8px] text-[#FAF8F5]/40 font-bold tracking-[0.2em] uppercase">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Right Side: Image */}
+                    <div className="relative w-[48%] h-[85%] rounded-2xl overflow-hidden shadow-lg border border-white/5 bg-[#18171B]">
+                      <img 
+                        src={item.imageUrl} 
+                        alt={item.title}
+                        className="w-full h-full object-cover transform group-hover:scale-102 transition-transform duration-1000 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                      
+                      {/* Floating Arrow CTA */}
+                      <div className="absolute -right-3 -bottom-3 w-12 h-12 rounded-full bg-[#18171B] border border-white/10 shadow-2xl flex items-center justify-center text-[#FAF8F5] group-hover:bg-[#E84855] group-hover:text-white transition-all duration-500 transform hover:scale-105 z-20">
+                        <ArrowUpRight size={18} strokeWidth={1.5} />
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </CardSwap>
+        </div>
       </div>
-
-      <style>{`
-        .cards-container {
-          animation: fade-out-container linear forwards;
-          animation-timeline: view();
-          animation-range: exit 60% exit 100%;
-        }
-
-        .stack-card-reveal {
-          animation: reveal-card linear both;
-          animation-timeline: view();
-          animation-range: entry 5% entry 50%;
-        }
-
-        .stack-card-content {
-          background-color: #18171B !important;
-          transform-origin: 50% 0%;
-          will-change: transform, filter;
-          animation: scale-card linear forwards;
-          animation-timeline: view();
-          animation-range: exit-crossing 0% exit-crossing 100%;
-        }
-
-        @keyframes reveal-card {
-          0% {
-            transform: translateY(15vh) scale(0.95);
-          }
-          100% {
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        @keyframes scale-card {
-          to {
-            transform: scale(0.95) translateY(-5vh) rotateX(-5deg);
-            filter: brightness(0.6);
-            border-radius: 20px;
-            box-shadow: 0 50px 80px -10px rgba(0,0,0,0.3);
-          }
-        }
-
-        @keyframes fade-out-container {
-          0% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 0;
-            transform: translateY(-5vh);
-          }
-        }
-      `}</style>
     </section>
   );
 }
-
-const ProjectCard = ({ item, index }: { item: any; index: number }) => {
-  const IconComponent = item.icon;
-  const number = String(index + 1).padStart(2, '0');
-
-  return (
-    <li 
-      className="sticky w-full perspective-[1000px]"
-      style={{ top: '12vh', zIndex: index + 10 }}
-    >
-      <div className="stack-card-reveal w-full h-full">
-        <div className="stack-card-content relative w-full flex flex-col md:flex-row items-center justify-between group cursor-pointer py-10 md:py-20 px-6 md:px-12 rounded-3xl bg-[#18171B] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border border-white/5 overflow-hidden">
-        
-        {/* Giant Floating Ambient Number */}
-        <div className="absolute -left-5 -top-5 md:-left-10 md:-top-10 z-0 select-none opacity-5 group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none">
-            <span className="font-serif italic text-[15rem] md:text-[20rem] text-[#FAF8F5] font-light leading-none tracking-tighter">
-              {number}
-            </span>
-        </div>
-        
-        {/* Left Side: Content Block */}
-        <div className="relative z-10 w-full md:w-[45%] border-l border-white/10 group-hover:border-[#E84855] pl-6 md:pl-10 transition-colors duration-700 h-fit">
-            <div className="flex items-center gap-4 mb-6 md:mb-8">
-                <div className="text-[#FAF8F5]/40 group-hover:text-[#E84855] transition-colors duration-700">
-                    <IconComponent size={24} strokeWidth={1.5} />
-                </div>
-                <span className="font-mono text-[10px] md:text-xs tracking-[0.2em] uppercase text-[#FAF8F5]/60 font-medium">
-                  {item.type}
-                </span>
-            </div>
-            
-            <h3 className="font-serif italic font-light text-4xl md:text-6xl text-[#FAF8F5] tracking-tight leading-[1] mb-6 md:mb-8 group-hover:text-[#E84855] transition-colors duration-700">
-              {item.title}
-            </h3>
-
-            {/* Editorial Project Details */}
-            <div className="mb-8 max-w-xl">
-              <p className="font-sans font-light text-sm md:text-base text-[#FAF8F5]/80 leading-relaxed mb-6">
-                {item.details[0]}
-              </p>
-              <div className="space-y-4">
-                {item.details.slice(1).map((detail: string, idx: number) => (
-                  <div key={idx} className="flex items-start gap-4 group/detail">
-                    <div className="w-1 h-1 rounded-full bg-white/20 mt-2.5 shrink-0 group-hover/detail:bg-[#E84855] transition-colors duration-300" />
-                    <p className="font-sans font-light text-xs md:text-sm text-[#FAF8F5]/60 group-hover/detail:text-[#FAF8F5]/90 transition-colors duration-300 leading-relaxed">
-                      {detail}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-x-6 gap-y-3">
-              {item.stack.map((tech: string, i: number) => (
-                <span key={i} className="font-mono text-[10px] text-[#FAF8F5]/40 font-bold tracking-[0.2em] uppercase">
-                  {tech}
-                </span>
-              ))}
-            </div>
-        </div>
-
-        {/* Right Side: Image with floating mockup effect */}
-        <div className="relative w-full md:w-[45%] h-[35vh] md:h-[50vh] mt-10 md:mt-0">
-          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border border-white/5 bg-[#18171B]">
-            <img 
-              src={item.imageUrl} 
-              alt={item.title}
-              className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          </div>
-
-          {/* Floating Arrow CTA */}
-          <div className="absolute -right-4 -bottom-4 w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#18171B] border border-white/10 shadow-2xl flex items-center justify-center text-[#FAF8F5] group-hover:bg-[#E84855] group-hover:text-white transition-all duration-500 transform hover:scale-110 z-20">
-            <ArrowUpRight size={24} strokeWidth={1.5} />
-          </div>
-        </div>
-      </div>
-      </div>
-    </li>
-  );
-};
