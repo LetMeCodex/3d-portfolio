@@ -52,6 +52,15 @@ const polaroids = [
 
 function Polaroid({ data, dragRef }: { data: any, dragRef: React.RefObject<HTMLDivElement> }) {
   const isVideo = data.src?.endsWith('.mp4') || data.src?.endsWith('.webm');
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (isVideo && videoRef.current) {
+      videoRef.current.play().catch(err => {
+        console.log("Autoplay was prevented by the browser:", err);
+      });
+    }
+  }, [isVideo, data.src]);
 
   return (
     <motion.div
@@ -67,6 +76,7 @@ function Polaroid({ data, dragRef }: { data: any, dragRef: React.RefObject<HTMLD
         {data.src ? (
           isVideo ? (
             <video 
+              ref={videoRef}
               src={data.src} 
               autoPlay 
               loop 
