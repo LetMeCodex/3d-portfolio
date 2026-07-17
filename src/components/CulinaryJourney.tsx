@@ -43,6 +43,14 @@ export function CulinaryJourney() {
               overlayRef.current.style.opacity = '1';
             }
           }
+          // Dynamically toggle container background color to prevent subpixel bleed-through
+          if (containerRef.current) {
+            if (self.progress > 0.9) {
+              containerRef.current.style.backgroundColor = '#F5F4F0';
+            } else {
+              containerRef.current.style.backgroundColor = '#111013';
+            }
+          }
         },
         onLeave: () => {
           if (overlayRef.current) {
@@ -92,13 +100,13 @@ export function CulinaryJourney() {
   return (
     <div 
       ref={containerRef} 
-      className="relative w-full min-h-screen bg-[#F5F4F0]"
+      className="relative w-full min-h-screen bg-[#111013]"
       style={{ isolation: 'isolate' }}
     >
       {/* Choice Section */}
       <section 
         ref={choiceSectionRef}
-        className="relative z-30 w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-[#F5F4F0]"
+        className="relative z-30 w-full min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-transparent"
       >
         <div className="text-center max-w-4xl w-full">
           <motion.div 
