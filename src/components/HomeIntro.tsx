@@ -40,14 +40,13 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
     { 
       text: "developer", 
       isSpecial: true, 
-      img: "/disha-developer-cutout.png",
-      fit: "contain"
+      img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=400&auto=format&fit=crop"
     },
     { text: " specializing in high-fidelity ", isSpecial: false },
     { 
       text: "interfaces,", 
       isSpecial: true, 
-      img: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=400&auto=format&fit=crop"
+      img: "/about-leakmap.png"
     },
     { text: " fluid ", isSpecial: false },
     { 
@@ -559,7 +558,6 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
                           src={seg.img} 
                           alt={seg.text} 
                           loading="lazy" 
-                          style={{ objectFit: seg.fit as any || 'cover' }}
                         />
                       )}
                       <div className="text-animation__reveal left bg-[#FAF5ED]"></div>
