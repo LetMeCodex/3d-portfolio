@@ -13,6 +13,7 @@ interface HomeIntroProps {
 export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
+  const avatarRef = useRef<HTMLDivElement>(null);
   const lottieRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -146,6 +147,20 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
           ease: "back.out(1.8)"
         },
         "-=0.3"
+      );
+    }
+
+    // Step B2: Pop the Avatar Circular Image (simultaneously with Lottie)
+    if (avatarRef.current) {
+      textTimeline.fromTo(avatarRef.current,
+        { opacity: 0, scale: 0 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          ease: "back.out(1.8)"
+        },
+        "<"
       );
     }
 
@@ -498,6 +513,19 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
           ref={nameRef} 
           className="font-display font-medium text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.6rem] text-[#1c2135] mb-8 tracking-tight flex flex-wrap justify-center items-center select-none leading-none gap-x-2 w-full"
         >
+          {/* Circular Portrait Image */}
+          <div 
+            ref={avatarRef}
+            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 inline-flex items-center justify-center flex-shrink-0 select-none overflow-hidden rounded-full border border-[#8A7FE8]/30 mr-2 md:mr-4 shadow-md bg-white"
+            style={{ opacity: 0, transform: 'scale(0)' }}
+          >
+            <img 
+              src="/disha-circle.png" 
+              alt="Disha Jain Portrait" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+
           <span className="flex">
             {part1.map((char, index) => (
               <span key={index} className="name-char inline-block origin-center" style={{ opacity: 0 }}>
