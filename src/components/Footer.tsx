@@ -19,6 +19,25 @@ export function Footer({ onOpenResume }: FooterProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [localTime, setLocalTime] = useState('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      const formatter = new Intl.DateTimeFormat('en-US', options);
+      setLocalTime(formatter.format(new Date()));
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!footerRef.current) return;
@@ -276,61 +295,84 @@ export function Footer({ onOpenResume }: FooterProps) {
 
         </div>
 
-        {/* UI Elements - Floating Interactive Capsules */}
-        <div className="footer-ui-elements absolute inset-x-0 bottom-0 z-30 pb-10 pointer-events-none px-6 md:px-12 lg:px-20">
-          
-          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 pointer-events-none">
+        {/* UI Elements - Creative CAD Status & Control Console */}
+        <div className="footer-ui-elements absolute inset-x-0 bottom-0 z-30 w-full pointer-events-none pb-6 px-6 md:px-12 lg:px-20">
+          <div className="max-w-7xl mx-auto bg-[#1C2135]/80 backdrop-blur-xl border border-white/15 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.4)] pointer-events-auto overflow-hidden">
             
-            {/* Left Capsule: Social Cards */}
-            <motion.div 
-              whileHover={{ y: -5, scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className="flex items-center gap-4 bg-[#1C2135]/70 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.25)] pointer-events-auto"
-            >
-              <SocialCards />
-            </motion.div>
-
-            {/* Center Capsule: Copyright Info */}
-            <motion.div 
-              whileHover={{ y: -5, scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className="bg-[#1C2135]/70 backdrop-blur-xl border border-white/10 px-6 py-3.5 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.25)] flex items-center justify-center pointer-events-auto"
-            >
-              <span className="text-[#FEF6DD]/60 text-[9px] uppercase tracking-[0.25em] font-mono select-none">
-                &copy; 2026 DISHA JAIN
-              </span>
-            </motion.div>
-
-            {/* Right Capsule: Quick Links + Resume Button */}
-            <motion.div 
-              whileHover={{ y: -5, scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className="flex items-center gap-6 bg-[#1C2135]/70 backdrop-blur-xl border border-white/10 pl-6 pr-2.5 py-2.5 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.25)] pointer-events-auto"
-            >
-              <ul className="flex gap-5 font-sans text-[10px] font-bold tracking-[0.2em] text-[#FEF6DD]/70 uppercase">
-                <li onClick={() => window.location.href = 'mailto:Jain.disha2712@gmail.com'} className="hover:text-[#E84855] cursor-pointer transition-colors duration-300">Inquiry</li>
-                <li onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-[#E84855] cursor-pointer transition-colors duration-300">Process</li>
-                <li onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-[#E84855] cursor-pointer transition-colors duration-300">Vibe</li>
-              </ul>
-              <div className="h-4 w-px bg-white/20" />
-              <div className="relative group">
-                <motion.div 
-                  onClick={(e) => onOpenResume ? onOpenResume(e) : window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  whileHover={{ scale: 1.05, backgroundColor: '#FEF6DD', color: '#1C2135', borderColor: '#FEF6DD' }}
-                  className="flex items-center gap-3 px-6 py-2 rounded-full border border-[#FEF6DD]/30 bg-[#1C2135]/60 text-[#FEF6DD] text-[10px] font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-300 backdrop-blur-md relative z-10"
-                >
-                  RESUME
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#FEF6DD] transition-colors" />
-                </motion.div>
-                {/* Circle doodle around the button */}
-                <HandDrawnDoodle 
-                  type="circle" 
-                  className="absolute inset-[-6px] text-[#FEF6DD]/20 scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" 
-                  color="#FEF6DD"
-                />
+            {/* The CAD Grid Columns */}
+            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10 text-[#FEF6DD] font-mono text-[9px] uppercase tracking-[0.25em]">
+              
+              {/* Left Column: SYSTEM COORDINATES */}
+              <div className="p-5 flex flex-col gap-2 relative">
+                <div className="absolute top-2 left-3 text-[7px] text-white/30 font-bold">SYS_LOC: [01]</div>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-[#FEF6DD]/50">LOCATION:</span>
+                  <span className="font-semibold text-white">JAIPUR, IN</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#FEF6DD]/50">COORDINATE:</span>
+                  <span className="text-white/80">26.9124° N / 75.7873° E</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#FEF6DD]/50">LOCAL TIME:</span>
+                  <span className="text-[#E58B88] font-bold tracking-wider">{localTime || "12:00:00 AM"}</span>
+                </div>
               </div>
-            </motion.div>
 
+              {/* Center Column: STATUS MONITOR */}
+              <div className="p-5 flex flex-col gap-2 justify-center relative">
+                <div className="absolute top-2 left-3 text-[7px] text-white/30 font-bold">SYS_STATUS: [02]</div>
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-[#FEF6DD]/50">DESIGNER STATUS:</span>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+                    <span className="text-emerald-400 font-bold">ACTIVE & HIRABLE</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#FEF6DD]/50">DESIGN SYSTEM:</span>
+                  <span className="text-white/80">DISHA_PORTFOLIO_V2.0</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#FEF6DD]/50">COPYRIGHT:</span>
+                  <span className="text-white/80">© 2026 DISHA JAIN</span>
+                </div>
+              </div>
+
+              {/* Right Column: SYSTEM ACTIONS */}
+              <div className="p-5 flex flex-col gap-3 justify-center relative">
+                <div className="absolute top-2 left-3 text-[7px] text-white/30 font-bold">SYS_INPUT: [03]</div>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-[#FEF6DD]/50">SOCIALS:</span>
+                  <div className="flex items-center gap-4">
+                    <a href="https://linkedin.com/in/disha-jain-94016b333" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#E58B88] transition-colors duration-300">LKD</a>
+                    <a href="https://github.com/dishajain27-ai" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-[#E58B88] transition-colors duration-300">GTHB</a>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#FEF6DD]/50">COMMANDS:</span>
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => window.location.href = 'mailto:Jain.disha2712@gmail.com'} className="hover:text-[#E58B88] text-white transition-colors duration-300">INQUIRE</button>
+                    <span className="text-white/20">|</span>
+                    <button onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-[#E58B88] text-white transition-colors duration-300">PROCESS</button>
+                    <span className="text-white/20">|</span>
+                    <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-[#E58B88] text-white transition-colors duration-300">VIBE</button>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-[#FEF6DD]/50">QUALIFICATION:</span>
+                  <div className="relative group">
+                    <button 
+                      onClick={(e) => onOpenResume ? onOpenResume(e) : window.scrollTo({ top: 0, behavior: 'smooth' })}
+                      className="px-4 py-1.5 rounded-full border border-[#FEF6DD]/30 hover:border-[#E58B88] hover:bg-[#E58B88]/10 text-[#FEF6DD] hover:text-[#E58B88] text-[8px] font-black uppercase tracking-[0.25em] cursor-pointer transition-all duration-300"
+                    >
+                      OPEN RESUME
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
