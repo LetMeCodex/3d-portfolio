@@ -176,7 +176,7 @@ export function Hero({ onOpenResume }: HeroProps) {
         <div className="sticky top-0 w-full h-screen flex items-center justify-end pr-4 md:pr-[8%] lg:pr-[12%]">
           <div className="relative w-full md:w-[70%] lg:w-[60%] h-[80vh] md:h-[95vh] -mt-[25vh] hero-character">
             <img
-              src="/disha-hero-cutout.png"
+              src="/disha-hero-cutout.webp"
               alt="Disha"
               className="w-full h-full object-contain object-center transform-gpu hero-character-inner scale-[1.3] lg:scale-[1.4]"
             />

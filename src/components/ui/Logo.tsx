@@ -34,7 +34,7 @@ export function Logo({ className, size = 'md' }: LogoProps) {
 
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.src = '/assets/logo.png';
+    img.src = '/assets/logo.webp';
     
     img.onload = () => {
       canvas.width = img.width;

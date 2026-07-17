@@ -123,7 +123,7 @@ export function CVViewer({ isActive, coords, onClose }: CVViewerProps) {
         <div className="relative w-full max-w-5xl h-[85vh] rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.5)]">
            <div className="absolute inset-0 bg-[#111] animate-pulse" />
            <img 
-             src="/assets/disha-cv.png" 
+             src="/assets/disha-cv.webp" 
              alt="Disha Jain CV" 
              className="relative z-10 w-full h-full object-contain bg-[#0a0a0a]"
            />

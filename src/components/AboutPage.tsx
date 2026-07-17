@@ -44,9 +44,9 @@ function TypewriterText({ text, delay = 0, className = "" }: { text: string, del
 }
 
 const polaroids = [
-  { id: 1, src: "/about-sunset.png", caption: "Chasing Jaipur's golden hour at Nahargarh Fort. Sunsets look better from the top of the world.", rotate: -8, top: "10%", left: "15%" },
-  { id: 2, src: "/about-pizza.png", caption: "Signature thin-crust and double cheese. A cheat day isn't complete without artisanal personal pizzas!", rotate: 6, top: "45%", left: "5%" },
-  { id: 3, src: "/about-vrindavan.png", caption: "Spiritual vibes in Vrindavan at the beautiful Chaar Dham. Divine peace and intricate gold architecture.", rotate: -4, top: "50%", left: "45%" },
+  { id: 1, src: "/about-sunset.webp", caption: "Chasing Jaipur's golden hour at Nahargarh Fort. Sunsets look better from the top of the world.", rotate: -8, top: "10%", left: "15%" },
+  { id: 2, src: "/about-pizza.webp", caption: "Signature thin-crust and double cheese. A cheat day isn't complete without artisanal personal pizzas!", rotate: 6, top: "45%", left: "5%" },
+  { id: 3, src: "/about-vrindavan.webp", caption: "Spiritual vibes in Vrindavan at the beautiful Chaar Dham. Divine peace and intricate gold architecture.", rotate: -4, top: "50%", left: "45%" },
   { id: 4, src: "/about-video.mp4", caption: "A snapshot of peaceful morning walks and quiet moments. The little details make the journey special.", rotate: 12, top: "15%", left: "48%", objectPosition: "top" },
 ];
 
@@ -417,7 +417,7 @@ export function AboutPage({ onBack }: AboutPageProps) {
                 }}
               >
                 <img 
-                  src="/DishaAboutMe_cutout.png"
+                  src="/DishaAboutMe_cutout.webp"
                   alt="Disha Jain"
                   className="portrait-image"
                 />

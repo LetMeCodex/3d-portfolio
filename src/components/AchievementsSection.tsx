@@ -15,7 +15,7 @@ const achievements = [
     title: "Microsoft AI Skills Fest",
     issuer: "Microsoft",
     desc: "Completed the Microsoft AI Skills Fest, gaining hands-on proficiency in Generative AI, Azure AI services, Microsoft Copilot, and autonomous agent systems.",
-    imageUrl: "/certificates/microsoft-ai.png"
+    imageUrl: "/certificates/microsoft-ai.webp"
   },
   {
     year: "2026",
@@ -23,7 +23,7 @@ const achievements = [
     title: "TRIQ - Think Twice",
     issuer: "OutThinkX",
     desc: "Awarded Certificate of Achievement in the TRIQ - Think Twice contest by OutThinkX, demonstrating quick thinking, reasoning, and exceptional knowledge under pressure.",
-    imageUrl: "/certificates/outthinkx-triq.png"
+    imageUrl: "/certificates/outthinkx-triq.webp"
   },
   {
     year: "2026",
@@ -31,7 +31,7 @@ const achievements = [
     title: "AWS Cloud Practitioner Essentials",
     issuer: "Amazon Web Services (AWS)",
     desc: "Successfully completed training on AWS cloud models, security, networking, pricing, and infrastructure design for core web systems.",
-    imageUrl: "/certificates/aws-practitioner.png"
+    imageUrl: "/certificates/aws-practitioner.webp"
   },
   {
     year: "2026",
@@ -39,7 +39,7 @@ const achievements = [
     title: "TCS iON Career Edge - Young Professional",
     issuer: "Tata Consultancy Services (TCS)",
     desc: "Completed training on communication, soft skills, presentation skills, resume writing, group discussions, and fundamental IT and AI skills.",
-    imageUrl: "/certificates/tcs-ion.png"
+    imageUrl: "/certificates/tcs-ion.webp"
   },
   {
     year: "2026",
@@ -47,7 +47,7 @@ const achievements = [
     title: "Master Business English",
     issuer: "Udemy / Course Completion",
     desc: "Completed training on 160 essential business phrases for professional discussions, presentation delivery, executive meetings, and corporate interactions.",
-    imageUrl: "/certificates/udemy-english.png"
+    imageUrl: "/certificates/udemy-english.webp"
   },
   {
     year: "2026",
@@ -55,7 +55,7 @@ const achievements = [
     title: "Elite Coders Open Source Hackathon",
     issuer: "Elite Coders",
     desc: "Successfully qualified the Pre-Assessment Round of the Open Source Hackathon 2026, demonstrating strong logical design, technical creativity, and dedication.",
-    imageUrl: "/certificates/elite-coders.png"
+    imageUrl: "/certificates/elite-coders.webp"
   },
   {
     year: "2026",
@@ -63,7 +63,7 @@ const achievements = [
     title: "GenAI Powered Data Analytics",
     issuer: "TATA Group / Forage",
     desc: "Completed a simulation model tackling real-world business challenges, leveraging GenAI alongside advanced data analysis, risk profiling, and storytelling.",
-    imageUrl: "/certificates/tata-forage.png"
+    imageUrl: "/certificates/tata-forage.webp"
   },
   {
     year: "2026",
@@ -71,7 +71,7 @@ const achievements = [
     title: "Professional Networking",
     issuer: "HP LIFE / HP Foundation",
     desc: "Completed the HP LIFE course for building meaningful professional relationships, personal branding, and leveraging digital tools to expand professional reach.",
-    imageUrl: "/certificates/hp-life.png"
+    imageUrl: "/certificates/hp-life.webp"
   },
   {
     year: "2026",
@@ -79,7 +79,7 @@ const achievements = [
     title: "Innovexis Participant",
     issuer: "Innovexis",
     desc: "Awarded for active participation and dedication throughout the program, focusing on open-source ecosystems, web engineering, and collaborative development.",
-    imageUrl: "/certificates/innovexis.png"
+    imageUrl: "/certificates/innovexis.webp"
   },
   {
     year: "2026",
@@ -87,7 +87,7 @@ const achievements = [
     title: "Yuva AI for All",
     issuer: "IndiaAI & nasscom",
     desc: "Completed the Yuva AI for All program, deep-diving into AI/ML foundations, CRAFT prompt engineering, and responsible AI FAST frameworks.",
-    imageUrl: "/certificates/yuva-ai.png"
+    imageUrl: "/certificates/yuva-ai.webp"
   },
   {
     year: "2026",
@@ -95,7 +95,7 @@ const achievements = [
     title: "CodSoft Web Dev Intern",
     issuer: "CodSoft",
     desc: "Selected for a one-month intensive Web Development internship focusing on building responsive modules, backend systems, and web projects.",
-    imageUrl: "/certificates/codsoft.png"
+    imageUrl: "/certificates/codsoft.webp"
   },
   {
     year: "2026",
@@ -103,7 +103,7 @@ const achievements = [
     title: "AWS Academy Cloud Foundations",
     issuer: "Amazon Web Services (AWS)",
     desc: "Successfully completed the Academy Cloud Foundations course, gaining proficiency in AWS core services, support, and CloudFormation.",
-    imageUrl: "/certificates/aws.png.png"
+    imageUrl: "/certificates/aws.png.webp"
   },
   {
     year: "2025",
@@ -111,7 +111,7 @@ const achievements = [
     title: "AICTE Participant",
     issuer: "IIC Organised",
     desc: "Active participation in high-level technical programs, driving forward-thinking technical paradigms and innovation.",
-    imageUrl: "/certificates/aicte.png"
+    imageUrl: "/certificates/aicte.webp"
   },
   {
     year: "2024",
@@ -119,7 +119,7 @@ const achievements = [
     title: "Web Development Intern",
     issuer: "SkillCraft Internship",
     desc: "A hands-on, intensive month focusing on modern frontend architecture, robust UI practices, and relational database creation with MySQL.",
-    imageUrl: "/certificates/skillcraft.png"
+    imageUrl: "/certificates/skillcraft.webp"
   },
   {
     year: "2023",
@@ -127,7 +127,7 @@ const achievements = [
     title: "Daksh SparkFest",
     issuer: "Collaborative Contributor",
     desc: "Contributed to rapid problem-solving and ideation within a collaborative technical team, delivering innovative solutions under pressure.",
-    imageUrl: "/certificates/daksh.png"
+    imageUrl: "/certificates/daksh.webp"
   }
 ];
 

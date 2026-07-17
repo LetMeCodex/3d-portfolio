@@ -11,7 +11,7 @@ const projects = [
       "Designed a real-time prompt risk analysis engine that identifies and redacts sensitive parameters before they hit public LLM endpoints.",
       "Engineered an interactive exposure mapping visualization that maps subprocessor networks and compliance data flow paths."
     ],
-    imageUrl: "/projects/leakmap.png",
+    imageUrl: "/projects/leakmap.webp",
     icon: Shield
   },
   {
@@ -23,7 +23,7 @@ const projects = [
       "Engineered a system to benchmark and reduce LLM hallucinations, ensuring reliability and structural compliance for automated corporate agents.",
       "Developed an agent optimization pipeline designed to run complex relational workflows under strict enterprise rules."
     ],
-    imageUrl: "/projects/agentforge.png",
+    imageUrl: "/projects/agentforge.webp",
     icon: Cpu
   },
   {
@@ -35,7 +35,7 @@ const projects = [
       "Created a decentralized, offline-first emergency communication system that operates entirely without cellular towers or internet access.",
       "Leveraged peer-to-peer protocols including Wi-Fi Direct and Bluetooth Low Energy along with Heltec V3 LoRa hardware simulations to enable mesh communication during disasters."
     ],
-    imageUrl: "/projects/resqmesh.png",
+    imageUrl: "/projects/resqmesh.webp",
     icon: Wifi
   },
   {
@@ -47,7 +47,7 @@ const projects = [
       "Architected a scalable backend with Node.js and MySQL, implementing secure RESTful endpoints for complex administrative CRUD operations.",
       "Engineered a pixel-perfect, responsive dashboard using React, ensuring a seamless user experience across mobile and desktop environments."
     ],
-    imageUrl: "/projects/student_mgmt.png",
+    imageUrl: "/projects/student_mgmt.webp",
     icon: Database
   },
   {
@@ -59,7 +59,7 @@ const projects = [
       "Implemented advanced asynchronous data fetching patterns and state management to handle complex dynamic weather conditions.",
       "Designed an immersive, glassmorphic UI with reactive animations that respond to live environmental shifts."
     ],
-    imageUrl: "/projects/weather_app.png",
+    imageUrl: "/projects/weather_app.webp",
     icon: Cloud
   },
   {
@@ -71,7 +71,7 @@ const projects = [
       "Collaborated on building optimized database schemas in MySQL, focusing on efficient data retrieval and relational mapping.",
       "Adhered to industry-standard UI/UX principles, delivering high-performance web pages with modular and maintainable codebases."
     ],
-    imageUrl: "/projects/skillcraft.png",
+    imageUrl: "/projects/skillcraft.webp",
     icon: Code
   },
   {
@@ -83,7 +83,7 @@ const projects = [
       "Contributed to the end-to-end design and logic of a tech-driven solution aimed at solving real-world institutional challenges.",
       "Worked closely with cross-functional teams to integrate complex concepts into a functional, presentable MVP."
     ],
-    imageUrl: "/projects/hackathon.png",
+    imageUrl: "/projects/hackathon.webp",
     icon: Trophy
   }
 ];

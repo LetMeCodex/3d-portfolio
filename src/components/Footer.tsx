@@ -253,7 +253,7 @@ export function Footer({ onOpenResume }: FooterProps) {
             <div className="relative h-[80vh] -translate-y-6 flex items-center justify-center z-20 character-img">
                <div className="absolute w-[80%] h-[80%] bg-gradient-to-tr from-[#FFB7B2]/20 to-[#FFDAC1]/25 blur-[120px] rounded-full z-[-1]" />
                <img 
-                 src="/assets/disha-character-final.png" 
+                 src="/assets/disha-character-final.webp" 
                  alt="Disha Character" 
                  className="h-full w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.8)]"
                  style={{ 

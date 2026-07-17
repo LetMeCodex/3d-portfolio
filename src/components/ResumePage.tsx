@@ -219,7 +219,7 @@ export function ResumePage({ onBack }: ResumePageProps) {
                             className="relative w-72 h-[450px] lg:w-96 lg:h-[550px] rounded-[10rem] overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.15)] border-[12px] border-white z-10"
                         >
                             <motion.img 
-                                src="/disha-colorful.jpg" 
+                                src="/disha-colorful.webp" 
                                 alt="Disha Jain" 
                                 initial={{ scale: 1.2, filter: "sepia(0.5) contrast(1.2) brightness(0.8)" }}
                                 animate={{ scale: 1, filter: "sepia(0.1) contrast(1.05) brightness(1.02)" }}

@@ -520,7 +520,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
             style={{ opacity: 0, transform: 'scale(0)' }}
           >
             <img 
-              src="/disha-circle.png" 
+              src="/disha-circle.webp" 
               alt="Disha Jain Portrait" 
               className="w-full h-full object-cover"
             />
