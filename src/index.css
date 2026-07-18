@@ -43,8 +43,6 @@
   /* Paint containment on page sections to isolate stacking contexts and reduce repaint area */
   section {
     contain: paint;
-    content-visibility: auto;
-    contain-intrinsic-size: auto 500px;
   }
 }
 

@@ -82,28 +82,33 @@ export function Hero({ onOpenResume }: HeroProps) {
       });
 
       // Transition Animation for Hero into IntroSection (Stacked Card Effect)
-      const tlTransition = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "bottom bottom",
-          pinSpacing: false,
-          pin: true,
-          scrub: true,
-          onRefresh: () => {
-            if (containerRef.current) {
-              gsap.set(containerRef.current, {
-                transformOrigin: "center " + (containerRef.current.offsetHeight - window.innerHeight / 2) + "px"
-              });
+      // Only enable pinning and scaling transition on desktop (>= 1024px) to prevent touch-scroll lock on mobile/tablet
+      const isMobileOrTablet = window.innerWidth < 1024;
+
+      if (!isMobileOrTablet) {
+        const tlTransition = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "bottom bottom",
+            pinSpacing: false,
+            pin: true,
+            scrub: true,
+            onRefresh: () => {
+              if (containerRef.current) {
+                gsap.set(containerRef.current, {
+                  transformOrigin: "center " + (containerRef.current.offsetHeight - window.innerHeight / 2) + "px"
+                });
+              }
             }
           }
-        }
-      });
-      
-      tlTransition.fromTo(
-        containerRef.current,
-        { y: 0, rotateX: 0, scale: 1, opacity: 1 },
-        { y: 0, rotateX: 0, scale: 0.85, opacity: 0, duration: 1, ease: "none" }
-      );
+        });
+        
+        tlTransition.fromTo(
+          containerRef.current,
+          { y: 0, rotateX: 0, scale: 1, opacity: 1 },
+          { y: 0, rotateX: 0, scale: 0.85, opacity: 0, duration: 1, ease: "none" }
+        );
+      }
 
     }, containerRef);
 

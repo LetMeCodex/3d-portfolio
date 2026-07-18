@@ -393,7 +393,7 @@ export const ArchitecturalGrid: React.FC<ArchitecturalGridProps> = ({
     <div ref={containerRef} className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`} style={{ opacity }}>
       {/* Mobile: static CSS grid pattern (zero JS cost). Desktop: animated canvas */}
       <div 
-        className="absolute inset-0 md:hidden"
+        className="absolute inset-0 md:hidden pointer-events-none"
         style={{
           backgroundColor: '#faf8f5',
           backgroundImage: `
