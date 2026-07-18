@@ -17,14 +17,6 @@ function isTouchDevice(): boolean {
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
-    // On touch devices, use native scrolling — Lenis hijacks touch scroll and breaks it
-    if (isTouchDevice()) {
-      // Still sync ScrollTrigger with native scroll
-      ScrollTrigger.defaults({ scroller: window });
-      ScrollTrigger.refresh();
-      return;
-    }
-
     const lenis = new Lenis({
       duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
