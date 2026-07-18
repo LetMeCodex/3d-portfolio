@@ -43,6 +43,8 @@
   /* Paint containment on page sections to isolate stacking contexts and reduce repaint area */
   section {
     contain: paint;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
   }
 }
 
@@ -134,11 +136,9 @@
 
 .marquee-left {
   animation: marquee-scroll-left 25s linear infinite;
-  will-change: transform;
 }
 .marquee-right {
   animation: marquee-scroll-right 30s linear infinite;
-  will-change: transform;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -149,6 +149,27 @@
 .no-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* ─── Reduced Motion Accessibility ─── */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-left,
+  .marquee-right,
+  .animate-orb-drift-1,
+  .animate-orb-drift-2,
+  .animate-orb-drift-3,
+  .animate-float-slow,
+  .animate-float-medium,
+  .animate-float-fast,
+  .doodle-wiggle,
+  .doodle-pulse {
+    animation: none !important;
+  }
+
+  .kinetic-text:hover,
+  .kinetic-text.active {
+    transform: none;
+  }
 }
 
 

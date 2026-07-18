@@ -95,9 +95,12 @@ export default function App() {
               
               {/* Foreground Content Wrapper */}
               <div className="relative z-20 w-full shadow-[0_30px_80px_rgba(0,0,0,0.3)] bg-[#F5F4F0]">
-                <ArchitecturalGrid />
-                {/* Global Hand-Drawn Doodles Background */}
-                <BackgroundDoodles />
+                {/* ArchitecturalGrid REMOVED — the fixed instance (line 64) already covers the whole page.
+                    Having two full-screen animated canvases was the single biggest performance killer. */}
+                {/* Global Hand-Drawn Doodles Background — hidden on mobile for performance */}
+                <div className="hidden md:block">
+                  <BackgroundDoodles />
+                </div>
                 <div className="relative z-10">
                   <Hero onOpenResume={handleOpenResume} />
                   <HomeIntro onOpenAbout={handleOpenAbout} />

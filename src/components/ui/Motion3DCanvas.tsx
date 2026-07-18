@@ -11,14 +11,15 @@ export function Motion3DCanvas() {
     // Fixed virtual size to prevent race conditions during parent resizing
     const width = 300;
     const height = 150;
+    const isMobile = window.innerWidth < 768;
 
     // Create scene, camera, renderer
     const scene = new THREE.Scene();
     
     // Transparent WebGL context so it overlays cleanly on section backgrounds
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
@@ -74,7 +75,7 @@ export function Motion3DCanvas() {
       side: THREE.DoubleSide
     });
     
-    const geo = new THREE.CylinderGeometry(0.75, 0.75, 0.3, 64, 64, false);
+    const geo = new THREE.CylinderGeometry(0.75, 0.75, 0.3, isMobile ? 32 : 64, isMobile ? 32 : 64, false);
 
     // Mesh 1: Rotates clockwise-ish
     const mesh1 = new THREE.Mesh(geo, mat);
@@ -90,10 +91,14 @@ export function Motion3DCanvas() {
     let animationFrameId: number;
     let isVisible = true;
 
+    // Pre-allocate Vector3 instances to avoid GC pressure from per-frame allocation
+    const axis1 = new THREE.Vector3(-1, 1, 0);
+    const axis2 = new THREE.Vector3(1, 1, 0);
+
     const animate = () => {
       if (!isVisible) return;
-      mesh1.rotateOnWorldAxis(new THREE.Vector3(-1, 1, 0), -0.005);
-      mesh2.rotateOnWorldAxis(new THREE.Vector3(1, 1, 0), 0.005);
+      mesh1.rotateOnWorldAxis(axis1, -0.005);
+      mesh2.rotateOnWorldAxis(axis2, 0.005);
       
       renderer.render(scene, camera);
       animationFrameId = requestAnimationFrame(animate);

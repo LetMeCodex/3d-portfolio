@@ -23,6 +23,9 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
     let animationFrameId: number;
 
     const isMobile = window.innerWidth < 768;
+    // Clamp DPR on mobile
+    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+
     const settings = {
         bgColor: "transparent",
         minWind: aggressive ? 1.0 : 0.2,
@@ -31,12 +34,13 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
         maxSize: aggressive ? 35 : 25,
         emitterY: 0.15,
         emitterSpread: 0.85,
-        gravity: aggressive ? 0.15 : 0.08, // Very gentle gravity
+        gravity: aggressive ? 0.15 : 0.08,
         turbulence: aggressive ? 0.8 : 0.4,
         rotationSpeed: aggressive ? 0.05 : 0.01,
         tumbleStrength: aggressive ? 0.6 : 0.2,
         staticTilt: 0,
-        particleCount: isMobile ? (aggressive ? 50 : 20) : (aggressive ? 120 : 50),
+        // Drastically reduce particles on mobile
+        particleCount: isMobile ? (aggressive ? 25 : 10) : (aggressive ? 120 : 50),
         direction: -1
     };
 
@@ -84,6 +88,7 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
 
     const particleImage = createDefaultImage();
 
+    // Pre-compute rotation helpers to avoid per-particle trig
     function rotateVector(x: number, y: number, z: number, ax: number, ay: number, az: number) {
         let cos = Math.cos(az);
         let sin = Math.sin(az);
@@ -130,22 +135,24 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
 
         reset(initOnScreen = false) {
             this.image = particleImage;
+            const logicalW = width / dpr;
+            const logicalH = height / dpr;
             this.width = cache.minSize + Math.random() * (cache.maxSize - cache.minSize);
             this.height = this.width;
 
-            const centerY = height * settings.emitterY;
-            const spreadHeight = height * settings.emitterSpread;
+            const centerY = logicalH * settings.emitterY;
+            const spreadHeight = logicalH * settings.emitterSpread;
             const minY = centerY - spreadHeight / 2;
             const maxY = centerY + spreadHeight / 2;
 
             this.y = minY + Math.random() * (maxY - minY);
 
             if (initOnScreen) {
-                this.x = Math.random() * width;
+                this.x = Math.random() * logicalW;
             } else {
                 this.x = settings.direction === -1
-                    ? width + this.width + Math.random() * width
-                    : -this.width - Math.random() * width;
+                    ? logicalW + this.width + Math.random() * logicalW
+                    : -this.width - Math.random() * logicalW;
             }
 
             const sizeFactor = (this.width - cache.minSize) / (cache.maxSize - cache.minSize || 1);
@@ -164,6 +171,8 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
         }
 
         update() {
+            const logicalW = width / dpr;
+            const logicalH = height / dpr;
             const targetSpeed = cache.minWind + (cache.maxWind - cache.minWind) * this.windFactor;
             this.vx += (targetSpeed - this.vx) * 0.1;
             this.x += this.vx * settings.direction;
@@ -184,9 +193,9 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
             }
 
             const buffer = 200;
-            const outByX = settings.direction === -1 ? this.x < -buffer : this.x > width + buffer;
+            const outByX = settings.direction === -1 ? this.x < -buffer : this.x > logicalW + buffer;
 
-            if (outByX || this.y > height + buffer || this.y < -buffer) {
+            if (outByX || this.y > logicalH + buffer || this.y < -buffer) {
                 this.reset(false);
             }
         }
@@ -196,36 +205,34 @@ export default function SakuraBackground({ className = "", zIndex = -1, aggressi
             const vecV = rotateVector(0, 1, 0, this.angleX, this.angleY + cache.tiltRad, this.angleZ);
 
             if(!ctx) return;
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.transform(vecU.x, vecU.y, vecV.x, vecV.y, 0, 0);
+            // Use setTransform instead of save/restore for better performance
+            ctx.setTransform(vecU.x, vecU.y, vecV.x, vecV.y, this.x, this.y);
             ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
-            ctx.restore();
         }
     }
 
     function resize() {
         if(!canvas) return;
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-        if(ctx) {
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = "high";
-        }
+        width = canvas.width = window.innerWidth * dpr;
+        height = canvas.height = window.innerHeight * dpr;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
     }
 
     function initParticles() {
         particles = [];
         for (let i = 0; i < settings.particleCount; i++) {
             const particle = new Particle(false);
-            particle.x += Math.random() * width * 1.5;
+            particle.x += Math.random() * (width / dpr) * 1.5;
             particles.push(particle);
         }
     }
 
     function animate() {
         if(!ctx) return;
-        ctx.clearRect(0, 0, width, height);
+        // Reset transform before clearing
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, width / dpr, height / dpr);
 
         for (const particle of particles) {
             particle.update();

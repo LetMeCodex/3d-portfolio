@@ -5,26 +5,38 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Detect touch devices to disable Lenis (fixes mobile/tablet scrolling)
+function isTouchDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    'ontouchstart' in window ||
+    navigator.maxTouchPoints > 0 ||
+    (navigator as any).msMaxTouchPoints > 0
+  );
+}
+
 export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
+    // On touch devices, use native scrolling — Lenis hijacks touch scroll and breaks it
+    if (isTouchDevice()) {
+      // Still sync ScrollTrigger with native scroll
+      ScrollTrigger.defaults({ scroller: window });
+      ScrollTrigger.refresh();
+      return;
+    }
+
     const lenis = new Lenis({
-      duration: 1.1, // Snappier scroll for better performance on mobile
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
 
-    // Synchronize Lenis scrolling perfectly with GSAP ScrollTrigger physics & scale timescale based on velocity
-    lenis.on('scroll', (e: any) => {
+    (window as any).lenis = lenis;
+
+    // Synchronize Lenis scrolling with GSAP ScrollTrigger
+    // REMOVED: gsap.globalTimeline.timeScale manipulation that was causing
+    // all GSAP animations to stutter during fast scrolling
+    lenis.on('scroll', () => {
       ScrollTrigger.update();
-      
-      const speed = Math.abs(e.velocity || 0);
-      // timescale ranges from 1.0 (normal) up to 2.5 (extremely fast scrolling)
-      const targetScale = 1.0 + Math.min(speed * 0.18, 1.5);
-      
-      gsap.to(gsap.globalTimeline, {
-        timeScale: targetScale,
-        duration: 0.18,
-        overwrite: 'auto'
-      });
     });
 
     const raf = (time: number) => {
@@ -36,6 +48,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
+      delete (window as any).lenis;
     };
   }, []);
 

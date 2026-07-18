@@ -26,7 +26,10 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
   const lineV2Ref = useRef<HTMLDivElement>(null);
 
   // Mouse hover state for floating technical widgets
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  // Using useRef instead of useState to prevent 60+ re-renders/second
+  const mousePosRef = useRef({ x: 0, y: 0 });
+  const coordDisplayRef = useRef<HTMLDivElement>(null);
+  const mouseMoveRafRef = useRef<number>(0);
   const compassRef = useRef<HTMLDivElement>(null);
   const spiralRef = useRef<HTMLDivElement>(null);
 
@@ -375,9 +378,18 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
     }
 
     // 4. Coordinate tracker tracking mouse move for magnetic reaction
+    // Throttled with rAF and uses direct DOM manipulation instead of React state
     const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      setMousePos({ x: clientX, y: clientY });
+      if (mouseMoveRafRef.current) return; // Skip if a frame is already pending
+      mouseMoveRafRef.current = requestAnimationFrame(() => {
+        mouseMoveRafRef.current = 0;
+        const { clientX, clientY } = e;
+        mousePosRef.current = { x: clientX, y: clientY };
+
+        // Direct DOM update instead of setState — no React re-render
+        if (coordDisplayRef.current) {
+          coordDisplayRef.current.textContent = `CURSOR: [${clientX}, ${clientY}]`;
+        }
 
       // Apply subtle magnetic repulsion/attraction to SVGs
       if (compassRef.current && spiralRef.current) {
@@ -421,11 +433,13 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
           gsap.to(spiralRef.current, { x: 0, y: 0, rotate: -20, duration: 1 });
         }
       }
+      }); // close requestAnimationFrame callback
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(mouseMoveRafRef.current);
     };
   }, []);
 
@@ -665,7 +679,7 @@ export function HomeIntro({ onOpenAbout }: HomeIntroProps) {
         <div className="mt-12 flex gap-4 font-mono text-[7px] text-[#1c2135]/30 uppercase tracking-wider grid-text">
           <span>SCALE: 1.000</span>
           <span>•</span>
-          <span>CURSOR: [{mousePos.x}, {mousePos.y}]</span>
+          <span ref={coordDisplayRef}>CURSOR: [0, 0]</span>
           <span>•</span>
           <span>SYSTEM: READY</span>
         </div>

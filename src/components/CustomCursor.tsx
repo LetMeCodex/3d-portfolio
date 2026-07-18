@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-
-interface Point {
-  x: number;
-  y: number;
-  time: number;
-}
+import { motion, useMotionValue, useSpring } from 'motion/react';
 
 interface Particle {
   x: number;
@@ -48,6 +42,8 @@ export function CustomCursor() {
   // Click reaction systems
   const particlesRef = useRef<Particle[]>([]);
   const ripplesRef = useRef<Ripple[]>([]);
+  const isAnimatingRef = useRef(false);
+  const animationIdRef = useRef<number>(0);
 
   // Smooth springs for trailing magnetic focus box
   const boxX = useSpring(mouseX, { damping: 25, stiffness: 200, mass: 0.5 });
@@ -143,7 +139,7 @@ export function CustomCursor() {
       mouseX.set(cx);
       mouseY.set(cy);
 
-      // Snapped focus tracking: update dimension rect coordinates on mousemove to handle components that animate scale or lift on hover
+      // Snapped focus tracking
       if (hoverTargetRef.current) {
         const rect = hoverTargetRef.current.getBoundingClientRect();
         setHoveredRect(rect);
@@ -152,7 +148,6 @@ export function CustomCursor() {
         boxWidth.set(rect.width);
         boxHeight.set(rect.height);
       } else {
-        // Fallback: box follows the mouse pointer
         boxX.set(cx - 12);
         boxY.set(cy - 12);
       }
@@ -175,18 +170,18 @@ export function CustomCursor() {
         x: cx,
         y: cy,
         radius: 4,
-        maxRadius: Math.random() * 25 + 60, // 60 to 85px
+        maxRadius: Math.random() * 25 + 60,
         alpha: 1,
         life: 0,
         maxLife: 40,
       });
 
-      // Spawn a burst of hand-drawn sparks and flares (optimized colors)
+      // Spawn a burst of hand-drawn sparks
       const colorsRgb = [
         '255, 183, 178', '255, 218, 193', '199, 206, 234', '181, 234, 215', '255, 154, 162', '226, 240, 203'
       ];
 
-      const sparkCount = Math.floor(Math.random() * 3) + 8; // reduced spark counts for mobile
+      const sparkCount = Math.floor(Math.random() * 3) + 8;
       for (let i = 0; i < sparkCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 4 + 2;
@@ -212,6 +207,9 @@ export function CustomCursor() {
           spin: (Math.random() - 0.5) * 0.12,
         });
       }
+
+      // Start canvas animation loop if not already running
+      startCanvasLoop();
     };
 
     const handleMouseUp = () => {
@@ -248,28 +246,30 @@ export function CustomCursor() {
     };
   }, [isVisible, mouseX, mouseY, boxX, boxY, boxWidth, boxHeight, boxRadius]);
 
-  // Canvas custom cursor rendering and particle trail loop
-  useEffect(() => {
-    // Touch device detection bypass
-    const isTouchDevice = () => {
-      return (('ontouchstart' in window) ||
-        (navigator.maxTouchPoints > 0) ||
-        ((navigator as any).msMaxTouchPoints > 0));
-    };
-    if (isTouchDevice()) return;
-
-    let animationId: number;
+  // Start the canvas animation loop only when there are particles/ripples to render
+  const startCanvasLoop = () => {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
 
     const renderTrail = () => {
       const canvas = canvasRef.current;
-      if (!canvas) return;
+      if (!canvas) { isAnimatingRef.current = false; return; }
       const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      if (!ctx) { isAnimatingRef.current = false; return; }
+
+      const particles = particlesRef.current;
+      const ripples = ripplesRef.current;
+
+      // If nothing to render, stop the loop (saves CPU when idle)
+      if (particles.length === 0 && ripples.length === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        isAnimatingRef.current = false;
+        return;
+      }
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // 1. Update and draw Click Sparks
-      const particles = particlesRef.current;
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.life++;
@@ -279,13 +279,10 @@ export function CustomCursor() {
           continue;
         }
 
-        // Apply physics
         p.x += p.vx;
         p.y += p.vy;
-        
         p.vx *= 0.96;
-        p.vy += 0.1; // gravity pull
-
+        p.vy += 0.1;
         p.alpha = 1 - p.life / p.maxLife;
 
         ctx.save();
@@ -296,9 +293,8 @@ export function CustomCursor() {
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
-        const s = p.size * (0.4 + p.alpha * 0.6); // slight scale down as it fades
+        const s = p.size * (0.4 + p.alpha * 0.6);
 
-        // Click spark - tiny sketchy cross
         ctx.beginPath();
         ctx.moveTo(-s * 0.6, 0);
         ctx.lineTo(s * 0.6, 0);
@@ -310,7 +306,6 @@ export function CustomCursor() {
       }
 
       // 2. Update and draw wobbly concentric ripples
-      const ripples = ripplesRef.current;
       for (let i = ripples.length - 1; i >= 0; i--) {
         const r = ripples[i];
         r.life++;
@@ -323,7 +318,6 @@ export function CustomCursor() {
         r.radius += (r.maxRadius - r.radius) * 0.08;
         r.alpha = 1 - r.life / r.maxLife;
 
-        // Draw wobbly, sketchy outer ring
         ctx.beginPath();
         for (let theta = 0; theta < Math.PI * 2.1; theta += 0.15) {
           const w = r.radius * (1 + Math.sin(theta * 6 + r.life * 0.1) * 0.03);
@@ -336,7 +330,6 @@ export function CustomCursor() {
         ctx.lineWidth = 1.2;
         ctx.stroke();
 
-        // Secondary sketchy inner wobbly ring
         if (r.radius > 20) {
           ctx.beginPath();
           for (let theta = 0; theta < Math.PI * 2.1; theta += 0.15) {
@@ -352,11 +345,25 @@ export function CustomCursor() {
         }
       }
 
-      animationId = requestAnimationFrame(renderTrail);
+      animationIdRef.current = requestAnimationFrame(renderTrail);
     };
 
-    animationId = requestAnimationFrame(renderTrail);
-    return () => cancelAnimationFrame(animationId);
+    animationIdRef.current = requestAnimationFrame(renderTrail);
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    const isTouchDevice = () => {
+      return (('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        ((navigator as any).msMaxTouchPoints > 0));
+    };
+    if (isTouchDevice()) return;
+
+    return () => {
+      cancelAnimationFrame(animationIdRef.current);
+      isAnimatingRef.current = false;
+    };
   }, []);
 
   return (

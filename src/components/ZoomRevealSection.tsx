@@ -19,31 +19,75 @@ export function ZoomRevealSection() {
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const currentFrameRef = useRef<number>(0);
 
-  // 1. Preload images
+  // 1. Preload images only when section is near viewport
   useEffect(() => {
-    const totalFrames = 68;
-    let loadedCount = 0;
-    const tempImages: HTMLImageElement[] = [];
+    const container = containerRef.current;
+    if (!container) return;
 
-    const handleLoad = () => {
-      loadedCount++;
-      if (loadedCount === totalFrames) {
-        setImagesLoaded(true);
-        // Draw initial frame once all are loaded
-        requestAnimationFrame(() => drawFrame(0));
+    let cancelled = false;
+    const isMobile = window.innerWidth < 768;
+    const totalFrames = 68;
+    // On mobile, load every other frame to save memory/bandwidth
+    const framesToLoad = isMobile 
+      ? Array.from({ length: 34 }, (_, i) => (i * 2) + 1)
+      : Array.from({ length: totalFrames }, (_, i) => i + 1);
+    
+    let loadedCount = 0;
+    const tempImages: HTMLImageElement[] = new Array(totalFrames).fill(null);
+
+    const startLoading = () => {
+      if (cancelled) return;
+      
+      const handleLoad = (frameIndex: number) => {
+        loadedCount++;
+        // If we skipped frames on mobile, copy the loaded frame to the next slot
+        if (isMobile && frameIndex < totalFrames && !tempImages[frameIndex]) {
+          // Fill missing frames with the nearest loaded frame
+          if (frameIndex > 0 && tempImages[frameIndex - 1]) {
+            tempImages[frameIndex] = tempImages[frameIndex - 1];
+          }
+        }
+        if (loadedCount === framesToLoad.length && !cancelled) {
+          // Fill any remaining null slots with nearest neighbor
+          for (let i = 0; i < tempImages.length; i++) {
+            if (!tempImages[i] && i > 0) {
+              tempImages[i] = tempImages[i - 1];
+            }
+          }
+          imagesRef.current = tempImages;
+          setImagesLoaded(true);
+          requestAnimationFrame(() => drawFrame(0));
+        }
+      };
+
+      for (const frameNum of framesToLoad) {
+        const img = new Image();
+        const numStr = String(frameNum).padStart(3, '0');
+        img.src = `/starting-animation/ezgif-frame-${numStr}.png`;
+        img.onload = () => {
+          tempImages[frameNum - 1] = img;
+          handleLoad(frameNum - 1);
+        };
+        img.onerror = () => handleLoad(frameNum - 1);
       }
     };
 
-    for (let i = 1; i <= totalFrames; i++) {
-      const img = new Image();
-      const numStr = String(i).padStart(3, '0');
-      img.src = `/starting-animation/ezgif-frame-${numStr}.png`;
-      img.onload = handleLoad;
-      img.onerror = handleLoad; // fallback to avoid getting stuck
-      tempImages.push(img);
-    }
+    // Only start loading when section is within 500px of viewport
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          startLoading();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '500px' }
+    );
+    observer.observe(container);
 
-    imagesRef.current = tempImages;
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
   }, []);
 
   // 2. Canvas drawing logic (object-fit: cover)
@@ -83,13 +127,20 @@ export function ZoomRevealSection() {
     currentFrameRef.current = frameIndex;
   };
 
-  // 3. Handle window resizes
+  // 3. Handle window resizes with DPR clamping
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+
     const handleResize = () => {
       const canvas = canvasRef.current;
       if (canvas) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.scale(dpr, dpr);
         drawFrame(currentFrameRef.current);
       }
     };

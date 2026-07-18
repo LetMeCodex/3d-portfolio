@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
 
 interface PixelSkyBackgroundProps {
-  mouseX: number; // range: -1 to 1
+  mouseX: number; // range: -1 to 1 (initial value only — updates via CSS custom properties)
   mouseY: number; // range: -1 to 1
 }
 
-export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroundProps) {
+const PixelSkyBackground = forwardRef<HTMLDivElement, PixelSkyBackgroundProps>(function PixelSkyBackground({ mouseX, mouseY }, ref) {
+  const innerRef = useRef<HTMLDivElement>(null);
   const [screenType, setScreenType] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+
+  // Merge refs
+  const setRef = (el: HTMLDivElement | null) => {
+    (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+    if (typeof ref === 'function') ref(el);
+    else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,22 +32,11 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Parallax multipliers based on screen size:
-  // Desktop: sky glow = 2px, distant clouds = 4px, mid clouds = 8px, fore = 12px, stars = -4px
-  // Tablet: 40% reduction (scale = 0.6)
-  // Mobile: disabled (scale = 0)
-  let scaleFactor = 1.0;
-  if (screenType === 'tablet') {
-    scaleFactor = 0.6;
-  } else if (screenType === 'mobile') {
-    scaleFactor = 0;
-  }
+  const scaleFactor = screenType === 'tablet' ? 0.6 : screenType === 'mobile' ? 0 : 1.0;
+  const isMobile = screenType === 'mobile';
 
-  const farSkyOffset = { x: mouseX * 2 * scaleFactor, y: mouseY * 2 * scaleFactor };
-  const farCloudsOffset = { x: mouseX * 4 * scaleFactor, y: mouseY * 4 * scaleFactor };
-  const midOffset = { x: mouseX * 8 * scaleFactor, y: mouseY * 8 * scaleFactor };
-  const foreOffset = { x: mouseX * 12 * scaleFactor, y: mouseY * 12 * scaleFactor };
-  const starsOffset = { x: mouseX * -4 * scaleFactor, y: mouseY * -4 * scaleFactor };
+  // On mobile, use a reduced star set (15 stars instead of 55)
+  const mobileStarCount = 15;
 
   // Rich, authentic galaxy constellation list (55 stars total)
   const stars = [
@@ -104,8 +101,11 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
     { cx: 850, cy: 330, type: 'diamond', color: '#C8CCFF', size: 3, delay: '1.3s', speed: '4.9s' },
     { cx: 1150, cy: 340, type: 'sparkle', color: '#FFF35A', size: 4, delay: '3.7s', speed: '3.6s' }
   ];
+  // Use full star list on desktop, reduced on mobile
+  const displayStars = isMobile ? stars.slice(0, mobileStarCount) : stars;
+
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+    <div ref={setRef} className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none" style={{ '--mouse-x': '0', '--mouse-y': '0' } as React.CSSProperties}>
       <style>{`
         /* --- Color Variables --- */
         :root {
@@ -292,23 +292,26 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
         }
       `}</style>
 
-      {/* Layer 7: Cozy lofi noise/grain overlay (3.5% opacity, mix-blend-overlay) */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-50 mix-blend-overlay opacity-30" style={{ pointerEvents: 'none' }}>
-        <defs>
-          <filter id="lofi-noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
-            <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.035 0" />
-          </filter>
-        </defs>
-        <rect width="100%" height="100%" filter="url(#lofi-noise)" />
-      </svg>
+      {/* Layer 7: Cozy lofi noise/grain overlay — REMOVED on mobile (feTurbulence is extremely GPU-expensive) */}
+      {!isMobile && (
+        <svg className="absolute inset-0 w-full h-full pointer-events-none z-50 mix-blend-overlay opacity-30" style={{ pointerEvents: 'none' }}>
+          <defs>
+            <filter id="lofi-noise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.035 0" />
+            </filter>
+          </defs>
+          <rect width="100%" height="100%" filter="url(#lofi-noise)" />
+        </svg>
+      )}
 
       {/* Layer 1 — Far Sky: 3-point Gradient with center-lower Pulsing sunset glow */}
       <div 
-        className="absolute inset-0 z-0 parallax-layer animate-ambient-light" 
+        className="absolute inset-0 z-0 parallax-layer animate-ambient-light"
         style={{
           background: 'linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 50%, var(--sky-lower) 100%)',
-          transform: `translate3d(${farSkyOffset.x}px, ${farSkyOffset.y}px, 0)`
+          transform: isMobile ? 'none' : `translate3d(calc(var(--mouse-x) * 2px * ${scaleFactor}), calc(var(--mouse-y) * 2px * ${scaleFactor}), 0)`,
+          willChange: isMobile ? 'auto' : 'transform'
         }}
       >
         {/* Soft radial glow in the middle-lower center (Sunset Pink #F3B8D8 + Blue blend) */}
@@ -326,12 +329,13 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
       <div 
         className="absolute inset-0 z-10 parallax-layer"
         style={{
-          transform: `translate3d(${starsOffset.x}px, ${starsOffset.y}px, 0)`
+          transform: isMobile ? 'none' : `translate3d(calc(var(--mouse-x) * -4px * ${scaleFactor}), calc(var(--mouse-y) * -4px * ${scaleFactor}), 0)`,
+          willChange: isMobile ? 'auto' : 'transform'
         }}
       >
-        {/* Shooting Stars */}
-        <div className="shooting-star-1" />
-        <div className="shooting-star-2" />
+        {/* Shooting Stars — removed on mobile */}
+        {!isMobile && <div className="shooting-star-1" />}
+        {!isMobile && <div className="shooting-star-2" />}
 
         <svg className="w-full h-full" viewBox="0 0 1440 900" fill="none">
           <defs>
@@ -370,7 +374,7 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
             <path d="M 1184,100 A 36,36 0 0,0 1256,100 A 36,36 0 0,1 1184,100" fill="#1C2135" opacity="0.08" />
           </g>
 
-          {stars.map((star, idx) => {
+          {displayStars.map((star, idx) => {
             const glowColor = star.color;
             if (star.type === 'sparkle') {
               return (
@@ -431,7 +435,8 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
       <div 
         className="absolute inset-0 z-20 parallax-layer"
         style={{
-          transform: `translate3d(${farCloudsOffset.x}px, ${farCloudsOffset.y}px, 0)`
+          transform: isMobile ? 'none' : `translate3d(calc(var(--mouse-x) * 4px * ${scaleFactor}), calc(var(--mouse-y) * 4px * ${scaleFactor}), 0)`,
+          willChange: isMobile ? 'auto' : 'transform'
         }}
       >
         <div className="absolute bottom-[20%] w-[2880px] h-[300px] flex overflow-hidden animate-drift-left">
@@ -466,7 +471,8 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
       <div 
         className="absolute inset-0 z-30 parallax-layer"
         style={{
-          transform: `translate3d(${midOffset.x}px, ${midOffset.y}px, 0)`
+          transform: isMobile ? 'none' : `translate3d(calc(var(--mouse-x) * 8px * ${scaleFactor}), calc(var(--mouse-y) * 8px * ${scaleFactor}), 0)`,
+          willChange: isMobile ? 'auto' : 'transform'
         }}
       >
         <div className="absolute bottom-[10%] w-[2880px] h-[350px] flex overflow-hidden animate-drift-right">
@@ -549,7 +555,8 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
       <div 
         className="absolute inset-0 z-32 parallax-layer animate-drift-left"
         style={{
-          transform: `translate3d(${midOffset.x * 0.9}px, ${midOffset.y * 0.9}px, 0)`
+          transform: isMobile ? 'none' : `translate3d(calc(var(--mouse-x) * 7.2px * ${scaleFactor}), calc(var(--mouse-y) * 7.2px * ${scaleFactor}), 0)`,
+          willChange: isMobile ? 'auto' : 'transform'
         }}
       >
         <div className="absolute bottom-[8%] w-[2880px] h-[350px] flex overflow-hidden">
@@ -566,7 +573,8 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
       <div 
         className="absolute inset-0 z-35 parallax-layer animate-ridge-vertical"
         style={{
-          transform: `translate3d(${midOffset.x * 0.75}px, ${midOffset.y * 0.75}px, 0)`
+          transform: isMobile ? 'none' : `translate3d(calc(var(--mouse-x) * 6px * ${scaleFactor}), calc(var(--mouse-y) * 6px * ${scaleFactor}), 0)`,
+          willChange: isMobile ? 'auto' : 'transform'
         }}
       >
         {/* Layer 4A (Back ridge, opacity 0.4) */}
@@ -688,4 +696,6 @@ export default function PixelSkyBackground({ mouseX, mouseY }: PixelSkyBackgroun
       </div>
     </div>
   );
-}
+});
+
+export default PixelSkyBackground;

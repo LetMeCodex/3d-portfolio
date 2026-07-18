@@ -18,6 +18,14 @@ export function Hero({ onOpenResume }: HeroProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    // Reset scroll immediately on mount to prevent ScrollTrigger measuring at incorrect scroll positions
+    if ((window as any).lenis) {
+      (window as any).lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+    ScrollTrigger.clearScrollMemory();
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ delay: 0.2 });
 
@@ -98,7 +106,16 @@ export function Hero({ onOpenResume }: HeroProps) {
       );
 
     }, containerRef);
-    return () => ctx.revert();
+
+    // Refresh layout heights and markers after the DOM settles
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
+    return () => {
+      ctx.revert();
+      clearTimeout(timer);
+    };
   }, []);
 
   return (

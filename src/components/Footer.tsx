@@ -18,18 +18,29 @@ export function Footer({ onOpenResume }: FooterProps) {
   const footerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  // Use useRef instead of useState for mouse position to prevent re-renders
+  const mousePosRef = useRef({ x: 0, y: 0 });
+  const pixelSkyRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!footerRef.current) return;
     const rect = footerRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    setMousePos({ x, y });
+    mousePosRef.current = { x, y };
+    // Update PixelSkyBackground via direct DOM manipulation
+    if (pixelSkyRef.current) {
+      pixelSkyRef.current.style.setProperty('--mouse-x', String(x));
+      pixelSkyRef.current.style.setProperty('--mouse-y', String(y));
+    }
   };
 
   const handleMouseLeave = () => {
-    setMousePos({ x: 0, y: 0 });
+    mousePosRef.current = { x: 0, y: 0 };
+    if (pixelSkyRef.current) {
+      pixelSkyRef.current.style.setProperty('--mouse-x', '0');
+      pixelSkyRef.current.style.setProperty('--mouse-y', '0');
+    }
   };
 
   useEffect(() => {
@@ -124,7 +135,7 @@ export function Footer({ onOpenResume }: FooterProps) {
       className="sticky bottom-0 w-full bg-black min-h-screen overflow-hidden z-10"
     >
       {/* The Animated Pixel Background Canvas */}
-      <PixelSkyBackground mouseX={mousePos.x} mouseY={mousePos.y} />
+      <PixelSkyBackground ref={pixelSkyRef} mouseX={0} mouseY={0} />
       
       {/* SVG Chroma Key Filter */}
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>

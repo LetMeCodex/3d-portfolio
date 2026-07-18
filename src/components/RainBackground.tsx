@@ -21,10 +21,15 @@ export default function RainBackground({ className = "", zIndex = -1, fast = fal
     let drops: Drop[] = [];
     let animationFrameId: number;
 
-    const baseDropCount = window.innerWidth < 768 ? 80 : 150;
+    const isMobile = window.innerWidth < 768;
+    // Drastically reduce drops on mobile for performance
+    const baseDropCount = isMobile ? 40 : 150;
     const dropCount = fast ? baseDropCount * 1.5 : baseDropCount;
-    const baseWind = fast ? 1.0 : 0.2; // Sideways wind
+    const baseWind = fast ? 1.0 : 0.2;
     const baseGravity = fast ? 6 : 3;
+
+    // Clamp DPR on mobile — render at 1x instead of retina resolution
+    const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
 
     class Drop {
       x: number = 0;
@@ -40,20 +45,20 @@ export default function RainBackground({ className = "", zIndex = -1, fast = fal
       }
 
       reset(initOnScreen = false) {
-        this.x = Math.random() * (width + 400) - 200; // Allow starting off-screen left due to wind
-        this.y = initOnScreen ? Math.random() * height : -Math.random() * 200 - 100;
-        this.length = Math.random() * 15 + 10 + (fast ? 10 : 0); // shorter drops to see them falling
-        this.thickness = Math.random() * 1.5 + (fast ? 2.0 : 1.0); // very thick, visible drops
-        this.speed = Math.random() * 2 + baseGravity; // gentle falling speed
+        this.x = Math.random() * (width / dpr + 400) - 200;
+        this.y = initOnScreen ? Math.random() * (height / dpr) : -Math.random() * 200 - 100;
+        this.length = Math.random() * 15 + 10 + (fast ? 10 : 0);
+        this.thickness = Math.random() * 1.5 + (fast ? 2.0 : 1.0);
+        this.speed = Math.random() * 2 + baseGravity;
         this.xSpeed = Math.random() * 0.5 + baseWind;
-        this.opacity = Math.random() * 0.4 + 0.5; // highly visible
+        this.opacity = Math.random() * 0.4 + 0.5;
       }
 
       update() {
         this.y += this.speed;
         this.x += this.xSpeed;
 
-        if (this.y > height + 50 || this.x > width + 100) {
+        if (this.y > height / dpr + 50 || this.x > width / dpr + 100) {
           this.reset(false);
         }
       }
@@ -61,8 +66,11 @@ export default function RainBackground({ className = "", zIndex = -1, fast = fal
 
     function resize() {
       if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      width = canvas.width = window.innerWidth * dpr;
+      height = canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx!.scale(dpr, dpr);
     }
 
     function initDrops() {
@@ -76,7 +84,6 @@ export default function RainBackground({ className = "", zIndex = -1, fast = fal
 
     const handleLightning = () => {
       if (!fast) return;
-      // 70% chance of double/triple flash
       lightningOpacity = 0.5 + Math.random() * 0.4;
       if (Math.random() > 0.3) {
         setTimeout(() => { lightningOpacity = 0.4 + Math.random() * 0.4; }, 50 + Math.random() * 100);
@@ -87,17 +94,16 @@ export default function RainBackground({ className = "", zIndex = -1, fast = fal
 
     function animate() {
       if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width / dpr, height / dpr);
 
       if (lightningOpacity > 0.01) {
         ctx.fillStyle = `rgba(255, 255, 255, ${lightningOpacity})`;
-        ctx.fillRect(0, 0, width, height);
-        lightningOpacity -= 0.05; // decay
+        ctx.fillRect(0, 0, width / dpr, height / dpr);
+        lightningOpacity -= 0.05;
       } else {
         lightningOpacity = 0;
       }
 
-      // Update drops
       for (const drop of drops) {
         drop.update();
       }
